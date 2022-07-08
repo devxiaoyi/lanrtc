@@ -70,7 +70,7 @@ RecordMainWindow::RecordMainWindow(QWidget *parent) : QMainWindow(parent) , ui(n
     sprintf(s,"webrtc://10.42.0.1:%d/live/livestream",m_context->avinfo.sys.httpPort);
     ui->m_url->setText(s);
 
-    m_hasAudio=true;
+    m_hasAudio=false;
     m_isStartpushplay=false;
     //using h264 h265
     m_context->avinfo.video.videoEncoderType=Yang_VED_264;//Yang_VED_265;

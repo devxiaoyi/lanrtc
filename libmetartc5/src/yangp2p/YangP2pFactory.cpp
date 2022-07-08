@@ -41,3 +41,10 @@ void* YangP2pFactory::getP2pCapture(int32_t pcapturetype,YangContext *pcontext){
   
     return new YangP2pCaputreCamera(pcontext);
 }
+
+YangVideoEncoderBuffer* YangP2pFactory::getTxVideoBuffer(YangSysMessageHandle* pmessageHandle){
+    if(!pmessageHandle) return NULL;
+    YangP2pMessageHandle* mess=dynamic_cast<YangP2pMessageHandle*>(pmessageHandle);
+    if(mess&&mess->m_p2p) return mess->m_p2p->getTxVideoBuffer();
+    return NULL;
+}

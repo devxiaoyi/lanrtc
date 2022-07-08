@@ -56,17 +56,108 @@ int32_t yang_find_pre_start_code(uint8_t *buf,int32_t bufLen){
 	return -1;
 }
 
+#ifndef MIN
+#define MIN(a, b) ((a) < (b) ? (a) : (b))
+#endif
+
+static int32_t getNextNaluLength(const char* nalus, uint32_t nalusLength, uint32_t* pStart, uint32_t* pNaluLength)
+{
+    int32_t retStatus = 0;
+    uint32_t zeroCount = 0, offset;
+    BOOL naluFound = FALSE;
+    char* pCurrent = NULL;
+
+    if (nalus == NULL || pStart == NULL || pNaluLength == NULL) {
+        printf("Warning: Failed to getNextNaluLength\n");
+		return -1;
+	}
+
+    // Annex-B Nalu will have 0x00000001 or 0x000001 start code, at most 4 bytes
+    for (offset = 0; offset < 4 && offset < nalusLength && nalus[offset] == 0; offset++)
+        ;
+
+    if (offset >= nalusLength - 1 || offset >= 4 || offset < 2 || nalus[offset] != 1) {
+		printf("Warning: getNextNaluLength nalu error\n");
+		return -2;
+	}
+
+	// Don
+	retStatus = nalus[offset+1];
+
+    *pStart = ++offset;
+    pCurrent = nalus + offset;
+
+    /* Not doing validation on number of consecutive zeros being less than 4 because some device can produce
+     * data with trailing zeros. */
+    while (offset < nalusLength) {
+        if (*pCurrent == 0) {
+            /* Maybe next byte is 1 */
+            offset++;
+            pCurrent++;
+
+        } else if (*pCurrent == 1) {
+            if (*(pCurrent - 1) == 0 && *(pCurrent - 2) == 0) {
+                zeroCount = *(pCurrent - 3) == 0 ? 3 : 2;
+                naluFound = TRUE;
+                break;
+            }
+
+            /* The jump is always 3 because of the 1 previously matched.
+             * All the 0's must be after this '1' matched at offset */
+            offset += 3;
+            pCurrent += 3;
+        } else {
+            /* Can jump 3 bytes forward */
+            offset += 3;
+            pCurrent += 3;
+        }
+    }
+    *pNaluLength = MIN(offset, nalusLength) - *pStart - (naluFound ? zeroCount : 0);
+
+    // As we might hit error often in a "bad" frame scenario, we can't use CHK_LOG_ERR as it will be too frequent
+
+    return retStatus;
+}
 
 void yang_createH264Meta( YangVideoMeta* pvmd, YangFrame *videoFrame){
+	uint32_t remainNalusLength = videoFrame->nb;
+	char* curPtrInNalus = videoFrame->payload;
+	uint32_t startIndex = 0;
+	uint32_t nextNaluLength = 0;
 	memset(pvmd,0,sizeof( YangVideoMeta));
-	uint32_t spslen=yang_get_be32(videoFrame->payload);
-	uint32_t ppslen=yang_get_be32(videoFrame->payload+spslen+4);
-	pvmd->mp4Meta.spsLen=spslen;
-	pvmd->mp4Meta.ppsLen=ppslen;
-	memcpy(pvmd->mp4Meta.sps,videoFrame->payload+4,spslen);
-	memcpy(pvmd->mp4Meta.pps,videoFrame->payload+4+spslen+4,ppslen);
 
+	uint32_t spslen = 0;
+	uint32_t ppslen = 0;
+
+    do {
+        int32_t ret = getNextNaluLength(curPtrInNalus, remainNalusLength, &startIndex, &nextNaluLength);
+		if (ret < 0) {
+			continue;
+		}
+
+        curPtrInNalus += startIndex;
+        remainNalusLength -= startIndex;
+
+        if (remainNalusLength == 0) {
+			return;
+		}
+		// SPS
+		if (ret == 0x67) {
+			pvmd->mp4Meta.spsLen = nextNaluLength;
+			memcpy(pvmd->mp4Meta.sps, curPtrInNalus, nextNaluLength);
+		}
+		// PPS
+		else if (ret == 0x68) {
+			pvmd->mp4Meta.ppsLen = nextNaluLength;
+			memcpy(pvmd->mp4Meta.pps, curPtrInNalus, nextNaluLength);
+			break;
+		}
+
+        remainNalusLength -= nextNaluLength;
+        curPtrInNalus += nextNaluLength;
+    } while (remainNalusLength != 0);
 }
+
 void yang_createH265Meta( YangVideoMeta* pvmd, YangFrame *videoFrame){
 	memset(pvmd,0,sizeof( YangVideoMeta));
 	uint32_t vpslen=yang_get_be32(videoFrame->payload);

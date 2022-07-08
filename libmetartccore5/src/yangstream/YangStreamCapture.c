@@ -112,14 +112,14 @@ void yang_streamcapture_setVideoData(void* pcontext,YangFrame* videoFrame,YangVi
 	context->video.preTimestamp = context->video.videoTimestamp;
 	context->video.frametype=videoFrame->frametype;
 }
-void yang_streamcapture_initSpspps(YangVideoStreamCapture* video,uint8_t *buf){
+void yang_streamcapture_initSpspps(YangVideoStreamCapture* video,YangVideoMeta* videoMeta){
 
 	if(video->spsppsConf==NULL){
 		video->spsppsConf=calloc(sizeof(YangSpsppsConf),1);//new YangSpsppsConf();
-		int32_t spsLen = *(buf + 12) + 1;
-		uint8_t *sps = buf + 13;
-		int32_t ppsLen = *(sps + spsLen + 1) + 1;
-		uint8_t *pps = buf + 13 + spsLen + 2;
+		int32_t spsLen = videoMeta->mp4Meta.spsLen;
+		uint8_t *sps = videoMeta->mp4Meta.sps;
+		int32_t ppsLen = videoMeta->mp4Meta.ppsLen;
+		uint8_t *pps = videoMeta->mp4Meta.pps;
 		//spsLen++;
 		//ppsLen++;
 		video->spsppsConf->sps=malloc(spsLen);//new uint8_t[spsLen];
@@ -132,16 +132,16 @@ void yang_streamcapture_initSpspps(YangVideoStreamCapture* video,uint8_t *buf){
 	}
 
 }
-void yang_streamcapture_setVideoMeta(void* pcontext,uint8_t* p,int32_t plen,YangVideoCodec videoType){
+void yang_streamcapture_setVideoMeta(void* pcontext,YangVideoMeta* videoMeta,YangVideoCodec videoType){
 	if(pcontext==NULL) return;
 	YangStreamCaptureContext* context=(YangStreamCaptureContext*)pcontext;
 	if(context->video.transType==Yang_Webrtc){
-		context->video.src=p;
-		context->video.videoLen= plen;
-		yang_streamcapture_initSpspps(&context->video,p);
+		context->video.src= videoMeta->livingMeta.buffer;
+		context->video.videoLen= videoMeta->livingMeta.bufLen;
+		yang_streamcapture_initSpspps(&context->video, videoMeta);
 	}else{
-		memcpy(context->video.videoBuffer, p, plen);
-		context->video.videoLen= plen;
+		memcpy(context->video.videoBuffer, videoMeta->livingMeta.buffer, videoMeta->livingMeta.bufLen);
+		context->video.videoLen= videoMeta->livingMeta.bufLen;
 	}
 }
 void yang_streamcapture_setVideoFrametype(void* pcontext,int32_t frametype){

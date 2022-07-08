@@ -230,8 +230,7 @@ void YangRtcPublish::startLoop() {
 			if (videoFrame.frametype == YANG_Frametype_I) {
 
 				if (m_vmd) {
-					data.setVideoMeta(data.context,m_vmd->livingMeta.buffer,
-							m_vmd->livingMeta.bufLen, videoType);
+					data.setVideoMeta(data.context,m_vmd, videoType);
 					//if (ret)	continue;
 				} else {
 					if (!vmd->isInit) {
@@ -248,7 +247,7 @@ void YangRtcPublish::startLoop() {
 						}
 					}
 
-					data.setVideoMeta(data.context,vmd->livingMeta.buffer,vmd->livingMeta.bufLen, videoType);
+					data.setVideoMeta(data.context,vmd, videoType);
 
 
 				}

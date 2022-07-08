@@ -21,7 +21,7 @@ typedef struct{
 
 	void (*initVideo)(void* pcontext,int32_t transtype);
 	void (*setVideoData)(void* pcontext,YangFrame *videoFrame, YangVideoCodec videoType);
-	void (*setVideoMeta)(void* pcontext,uint8_t *p, int32_t plen, YangVideoCodec videoType);
+	void (*setVideoMeta)(void* pcontext,YangVideoMeta *videoMeta, YangVideoCodec videoType);
 	void (*setMetaTimestamp)(void* pcontext,int64_t timestamp);
 	void (*setVideoFrametype)(void* pcontext,int32_t frametype);
 

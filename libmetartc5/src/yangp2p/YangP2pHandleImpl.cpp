@@ -100,6 +100,12 @@ vector<YangVideoBuffer*>* YangP2pHandleImpl::getPlayVideoBuffer(){
 	if(m_decoder) return m_decoder->getOutVideoBuffer();
 	return NULL;
 }
+
+YangVideoEncoderBuffer* YangP2pHandleImpl::getTxVideoBuffer() {
+    if (m_cap)    return m_cap->getTxVideoBuffer();
+    return NULL;
+}
+
 int32_t YangP2pHandleImpl::initRtc(){
 	if (m_pub == NULL) {
 		m_pub = new YangP2pRtc(m_context);
@@ -117,7 +123,7 @@ int32_t YangP2pHandleImpl::initRtc(){
 	m_cap->setNetBuffer(m_pub);
 
 	if (m_hasAudio) 	m_cap->startAudioEncoding();
-	m_cap->startVideoEncoding();
+	// m_cap->startVideoEncoding();
 	return Yang_Ok;
 }
 

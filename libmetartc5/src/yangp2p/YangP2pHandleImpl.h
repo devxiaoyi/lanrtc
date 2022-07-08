@@ -26,6 +26,7 @@ public:
     int32_t initRtc2(bool hasPlay);
 	YangVideoBuffer* getPreVideoBuffer();
 	vector<YangVideoBuffer*>* getPlayVideoBuffer();
+	YangVideoEncoderBuffer* getTxVideoBuffer();
 	void disconnect();
 	void receiveTcp(char *data, int32_t nb_data);
 

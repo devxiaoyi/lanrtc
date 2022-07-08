@@ -446,7 +446,7 @@ void YangP2pRtcIce::startLoop() {
 			if (videoFrame.frametype == YANG_Frametype_I) {
 
 				if (m_vmd) {
-					data.setVideoMeta(data.context,m_vmd->livingMeta.buffer,m_vmd->livingMeta.bufLen, videoType);
+					data.setVideoMeta(data.context,m_vmd, videoType);
 				} else {
 					if (!vmd->isInit) {
 						if (videoType == Yang_VED_264) {
@@ -457,7 +457,7 @@ void YangP2pRtcIce::startLoop() {
 							yang_getConfig_Flv_H265(&vmd->mp4Meta,vmd->livingMeta.buffer,&vmd->livingMeta.bufLen);
 						}
 					}
-					data.setVideoMeta(data.context,vmd->livingMeta.buffer,vmd->livingMeta.bufLen, videoType);
+					data.setVideoMeta(data.context,vmd, videoType);
 				}
 				data.setVideoFrametype(data.context,YANG_Frametype_Spspps);
 				data.setMetaTimestamp(data.context,videoFrame.pts);

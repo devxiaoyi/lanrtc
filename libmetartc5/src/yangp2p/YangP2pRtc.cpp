@@ -361,6 +361,7 @@ int32_t YangP2pRtc::publishVideoData(YangStreamCapture* data){
 
 		if(rtc->isConnected(&rtc->peer)){
 			ret = rtc->on_video(&rtc->peer,data->getVideoFrame(data->context));
+			// ret = rtc->on_video(&rtc->peer,data);
 		}
 	}
 	return ret;
@@ -401,6 +402,10 @@ void YangP2pRtc::startLoop() {
 	}
 
 	YangH264NaluData nalu;
+	int index = 0;
+	char tmpstr[64] = {0};
+	snprintf(tmpstr, 64, "./outvideofile/file-%03d.264", index++);
+	FILE *fp = fopen(tmpstr, "ab+");
 
 	while (m_isConvert == 1) {
 		if ((m_in_videoBuffer && m_in_videoBuffer->size() == 0)
@@ -430,10 +435,14 @@ void YangP2pRtc::startLoop() {
 
 			videoFrame.payload = m_in_videoBuffer->getEVideoRef(&videoFrame);
 
+			if (fp) {
+				fwrite(videoFrame.payload, videoFrame.nb, 1, fp);
+			}
+
 			if (videoFrame.frametype == YANG_Frametype_I) {
 
 				if (m_vmd) {
-					data.setVideoMeta(data.context,m_vmd->livingMeta.buffer,m_vmd->livingMeta.bufLen, videoType);
+					data.setVideoMeta(data.context,m_vmd, videoType);
 				} else {
 					if (!vmd->isInit) {
 						if (videoType == Yang_VED_264) {
@@ -444,7 +453,7 @@ void YangP2pRtc::startLoop() {
 							yang_getConfig_Flv_H265(&vmd->mp4Meta,vmd->livingMeta.buffer,&vmd->livingMeta.bufLen);
 						}
 					}
-					data.setVideoMeta(data.context,vmd->livingMeta.buffer,vmd->livingMeta.bufLen, videoType);
+					data.setVideoMeta(data.context,vmd, videoType);
 				}
 				data.setVideoFrametype(data.context,YANG_Frametype_Spspps);
 				data.setMetaTimestamp(data.context,videoFrame.pts);
@@ -454,8 +463,8 @@ void YangP2pRtc::startLoop() {
 					memset(&nalu, 0, sizeof(YangH264NaluData));
 					yang_parseH264Nalu(&videoFrame, &nalu);
 					if (nalu.keyframePos > -1) {
-						videoFrame.payload += nalu.keyframePos + 4;
-						videoFrame.nb -= (nalu.keyframePos + 4);
+						videoFrame.payload += nalu.keyframePos;
+						videoFrame.nb -= (nalu.keyframePos);
 
 					} else {
 						videoFrame.payload = NULL;
@@ -472,6 +481,7 @@ void YangP2pRtc::startLoop() {
 
 		}			//end
 	}
+	fclose(fp);
 	isPublished = 0;
 	yang_destroy_streamCapture(&data);
 	yang_free(vmd);
