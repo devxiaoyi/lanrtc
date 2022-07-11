@@ -59,10 +59,11 @@ void yang_destroy_rtcContext(YangRtcContext *context) {
 	if (context == NULL)	return;
 	context->streamConfig = NULL;
 	yang_free(context->stun.data);
-	if (context->udp)
+	if (context->udp) {
 		context->udp->stop(&context->udp->session);
-	yang_destroy_rtcudp(context->udp);
-	yang_free(context->udp);
+		yang_destroy_rtcudp(context->udp);
+		yang_free(context->udp);
+	}
 #if Yang_HaveDtls
 	yang_destroy_rtcdtls(context->dtls);
 	yang_free(context->dtls);

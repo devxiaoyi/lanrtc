@@ -104,6 +104,7 @@ void YangVideoDecoderHandle::onVideoData(YangFrame* pframe){
 	}
 }
 
+#define _DEBUG 1
 
 void YangVideoDecoderHandle::startLoop() {
 	m_isConvert = 1;
@@ -116,10 +117,12 @@ void YangVideoDecoderHandle::startLoop() {
 	memset(&videoFrame,0,sizeof(YangFrame));
 	int err=0;
 
+#if _DEBUG
 	int index = 0;
 	char tmpstr[64] = {0};
-	snprintf(tmpstr, 64, "./playvideofile/file-%03d.264", index++);
+	snprintf(tmpstr, 64, "./playvideofile-%03d.h264", index++);
 	FILE *fp = fopen(tmpstr, "ab+");
+#endif
 
 	while (m_isConvert == 1) {
 		if (!m_in_videoBuffer) {
@@ -140,11 +143,12 @@ void YangVideoDecoderHandle::startLoop() {
 		else
 			continue;
 
-
+#if _DEBUG
 		if (fp) {
 			fwrite(videoFrame.payload, videoFrame.nb, 1, fp);
 		}
 		continue;
+#endif
 
 		if (videoFrame.frametype == YANG_Frametype_Spspps) {
 			if (m_decs == NULL) {
@@ -188,7 +192,9 @@ void YangVideoDecoderHandle::startLoop() {
 
 	}
 
+#if _DEBUG
 	fclose(fp);
+#endif
 	
 	temp = NULL;
 	yang_deleteA(srcVideo);

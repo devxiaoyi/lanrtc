@@ -101,6 +101,32 @@ static int32_t getNextNaluLength(const char* nalus, uint32_t nalusLength, uint32
     return retStatus;
 }
 
+int32_t player_parseH264Nalu( YangFrame *videoFrame,  YangH264NaluData *pnalu) {
+	uint8_t *tmp = NULL; //videoFrame->payload;
+	uint32_t len = videoFrame->nb;
+	uint32_t naluLen = 0;
+	int32_t pos = 0;
+	int32_t err = 1;
+	pnalu->spsppsPos = -1;
+	pnalu->keyframePos = -1;
+	while (pos < len) {
+		tmp = videoFrame->payload + pos;
+		if ((*(tmp + 4) & kNalTypeMask) == YangAvcNaluTypeIDR) {
+			pnalu->keyframePos = pos;
+			break;
+		}
+		if ((*(tmp + 4) & kNalTypeMask) == YangAvcNaluTypeSPS) {
+			pnalu->spsppsPos = pos;
+		}
+		naluLen = yang_get_be32(tmp);
+		if (naluLen > len) {
+			break;
+		}
+		pos += naluLen + 4;
+	}
+	return err;
+}
+
 int32_t yang_parseH264Nalu( YangFrame *videoFrame,  YangH264NaluData *pnalu) {
 	uint32_t remainNalusLength = videoFrame->nb;
 	char* curPtrInNalus = videoFrame->payload;

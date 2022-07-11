@@ -96,41 +96,54 @@ void* senderThread(void *arg)
     const int NUMBER_OF_H264_FRAME_FILES = 403;
 
     YangFrame pframe;
-    uint8_t* tmpbuff = (uint8_t*)calloc(1, 200 * 1024);
+    const int buffLen = 120 * 1024 * 1024;
+    uint8_t* tmpbuff = (uint8_t*)calloc(1, buffLen);
     if (tmpbuff == NULL) {
         exit(0);
     }
-
+    int32_t tmpsize = 0;
+    FILE * pFile;
     int flag = 0;
+    int offset = 0;
     while(1) {
         YangVideoEncoderBuffer* txBuf = mf.getTxVideoBuffer(sysmessage);
         if (txBuf) {
             if (flag == 0) {
-                yang_usleep(1000 * 1000);
+                snprintf(filePath, MAX_PATH_LEN, "C:\\YVR\\webrtc\\metaRTC\\win5b0\\bin\\app_win_debug\\alvr_server_out_small.h264");
+                memset(tmpbuff, 0, buffLen);
+                int ret = readFile(filePath, tmpbuff, &tmpsize);
+                if (ret != 0)
+                {
+                    yang_info("senderThread::failed:%d...size:%d", ret, tmpsize);
+                }
+
+                pFile = fopen("C:\\YVR\\webrtc\\metaRTC\\win5b0\\bin\\app_win_debug\\alvr_server_out_small.txt", "r");
+                if (pFile == NULL)
+                    perror("Error opening file");
+
                 flag = 1;
             }
-            int32_t tmpsize = 0;
-            memset(tmpbuff, 0, 200 * 1024);
-            fileIndex = fileIndex % NUMBER_OF_H264_FRAME_FILES + 1;
-            snprintf(filePath, MAX_PATH_LEN, "C:\\YVR\\webrtc\\metaRTC\\win5b0\\bin\\app_win_debug\\h264SampleFrames\\frame-%03d.h264", fileIndex);
-            int ret = readFile(filePath, tmpbuff, &tmpsize);
-            if (ret != 0) {
-                yang_info("senderThread::failed:%d...size:%d", ret, tmpsize);
-                continue;
+
+            char mystring[100];
+            int frameSize = 0;
+            if (pFile && fgets(mystring, 100, pFile) != NULL) {
+                // printf("alvr_server_out_small size:%s\n",mystring);
+                frameSize = atoi(mystring);
             }
-            pframe.payload = tmpbuff;
-            pframe.nb = tmpsize;
+            pframe.payload = tmpbuff + offset;
+            pframe.nb = frameSize;
             pframe.mediaType = 9;
-            pframe.frametype = (fileIndex-1) % 45 == 0 ? 1 : 0;  //  I(1)  P(0)
-            // pframe.frametype = 1;
+            pframe.frametype = fileIndex++ % 180 == 0 ? 1 : 0;  //  I(1)  P(0)
             pframe.uid = 0;
             pframe.dts = getCurrentTimeMillis();
             pframe.pts = pframe.dts;
 //            yang_info("senderThread::running...size:%d", tmpsize);
             txBuf->putEVideo(&pframe);
+            offset += frameSize;
         }
-        yang_usleep(40*1000);
+        yang_usleep(11*1000);
     }
+    fclose(pFile);
 }
 
 int main(int argc, char *argv[])
@@ -160,13 +173,14 @@ int main(int argc, char *argv[])
     w.m_message=sysmessage;
     sysmessage->start();
 
+#if 1
    YangRecordThread videoThread;
     w.initVideoThread(&videoThread);
     videoThread.start();
     w.show();
     QThread::msleep(200);
     w.initPreview();
-
+#endif
 
     return a.exec();
 }

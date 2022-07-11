@@ -173,7 +173,7 @@ void yang_playtrack_receiveVideo(YangRtcContext *context,YangFrame *videoFrame) 
             }
 #endif
             YangH264NaluData nalu;
-            yang_parseH264Nalu(videoFrame,&nalu);
+            player_parseH264Nalu(videoFrame,&nalu);
             if(nalu.spsppsPos>-1&&nalu.keyframePos>-1){
                      uint8_t meta[200] = { 0 };
                      videoFrame->payload=meta;

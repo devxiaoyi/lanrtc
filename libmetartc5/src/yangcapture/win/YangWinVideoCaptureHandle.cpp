@@ -49,7 +49,7 @@ STDMETHODIMP YangWinVideoCaptureHandle::SampleCB(double Time,
 STDMETHODIMP YangWinVideoCaptureHandle::BufferCB(double Time, BYTE *pBuffer,
 		long BufferLen) {
 
-	putBuffer(Time*1000000, pBuffer, BufferLen);
+	// putBuffer(Time*1000000, pBuffer, BufferLen);
 	return E_NOTIMPL;
 }
 

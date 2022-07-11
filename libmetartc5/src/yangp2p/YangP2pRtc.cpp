@@ -376,6 +376,8 @@ int32_t YangP2pRtc::publishAudioData(YangStreamCapture* data){
 	}
 	return ret;
 }
+
+#define _DEBUG 0
 void YangP2pRtc::startLoop() {
 
 	isPublished = 0;
@@ -402,10 +404,13 @@ void YangP2pRtc::startLoop() {
 	}
 
 	YangH264NaluData nalu;
+
+#if _DEBUG
 	int index = 0;
 	char tmpstr[64] = {0};
-	snprintf(tmpstr, 64, "./outvideofile/file-%03d.264", index++);
+	snprintf(tmpstr, 64, "./transvideofile-%03d.h264", index++);
 	FILE *fp = fopen(tmpstr, "ab+");
+#endif
 
 	while (m_isConvert == 1) {
 		if ((m_in_videoBuffer && m_in_videoBuffer->size() == 0)
@@ -435,10 +440,11 @@ void YangP2pRtc::startLoop() {
 
 			videoFrame.payload = m_in_videoBuffer->getEVideoRef(&videoFrame);
 
+#if _DEBUG
 			if (fp) {
 				fwrite(videoFrame.payload, videoFrame.nb, 1, fp);
 			}
-
+#endif
 			if (videoFrame.frametype == YANG_Frametype_I) {
 
 				if (m_vmd) {
@@ -481,7 +487,11 @@ void YangP2pRtc::startLoop() {
 
 		}			//end
 	}
+
+#if _DEBUG
 	fclose(fp);
+#endif
+
 	isPublished = 0;
 	yang_destroy_streamCapture(&data);
 	yang_free(vmd);
