@@ -167,10 +167,12 @@ void yang_playtrack_receiveVideo(YangRtcContext *context,YangFrame *videoFrame) 
             videoFrame->nb=videoLen-5;
 
 #if Yang_Rtp_I_Withmeta
-            if(context->avcontext->avinfo->video.videoDecHwType==Yang_Hw_Soft){
-               	videoFrame->frametype =YANG_Frametype_I;
-            	goto sendevideo;
-            }
+            // if(context->avcontext->avinfo->video.videoDecHwType==Yang_Hw_Soft){
+            //    	videoFrame->frametype =YANG_Frametype_I;
+            // 	goto sendevideo;
+            // }
+			videoFrame->frametype =YANG_Frametype_I;
+			goto sendevideo;
 #endif
             YangH264NaluData nalu;
             player_parseH264Nalu(videoFrame,&nalu);
@@ -233,7 +235,7 @@ void yang_playtrack_receiveVideo(YangRtcContext *context,YangFrame *videoFrame) 
                 }
         	}
         }
-    sendevideo:
+sendevideo:
 	videoFrame->uid=context->streamConfig->uid;
     if (context &&context->streamConfig->recvCallback.receiveVideo){
     	context->streamConfig->recvCallback.receiveVideo(context->streamConfig->recvCallback.context,videoFrame);

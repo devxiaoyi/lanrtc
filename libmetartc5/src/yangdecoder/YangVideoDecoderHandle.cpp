@@ -104,7 +104,7 @@ void YangVideoDecoderHandle::onVideoData(YangFrame* pframe){
 	}
 }
 
-#define _DEBUG 1
+#define DON_DEBUG 0
 
 void YangVideoDecoderHandle::startLoop() {
 	m_isConvert = 1;
@@ -117,7 +117,7 @@ void YangVideoDecoderHandle::startLoop() {
 	memset(&videoFrame,0,sizeof(YangFrame));
 	int err=0;
 
-#if _DEBUG
+#if DON_DEBUG
 	int index = 0;
 	char tmpstr[64] = {0};
 	snprintf(tmpstr, 64, "./playvideofile-%03d.h264", index++);
@@ -143,7 +143,7 @@ void YangVideoDecoderHandle::startLoop() {
 		else
 			continue;
 
-#if _DEBUG
+#if DON_DEBUG
 		if (fp) {
 			fwrite(videoFrame.payload, videoFrame.nb, 1, fp);
 		}
@@ -192,7 +192,7 @@ void YangVideoDecoderHandle::startLoop() {
 
 	}
 
-#if _DEBUG
+#if DON_DEBUG
 	fclose(fp);
 #endif
 	

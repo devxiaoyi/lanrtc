@@ -204,6 +204,10 @@ int32_t yang_rtcpush_on_rtcp(YangRtcContext *context,
 	if (context == NULL || pub == NULL)
 		return ERROR_RTC_PUBLISH;
 
+#if 0
+	yang_warn("DonDBG yang_rtcpush_on_rtcp type:%d", rtcp->header.type);
+#endif
+
 	if (YangRtcpType_rr == rtcp->header.type) {
 
 		return yang_rtcpush_on_rtcp_rr(context, pub, rtcp);
