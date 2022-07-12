@@ -153,9 +153,9 @@ int32_t YangP2pCaputreCamera::initVideo(){
 		m_videoCapture = cf.createRecordVideoCapture(&m_context->avinfo.video);//new YangVideoCapture(m_context);
 #endif
 
-		if((err=m_videoCapture->init())!=Yang_Ok){
-			return yang_error_wrap(err,"video capture init fail!");
-		}
+		// if((err=m_videoCapture->init())!=Yang_Ok){
+		// 	return yang_error_wrap(err,"video capture init fail!");
+		// }
 
 		m_out_videoBuffer->init(m_context->avinfo.video.width,m_context->avinfo.video.height,m_context->avinfo.video.videoEncoderFormat);
 		m_pre_videoBuffer->init(m_context->avinfo.video.width,m_context->avinfo.video.height,m_context->avinfo.video.videoEncoderFormat);

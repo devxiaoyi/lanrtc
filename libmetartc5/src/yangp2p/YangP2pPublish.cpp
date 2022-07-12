@@ -79,7 +79,7 @@ int32_t YangP2pPublish::startVideoCapture() {
 	}
 	int32_t err=Yang_Ok;
 	if((err=m_capture->initVideo())!=Yang_Ok) return yang_error_wrap(err,"init videoCapture fail");
-	m_capture->startVideoCapture();
+	// m_capture->startVideoCapture();
 	isStartVideoCapture = 1;
 	return err;
 }

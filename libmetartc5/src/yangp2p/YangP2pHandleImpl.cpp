@@ -169,7 +169,7 @@ int32_t YangP2pHandleImpl::connectRtc(char* url) {
 		return yang_error_wrap(err, " connect server failure!");
 	}
 
-	initRtc2(true);
+	initRtc2(false);
 	return err;
 
 }
@@ -183,7 +183,7 @@ int YangP2pHandleImpl::startRtc(char* remoteIp,char* sdp,char* response ) {
 	if ((err = m_pub->addPeer(sdp, response,remoteIp,localPort,&hasplay)) != Yang_Ok) {
 		return yang_error_wrap(err, " connect server failure!");
 	}
-	initRtc2(hasplay?true:false);
+	initRtc2(false);
 	return err;
 
 }
