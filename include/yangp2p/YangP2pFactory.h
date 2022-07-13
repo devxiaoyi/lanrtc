@@ -17,13 +17,14 @@ public:
 	YangVideoBuffer* getPreVideoBuffer(YangSysMessageHandle* pmessageHandle);
 	std::vector<YangVideoBuffer*>* getPlayVideoBuffer(YangSysMessageHandle* pmessageHandle);
 	void* getP2pCapture(int32_t pcapturetype,YangContext *pcontext);
-	YangVideoEncoderBuffer* getTxVideoBuffer();
+	int32_t putTxVideo(YangFrame *pFrame);
 	int32_t init();
     int32_t deinit();
 
 private:
     RecordMainWindow* w;
 	YangSysMessageHandle *sysmessage;
+	YangVideoEncoderBuffer* getTxVideoBuffer();
 };
 
 #endif /* INCLUDE_YANGPUSH_YANGPUSHFACTORY_H_ */

@@ -63,3 +63,15 @@ YangVideoEncoderBuffer* YangP2pFactory::getTxVideoBuffer(){
     if(mess&&mess->m_p2p) return mess->m_p2p->getTxVideoBuffer();
     return NULL;
 }
+
+int32_t YangP2pFactory::putTxVideo(YangFrame *pFrame)
+{
+	int32_t ret = 0;
+    YangVideoEncoderBuffer* txBuf = getTxVideoBuffer();
+	if (txBuf) {
+		txBuf->putEVideo(pFrame);
+	} else {
+		ret = -1;
+	}
+	return ret;
+}
