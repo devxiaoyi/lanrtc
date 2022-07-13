@@ -7,12 +7,26 @@
 #include <yangp2p/recordmainwindow.h>
 
 YangP2pFactory::YangP2pFactory() {
-    w = new RecordMainWindow();
-    sysmessage = createP2pMessageHandle(w->m_hasAudio, w->m_context, w, w);
+
 }
 
 YangP2pFactory::~YangP2pFactory() {
-	delete w;
+
+}
+
+int32_t YangP2pFactory::init()
+{
+    w = new RecordMainWindow();
+    sysmessage = createP2pMessageHandle(w->m_hasAudio, w->m_context, w, w);
+    return 0;
+}
+
+int32_t YangP2pFactory::deinit()
+{
+    if (w) {
+        delete w;
+    }
+    return 0;
 }
 
 YangP2pHandle* YangP2pFactory::createP2pHandle(bool hasAudio, YangContext *pcontext,YangSysMessageI *pmessage) {

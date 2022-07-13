@@ -18,6 +18,8 @@ public:
 	std::vector<YangVideoBuffer*>* getPlayVideoBuffer(YangSysMessageHandle* pmessageHandle);
 	void* getP2pCapture(int32_t pcapturetype,YangContext *pcontext);
 	YangVideoEncoderBuffer* getTxVideoBuffer();
+	int32_t init();
+    int32_t deinit();
 
 private:
     RecordMainWindow* w;

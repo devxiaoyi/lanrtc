@@ -140,6 +140,7 @@ void* senderThread(void *arg)
 int main(int argc, char *argv[])
 {
     mf = new YangP2pFactory();
+    mf->init();
 
     pthread_t m_thread;
     pthread_create(&m_thread, 0, senderThread, NULL);
