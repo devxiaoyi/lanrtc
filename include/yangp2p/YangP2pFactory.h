@@ -6,6 +6,7 @@
 #include <yangp2p/YangP2pHandle.h>
 #include <yangutil/sys/YangSysMessageHandle.h>
 #include <yangutil/buffer/YangVideoEncoderBuffer.h>
+#include <yangp2p/recordmainwindow.h>
 
 class YangP2pFactory {
 public:
@@ -16,7 +17,11 @@ public:
 	YangVideoBuffer* getPreVideoBuffer(YangSysMessageHandle* pmessageHandle);
 	std::vector<YangVideoBuffer*>* getPlayVideoBuffer(YangSysMessageHandle* pmessageHandle);
 	void* getP2pCapture(int32_t pcapturetype,YangContext *pcontext);
-	YangVideoEncoderBuffer* getTxVideoBuffer(YangSysMessageHandle* pmessageHandle);
+	YangVideoEncoderBuffer* getTxVideoBuffer();
+
+private:
+    RecordMainWindow* w;
+	YangSysMessageHandle *sysmessage;
 };
 
 #endif /* INCLUDE_YANGPUSH_YANGPUSHFACTORY_H_ */

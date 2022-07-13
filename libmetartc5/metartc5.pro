@@ -135,6 +135,7 @@ SOURCES += \
     src/yangp2p/YangP2pMessageHandle.cpp \
     src/yangp2p/YangP2pPublish.cpp \
     src/yangp2p/YangP2pRtc.cpp \
+    src/yangp2p/recordmainwindow.cpp \
     src/yangplayer/YangPlayFactory.cpp \
     src/yangplayer/YangPlayReceive.cpp \
     src/yangplayer/YangPlayerBase.cpp \
@@ -264,6 +265,7 @@ HEADERS += \
     src/yangp2p/YangP2pMessageHandle.h \
     src/yangp2p/YangP2pPublish.h \
     src/yangp2p/YangP2pRtc.h \
+    src/yangp2p/recordmainwindow.h \
     src/yangplayer/YangPlayerHandleImpl.h \
     src/yangplayer/YangRtcReceive.h \
     src/yangpush/YangPushEncoder.h \
