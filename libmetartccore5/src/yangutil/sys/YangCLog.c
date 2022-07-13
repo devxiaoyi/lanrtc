@@ -50,7 +50,7 @@ void yang_setCLogFile(int32_t isSetLogFile) {
 #else
         if (getcwd(file_path_getcwd, 255)) {
 #endif
-			sprintf(file1, "%s/yang_log.log", file_path_getcwd);
+			sprintf(file1, "%s/yvr_log.log", file_path_getcwd);
 			g_fmsg = fopen(file1, "wb+");
 
 		}
@@ -80,10 +80,10 @@ void yang_clog(int32_t level, const char *fmt, ...) {
     if(level==YANG_LOG_ERROR){
         time_t t_now=time(NULL);
         ntm=localtime(&t_now);
-        yang_printf("[%02d:%02d:%02d] Yang %s: %s\n",ntm->tm_hour,ntm->tm_min,ntm->tm_sec,YANG_LOG_LEVEL_NAME[level], buf);
+        yang_printf("[%02d:%02d:%02d] YVR %s: %s\n",ntm->tm_hour,ntm->tm_min,ntm->tm_sec,YANG_LOG_LEVEL_NAME[level], buf);
 
     }else{
-         yang_printf("Yang %s: %s\n",YANG_LOG_LEVEL_NAME[level], buf);
+         yang_printf("YVR %s: %s\n",YANG_LOG_LEVEL_NAME[level], buf);
     }
 #if Yang_Have_Logfile
 	if (g_hasLogFile) {
@@ -92,9 +92,9 @@ void yang_clog(int32_t level, const char *fmt, ...) {
 		memset(sf, 0, 4196);
         int32_t sfLen=0;
         if(level==YANG_LOG_ERROR&&ntm)
-             sfLen = sprintf(sf, "[%02d:%02d:%02d] Yang %s: %s\n",ntm->tm_hour,ntm->tm_min,ntm->tm_sec, YANG_LOG_LEVEL_NAME[level], buf);
+             sfLen = sprintf(sf, "[%02d:%02d:%02d] YVR %s: %s\n",ntm->tm_hour,ntm->tm_min,ntm->tm_sec, YANG_LOG_LEVEL_NAME[level], buf);
         else
-             sfLen = sprintf(sf, "Yang %s: %s\n", YANG_LOG_LEVEL_NAME[level], buf);
+             sfLen = sprintf(sf, "YVR %s: %s\n", YANG_LOG_LEVEL_NAME[level], buf);
 		if (g_fmsg){
 			fwrite(sf, sfLen, 1, g_fmsg);
 			fflush(g_fmsg);
@@ -122,10 +122,10 @@ void yang_clog2(int32_t level, const char *fmt, ...) {
     if(level==YANG_LOG_ERROR){
         time_t t_now=time(NULL);
         ntm=localtime(&t_now);
-        yang_printf("[%02d:%02d:%02d] Yang %s: %s\n",ntm->tm_hour,ntm->tm_min,ntm->tm_sec,YANG_LOG_LEVEL_NAME[level], buf);
+        yang_printf("[%02d:%02d:%02d] YVR %s: %s\n",ntm->tm_hour,ntm->tm_min,ntm->tm_sec,YANG_LOG_LEVEL_NAME[level], buf);
 
     }else{
-         yang_printf("Yang %s: %s\n",YANG_LOG_LEVEL_NAME[level], buf);
+         yang_printf("YVR %s: %s\n",YANG_LOG_LEVEL_NAME[level], buf);
     }
 #if Yang_Have_Logfile
 	if (g_hasLogFile) {
@@ -134,9 +134,9 @@ void yang_clog2(int32_t level, const char *fmt, ...) {
 		memset(sf, 0, Yang_Log_Cachesize);
         int32_t sfLen=0;
         if(level==YANG_LOG_ERROR&&ntm)
-             sfLen = sprintf(sf, "[%02d:%02d:%02d] Yang %s: %s\n",ntm->tm_hour,ntm->tm_min,ntm->tm_sec, YANG_LOG_LEVEL_NAME[level], buf);
+             sfLen = sprintf(sf, "[%02d:%02d:%02d] YVR %s: %s\n",ntm->tm_hour,ntm->tm_min,ntm->tm_sec, YANG_LOG_LEVEL_NAME[level], buf);
         else
-             sfLen = sprintf(sf, "Yang %s: %s\n", YANG_LOG_LEVEL_NAME[level], buf);
+             sfLen = sprintf(sf, "YVR %s: %s\n", YANG_LOG_LEVEL_NAME[level], buf);
 		if (g_fmsg){
 			fwrite(sf, sfLen, 1, g_fmsg);
 			fflush(g_fmsg);
@@ -158,9 +158,9 @@ int32_t yang_error_wrap(int32_t errcode, const char *fmt, ...) {
     time_t t_now=time(NULL);
     struct tm* ntm=localtime(&t_now);
 #ifdef __ANDROID__
-    yang_error("Yang Error(%d): %s\n",  errcode,buf);
+    yang_error("YVR Error(%d): %s\n",  errcode,buf);
 #else
-    yang_printf("Yang Error(%d): %s\n",  errcode,buf);
+    yang_printf("YVR Error(%d): %s\n",  errcode,buf);
 #endif
 
 #if Yang_Have_Logfile
@@ -168,7 +168,7 @@ int32_t yang_error_wrap(int32_t errcode, const char *fmt, ...) {
 
 		char sf[4196];
 		memset(sf, 0, 4196);
-        int32_t sfLen = sprintf(sf, "[%02d:%02d:%02d] Yang Error(%d): %s\n",ntm->tm_hour,ntm->tm_min,ntm->tm_sec, errcode, buf);
+        int32_t sfLen = sprintf(sf, "[%02d:%02d:%02d] YVR Error(%d): %s\n",ntm->tm_hour,ntm->tm_min,ntm->tm_sec, errcode, buf);
     	if (g_fmsg){
     			fwrite(sf, sfLen, 1, g_fmsg);
     			fflush(g_fmsg);

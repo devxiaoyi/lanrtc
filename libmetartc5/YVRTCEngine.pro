@@ -190,7 +190,8 @@ SOURCES += \
     src/yangutil/buffer/YangVideoBuffer.cpp \
     src/yangutil/buffer/YangVideoDecoderBuffer.cpp \
     src/yangutil/buffer/YangVideoEncoderBuffer.cpp \
-    src/yangutil/sys/YangIniImpl.cpp
+    src/yangutil/sys/YangIniImpl.cpp\
+    src/interface/yvrtc_internal.cpp
 
 
 

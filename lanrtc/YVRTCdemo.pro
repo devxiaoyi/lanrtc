@@ -1,8 +1,6 @@
 
 CONFIG += c++11
 
-# Copyright (c) 2019-2022 yanggaofeng
-
 # You can also make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
@@ -21,11 +19,11 @@ unix{
         DESTDIR += $$HOME_BASE/bin/app_release
     }
 
- LIBS += -L$$HOME_BASE/thirdparty/lib -lmetartc5  -lmetartccore5  -lyuv -lopus -lopenh264 -lspeexdsp -lusrsctp -lpthread -lasound -ldl
+ LIBS += -L$$HOME_BASE/thirdparty/lib -lYVRTCEngine  -lYVRTCCore  -lyuv -lopus -lopenh264 -lspeexdsp -lusrsctp -lpthread -lasound -ldl
 #openssl
  LIBS += -lssl2 -lcrypto2 -lsrtp2
 #gmssl
- #LIBS += -lssl_gm -lcrypto_gm -lmetasrtp3
+ #LIBS += -lssl_gm -lcrypto_gm -lyvrsrtp3
 
 }
 
@@ -38,14 +36,9 @@ win32{
         LIBS += -L$$HOME_BASE/bin/lib_win_release
         DESTDIR += $$HOME_BASE/bin/app_win_release
     }
-    LIBS += -lmetartc5  -lmetartccore5 -lyuv -lopus -lopenh264  -lspeexdsp -lavutil -lavcodec -lusrsctp -lksuser -lwinmm  -lole32 -lStrmiids
-    #gpu encode and decode
-    #LIBS +=  -lyangwincodec5  -ld3d11 -ld3d9 -ldxva2
-    #using vr
-    #LIBS += -lyangrtcext2
+    LIBS += -lYVRTCEngine  -lYVRTCCore -lyuv -lopus -lopenh264  -lspeexdsp -lavutil -lavcodec -lusrsctp -lksuser -lwinmm  -lole32 -lStrmiids
 
-
-    YANG_LIB=  -L$$HOME_BASE/thirdparty/lib/win -lsrtp2  -lssl  -lcrypto
+    THIRD_LIB=  -L$$HOME_BASE/thirdparty/lib/win -lsrtp2  -lssl  -lcrypto
     msvc{
         #QMAKE_CFLAGS += /utf-8
         #QMAKE_CXXFLAGS += /utf-8
@@ -53,15 +46,14 @@ win32{
         DEFINES +=HAVE_STRUCT_TIMESPEC
         DEFINES +=WIN32_LEAN_AND_MEAN
         INCLUDEPATH += $$HOME_BASE\thirdparty\include\win\include   #vc
-        YANG_LIB=  -L$$HOME_BASE/thirdparty/lib/win/msvc -lpthreadVC2 -lavrt -luser32 -lAdvapi32
+        THIRD_LIB=  -L$$HOME_BASE/thirdparty/lib/win/msvc -lpthreadVC2 -lavrt -luser32 -lAdvapi32
         #openssl
-        YANG_LIB+= -lsrtp2  -llibcrypto -llibssl
+        THIRD_LIB+= -lsrtp2  -llibcrypto -llibssl
         #gmssl
-        #YANG_LIB+= -lmetasrtp3  -llibcrypto_gm -llibssl_gm
         QMAKE_CXXFLAGS += /source-charset:utf-8 /execution-charset:utf-8
     }
 
-    LIBS +=  $$YANG_LIB
+    LIBS +=  $$THIRD_LIB
     LIBS +=   -lCrypt32 -lws2_32
 }
 
@@ -69,8 +61,8 @@ SOURCES += \
     main.cpp
 
 
-# HEADERS += \
-#     recordmainwindow.h
+ HEADERS += \
+     yvrtc_interface.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

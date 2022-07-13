@@ -1,22 +1,12 @@
 ﻿
-#include <yangp2p/YangP2pFactory.h>
-
 #include <iostream>
 #include <errno.h>
 #include <sys/timeb.h>
+#include <yvrtc_interface.h>
+#include <windows.h>
+#include <pthread.h>
 
-typedef struct
-{
-    int32_t mediaType;
-    int32_t uid;
-    int32_t frametype;
-    int32_t nb;
-    int64_t pts;
-    int64_t dts;
-    uint8_t *payload;
-} RTCFrame;
-
-UINT64 getCurrentTimeMillis()
+uint64_t getCurrentTimeMillis()
 {
     timeb t;
     ftime(&t); //获取毫秒
@@ -32,7 +22,7 @@ UINT64 getCurrentTimeMillis()
             retStatus = (errRet); \
             goto CleanUp;         \
         }                         \
-    } while (FALSE)
+    } while (0)
 
 int readFile(char *filePath, uint8_t *pBuffer, int32_t *pSize)
 {
@@ -58,7 +48,7 @@ int readFile(char *filePath, uint8_t *pBuffer, int32_t *pSize)
     if (pBuffer == NULL)
     {
         // requested the length - set and early return
-        CHK(FALSE, 0);
+        CHK(0, 0);
     }
     *pSize = fileLen;
 
@@ -80,16 +70,16 @@ CleanUp:
     return retStatus;
 }
 
-YangP2pFactory *mf;
+yvrtc::YVRTCEngine* lanrtc;
 
 void *senderThread(void *arg)
 {
-    UINT32 fileIndex = 0, frameSize;
+    uint32_t fileIndex = 0, frameSize;
     const int MAX_PATH_LEN = 4096;
-    CHAR filePath[MAX_PATH_LEN + 1];
+    char filePath[MAX_PATH_LEN + 1];
     const int NUMBER_OF_H264_FRAME_FILES = 403;
 
-    YangFrame pframe;
+    yvrtc::YVRFrame pframe;
     const int buffLen = 120 * 1024 * 1024;
     uint8_t *tmpbuff = (uint8_t *)calloc(1, buffLen);
     if (tmpbuff == NULL)
@@ -128,13 +118,11 @@ void *senderThread(void *arg)
             frameSize = atoi(mystring);
         }
         pframe.payload = tmpbuff + offset;
-        pframe.nb = frameSize;
-        pframe.mediaType = 9;
-        pframe.frametype = fileIndex++ % 180 == 0 ? 1 : 0; //  I(1)  P(0)
+        pframe.size = frameSize;
+        pframe.frameType = (yvrtc::VideoFrameType)(fileIndex++ % 180 == 0 ? 1 : 0); //  I(1)  P(0)
         pframe.uid = 0;
-        pframe.dts = getCurrentTimeMillis();
-        pframe.pts = pframe.dts;
-        ret = mf->putTxVideo(&pframe);
+        pframe.timestamp = getCurrentTimeMillis();
+        ret = lanrtc->putVideoFrame(&pframe);
         offset += frameSize;
 
         Sleep(11);
@@ -145,8 +133,7 @@ void *senderThread(void *arg)
 
 int main(int argc, char *argv[])
 {
-    mf = new YangP2pFactory();
-    mf->init();
+    lanrtc = new yvrtc::YVRTCEngine();
 
     pthread_t m_thread;
     pthread_create(&m_thread, 0, senderThread, NULL);

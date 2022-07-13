@@ -38,15 +38,15 @@ void yang_setCLogLevel(int32_t plevel);
 #include <android/log.h>
 #define yang_fatal( fmt, ...) __android_log_print(ANDROID_LOG_FATAL,fmt, ##__VA_ARGS__)
 
-#define yang_warn( fmt, ...) __android_log_print(ANDROID_LOG_WARN,"metaRTC",fmt, ##__VA_ARGS__)
-#define yang_info( fmt, ...) __android_log_print(ANDROID_LOG_INFO,"metaRTC",fmt, ##__VA_ARGS__)
-#define yang_debug( fmt, ...) __android_log_print(ANDROID_LOG_DEBUG,"metaRTC",fmt, ##__VA_ARGS__)
+#define yang_warn( fmt, ...) __android_log_print(ANDROID_LOG_WARN,"YVRTC",fmt, ##__VA_ARGS__)
+#define yang_info( fmt, ...) __android_log_print(ANDROID_LOG_INFO,"YVRTC",fmt, ##__VA_ARGS__)
+#define yang_debug( fmt, ...) __android_log_print(ANDROID_LOG_DEBUG,"YVRTC",fmt, ##__VA_ARGS__)
 
 
 #define yang_debug2( fmt, ...) __android_log_print(ANDROID_LOG_DEBUG,fmt, ##__VA_ARGS__)
 #define yang_info2( fmt, ...) __android_log_print(ANDROID_LOG_INFO,fmt, ##__VA_ARGS__)
-#define yang_trace( fmt, ...) __android_log_print(ANDROID_LOG_VERBOSE,"metaRTC",fmt, ##__VA_ARGS__)
-#define yang_error( fmt, ...) __android_log_print(ANDROID_LOG_ERROR,"metaRTC",fmt, ##__VA_ARGS__)
+#define yang_trace( fmt, ...) __android_log_print(ANDROID_LOG_VERBOSE,"YVRTC",fmt, ##__VA_ARGS__)
+#define yang_error( fmt, ...) __android_log_print(ANDROID_LOG_ERROR,"YVRTC",fmt, ##__VA_ARGS__)
 #else
 #define yang_fatal( fmt, ...) yang_clog(0,fmt, ##__VA_ARGS__)
 #define yang_error( fmt, ...) yang_clog(1,fmt, ##__VA_ARGS__)
