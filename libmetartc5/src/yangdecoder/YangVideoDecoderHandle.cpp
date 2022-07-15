@@ -120,7 +120,7 @@ void YangVideoDecoderHandle::startLoop() {
 #if DON_DEBUG
 	int index = 0;
 	char tmpstr[64] = {0};
-	snprintf(tmpstr, 64, "./playvideofile-%03d.h264", index++);
+	snprintf(tmpstr, 64, "./playvideofile-0715-%03d.h264", index++);
 	FILE *fp = fopen(tmpstr, "ab+");
 #endif
 

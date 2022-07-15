@@ -378,6 +378,7 @@ int32_t YangP2pRtc::publishAudioData(YangStreamCapture* data){
 }
 
 #define _DEBUG 0
+
 void YangP2pRtc::startLoop() {
 
 	isPublished = 0;
@@ -408,7 +409,7 @@ void YangP2pRtc::startLoop() {
 #if _DEBUG
 	int index = 0;
 	char tmpstr[64] = {0};
-	snprintf(tmpstr, 64, "./transvideofile-%03d.h264", index++);
+	snprintf(tmpstr, 64, "./transvideofile-0715-%03d.h264", index++);
 	FILE *fp = fopen(tmpstr, "ab+");
 #endif
 
@@ -477,6 +478,10 @@ void YangP2pRtc::startLoop() {
 						continue;
 					}
 				}
+			}
+			else {
+				videoFrame.payload += 4;
+				videoFrame.nb -= 4;
 			}
 
 			data.setVideoData(data.context,&videoFrame, videoType);

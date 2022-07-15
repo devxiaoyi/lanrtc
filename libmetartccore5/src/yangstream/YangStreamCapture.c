@@ -310,7 +310,7 @@ void yang_create_streamCapture(YangStreamCapture* stream){
 
 	context->video.src = NULL;
 
-	context->video.transType = 0;
+	context->video.transType = 2;
 	context->video.videoLen = 0;
 	context->video.frametype = 1;
 	context->video.metaTime = 0;
@@ -325,7 +325,7 @@ void yang_create_streamCapture(YangStreamCapture* stream){
 	context->audio.unitAudioTime = 960;
 	context->audio.src = NULL;
 	context->audio.srcLen = 0;
-	context->audio.transType = 0;
+	context->audio.transType = 2;
 	context->audio.frametype = 1;
 	context->audio.audioLen = 0;
 	context->audio.audioType = Yang_AED_AAC;

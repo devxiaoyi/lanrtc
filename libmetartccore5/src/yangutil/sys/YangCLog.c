@@ -50,7 +50,7 @@ void yang_setCLogFile(int32_t isSetLogFile) {
 #else
         if (getcwd(file_path_getcwd, 255)) {
 #endif
-			sprintf(file1, "%s/yvr_log.log", file_path_getcwd);
+			sprintf(file1, "%s/yvrtc_log.log", file_path_getcwd);
 			g_fmsg = fopen(file1, "wb+");
 
 		}

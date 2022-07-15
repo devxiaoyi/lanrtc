@@ -217,7 +217,7 @@ void YangIni::initVideo(YangVideoInfo* video){
        void YangIni::initSys(YangSysInfo *sys){
     	   memset(sys,0,sizeof(YangSysInfo));
 
-		   sys->transType = readIntValue("sys", "transType", 0);
+		   sys->transType = readIntValue("sys", "transType", 2);
 		   sys->mediaServer = readIntValue("sys", "mediaServer", 0);
     	   sys->isMultCamera = readIntValue("sys", "isMultCamera", 0);
     	   sys->usingDataServer = readIntValue("sys", "usingDataServer", 0);

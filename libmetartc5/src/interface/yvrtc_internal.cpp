@@ -26,7 +26,7 @@ int32_t yvrtc::YVRTCEngine::putVideoFrame(YVRFrame *pFrame) {
     YFrame.uid = pFrame->uid;
     YFrame.frametype = pFrame->frameType;
     if (mf) { 
-        mf->putTxVideo(&YFrame);
+        ret = mf->putTxVideo(&YFrame);
     }
     else {
         ret = -1;

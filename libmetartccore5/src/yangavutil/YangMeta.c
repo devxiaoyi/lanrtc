@@ -196,8 +196,8 @@ void yang_getConfig_Flv_H264( YangH2645Conf *p_264, uint8_t *configBuf,
 
 	memcpy(szTmp, p_264->sps, p_264->spsLen);
 	szTmp += p_264->spsLen;
-	*szTmp = 0x01;
-	szTmp += 1;
+	// *szTmp = 0x01;
+	// szTmp += 1;
     *szTmp++=0x00;
     *szTmp++=p_264->ppsLen;
 	memcpy(szTmp, p_264->pps, p_264->ppsLen);
@@ -455,9 +455,9 @@ void yang_getH264RtmpHeader(uint8_t *buf, uint8_t *src, int32_t *hLen) {
 }
 
 void yang_decodeMetaH264(uint8_t *buf,int32_t p_configLen, YangSample* sps, YangSample* pps){
-	sps->nb= *(buf + 12) + 1;
+	sps->nb= *(buf + 12);
 	sps->bytes = (char*)buf + 13;
-	pps->nb = *(sps->bytes + sps->nb + 1) + 1;
+	pps->nb = *(sps->bytes + sps->nb + 1);
 	pps->bytes= (char*)buf + 13 + sps->nb + 2;
 }
 void yang_decodeMetaH265(uint8_t *meta,int32_t p_configLen, YangSample* vps, YangSample* sps, YangSample* pps){
