@@ -14,13 +14,16 @@
 
 class YangPlayerHandleImpl :public YangPlayerHandle{
 public:
-	YangPlayerHandleImpl(YangContext* pcontext,YangSysMessageI* pmessage);
+    YangPlayerHandleImpl(YangContext* pcontext);
 	virtual ~YangPlayerHandleImpl();
 	YangVideoBuffer* getVideoBuffer();
 	int play(char* url);
 
 	int32_t playRtc(int32_t puid,char* localIp, char* server, int32_t pport,char* app,char* stream);
 	void stopPlay();
+
+	int32_t getVideoFrame(YangFrame* pFrame);
+	int32_t checkConnectionState();
 protected:
 
 	YangUrlData m_url;
@@ -33,7 +36,7 @@ private:
 	YangContext* m_context;
 	YangVideoDecoderBuffer* m_outVideoBuffer;
 	YangAudioEncoderBuffer* m_outAudioBuffer;
-	YangSysMessageI* m_message;
+	// YangSysMessageI* m_message;
 };
 
 #endif /* YANGMEETING_INCLUDE_YANGPLAYERHANDLE_H_ */

@@ -5,14 +5,38 @@
 #include <yangutil/sys/YangLog.h>
 #include <string.h>
 #include <yangutil/yang_unistd.h>
+#include <yangutil/sys/YangSocket.h>
+#include <yangutil/sys/YangMath.h>
 
-
-YangPlayerHandle* YangPlayerHandle::createPlayerHandle(YangContext* pcontext,YangSysMessageI* pmessage){
-	return new YangPlayerHandleImpl(pcontext,pmessage);
+YangPlayerHandle* YangPlayerHandle::createPlayerHandle(YangContext* pcontext){
+	return new YangPlayerHandleImpl(pcontext);
 }
-YangPlayerHandleImpl::YangPlayerHandleImpl(YangContext* pcontext,YangSysMessageI* pmessage) {
+
+YangPlayerHandle* YangPlayerHandle::createPlayerHandle(){
+	YangContext* context = new YangContext();
+    context->init();
+	// strcpy(context->avinfo.rtc.iceServerIP,"127.0.0.1");//stun server ip
+    // context->avinfo.rtc.iceStunPort=3478;
+    // context->avinfo.rtc.hasIceServer=0;
+    context->streams.m_playBuffer = new YangSynBuffer();
+    context->avinfo.rtc.usingDatachannel = 0;
+    context->avinfo.sys.mediaServer = Yang_Server_Srs; // Yang_Server_Srs/Yang_Server_Zlm
+
+    // YangV_Hw_Android mediacodec
+    // Yang_Hw_Soft yangh264decoder
+    context->avinfo.video.videoDecHwType = Yang_Hw_Soft;
+
+    context->avinfo.sys.rtcLocalPort = 10000 + yang_random() % 15000;
+    memset(context->avinfo.sys.localIp, 0, sizeof(context->avinfo.sys.localIp));
+    yang_getLocalInfo(context->avinfo.sys.localIp);
+    yang_setLogLevle(5);
+    yang_setLogFile(1);
+	return new YangPlayerHandleImpl(context);
+}
+
+YangPlayerHandleImpl::YangPlayerHandleImpl(YangContext* pcontext) {
 	m_context=pcontext;
-	m_message=pmessage;
+	// m_message=pmessage;
 	m_recv = NULL;
 	m_play = NULL;
 	m_rtcRecv=NULL;
@@ -29,7 +53,7 @@ YangPlayerHandleImpl::~YangPlayerHandleImpl() {
 	yang_delete(m_rtcRecv);
 	yang_delete(m_outVideoBuffer);
 	yang_delete(m_outAudioBuffer);
-
+	yang_delete(m_context);
 }
 
 void YangPlayerHandleImpl::stopPlay(){
@@ -122,7 +146,7 @@ int32_t YangPlayerHandleImpl::playRtc(int32_t puid,char* localIp,char* server, i
 
 
 	if(m_rtcRecv==NULL) {
-		m_rtcRecv=new YangRtcReceive(m_context,m_message);
+		m_rtcRecv=new YangRtcReceive(m_context);
 		m_rtcRecv->setBuffer(m_outAudioBuffer, m_outVideoBuffer);
 		m_rtcRecv->init(puid,localIp,server,pport,app,stream);
 	}
@@ -144,4 +168,35 @@ void YangPlayerHandleImpl::initList() {
 	if (m_outVideoBuffer == NULL)
 		m_outVideoBuffer = new YangVideoDecoderBuffer();
 
+}
+
+#include <iostream>
+
+int32_t YangPlayerHandleImpl::getVideoFrame(YangFrame* pFrame)
+{
+	int32_t ret = -1;
+	if (m_outVideoBuffer == NULL) {
+		ret = -2;
+	}
+	if (m_outVideoBuffer->size() == 0) {
+		ret = -3;
+	}
+	// std::cout << "checkConnectionState:" << ret << std::endl;
+	if (checkConnectionState() == 1) {
+		m_outVideoBuffer->getEVideo(pFrame);
+		ret = 0;
+	}
+	else {
+		ret = -4;
+	}
+	return ret;
+}
+
+int32_t YangPlayerHandleImpl::checkConnectionState()
+{
+	int32_t ret = 0;
+	if(m_rtcRecv != NULL) {
+		ret = m_rtcRecv->isConnected();
+	}
+	return ret;
 }

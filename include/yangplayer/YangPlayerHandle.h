@@ -15,7 +15,9 @@ public:
 	virtual int play(char* url)=0;
 	virtual int32_t playRtc(int32_t puid,char* localIp, char* server, int32_t pport,char* app,char* stream)=0;
     virtual void stopPlay()=0;
-    static YangPlayerHandle* createPlayerHandle(YangContext* pcontext,YangSysMessageI* pmessage);
+    static YangPlayerHandle* createPlayerHandle(YangContext* pcontext);
+	static YangPlayerHandle* createPlayerHandle();
+	virtual int32_t getVideoFrame(YangFrame* pFrame) = 0;
 };
 
 #endif /* INCLUDE_YANGPLAYER_YANGPLAYERHANDLE_H_ */

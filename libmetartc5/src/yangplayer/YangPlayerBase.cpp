@@ -49,7 +49,7 @@ void YangPlayerBase::startAudioDecoder(YangAudioEncoderBuffer *prr){
 }
 void YangPlayerBase::startVideoDecoder(YangVideoDecoderBuffer *prr){
 	m_ydb->setInVideoBuffer(prr);
-	m_ydb->startVideoDecoder();
+	// m_ydb->startVideoDecoder();
 }
 
 void YangPlayerBase::startAudioPlay(YangContext* paudio) {

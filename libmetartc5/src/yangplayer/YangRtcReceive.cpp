@@ -30,8 +30,8 @@ int32_t g_rtcrecv_sendRtcMessage(void* user,int puid,YangRtcMessageType mess){
 	return Yang_Ok;
 }
 
-YangRtcReceive::YangRtcReceive(YangContext* pcontext,YangSysMessageI* pmessage) {
-	m_message=pmessage;
+YangRtcReceive::YangRtcReceive(YangContext* pcontext) {
+	// m_message=pmessage;
 	m_context=pcontext;
 	m_isStart = 0;
 	m_out_videoBuffer = NULL;
@@ -64,7 +64,7 @@ YangRtcReceive::~YangRtcReceive() {
 
 	m_out_audioBuffer = NULL;
 	m_out_videoBuffer = NULL;
-	m_message=NULL;
+	// m_message=NULL;
 	pthread_mutex_destroy(&m_lock);
 	pthread_cond_destroy(&m_cond_mess);
 }
@@ -77,6 +77,12 @@ void YangRtcReceive::disConnect() {
 	yang_free(m_recv);
 
 }
+
+int32_t YangRtcReceive::isConnected() {
+	if (m_recv)
+		return m_recv->isConnected(&m_recv->peer);
+}
+
 void YangRtcReceive::setBuffer(YangAudioEncoderBuffer *al,YangVideoDecoderBuffer *vl) {
 	m_out_audioBuffer = al;
 	m_out_videoBuffer = vl;
@@ -160,9 +166,9 @@ void YangRtcReceive::startLoop() {
 	int err=Yang_Ok;
 	if ((err=m_recv->connectSfuServer(&m_recv->peer))!=Yang_Ok) {
 		m_loops=0;
-		if(m_message) m_message->failure(err);
+		// if(m_message) m_message->failure(err);
 	}else{
-		if(m_message) m_message->success();
+		// if(m_message) m_message->success();
 	}
 
 	pthread_mutex_lock(&m_lock);

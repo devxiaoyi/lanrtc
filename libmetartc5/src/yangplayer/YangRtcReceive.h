@@ -17,7 +17,7 @@
 using namespace std;
 class YangRtcReceive : public YangThread,public YangMediaConfigCallback{
 public:
-	YangRtcReceive(YangContext* pcontext,YangSysMessageI* pmessage);
+	YangRtcReceive(YangContext* pcontext);
 	virtual ~YangRtcReceive();
 	void receiveAudio(YangFrame* audioFrame);
 	void receiveVideo(YangFrame* videoFrame);
@@ -27,6 +27,7 @@ public:
     int32_t init(int32_t puid,char* localIp, char* server, int32_t pport,char* app,	char* stream);
     void setBuffer(YangAudioEncoderBuffer *al,YangVideoDecoderBuffer *vl);
     void disConnect();
+	int32_t isConnected();
     void play(char* pserverStr,char *streamName);
     void setMediaConfig(int32_t puid, YangAudioParam *audio,YangVideoParam *video);
     YangPeerConnection *m_recv;
@@ -38,7 +39,7 @@ protected:
 	void run();
 	void startLoop();
 	YangContext* m_context;
-	YangSysMessageI* m_message;
+	// YangSysMessageI* m_message;
 
 
 

@@ -11,8 +11,8 @@ project("player")
 set(HOME_BASE_REL "../../../../../")
 get_filename_component(HOME_BASE ${HOME_BASE_REL} REALPATH)
 message(${HOME_BASE})
-set(Yang_3RD_DIR ${HOME_BASE}/thirdparty/lib/android/${CMAKE_ANDROID_ARCH_ABI})
-set(Yang_Lib_DIR ${HOME_BASE}/bin/lib_android/${CMAKE_ANDROID_ARCH_ABI})
+set(YVRTC_THIRD_DIR ${HOME_BASE}/thirdparty/lib/android/${CMAKE_ANDROID_ARCH_ABI})
+set(YVRTC_LIB_DIR ${HOME_BASE}/bin/lib_android/${CMAKE_ANDROID_ARCH_ABI})
 include_directories(${HOME_BASE}/include)
 # Creates and names a library, sets it as either STATIC
 # or SHARED, and provides the relative paths to its source code.
@@ -48,10 +48,10 @@ find_library( # Sets the name of the path variable.
 
 target_link_libraries( # Specifies the target library.
         player
-        ${Yang_Lib_DIR}/libmetartc5.a  ${Yang_Lib_DIR}/libmetartccore5.a
-        ${Yang_3RD_DIR}/libsrtp2.a ${Yang_3RD_DIR}/libssl.a ${Yang_3RD_DIR}/libcrypto.a
-        ${Yang_3RD_DIR}/libspeexdsp.a ${Yang_3RD_DIR}/libyuv.a ${Yang_3RD_DIR}/libusrsctp.a
-        ${Yang_3RD_DIR}/libyangh264decoder.a ${Yang_3RD_DIR}/libopus.a
+        ${YVRTC_LIB_DIR}/libyvrtc.a  ${YVRTC_LIB_DIR}/libyvrtccore.a
+        ${YVRTC_THIRD_DIR}/libsrtp2.a ${YVRTC_THIRD_DIR}/libssl.a ${YVRTC_THIRD_DIR}/libcrypto.a
+        ${YVRTC_THIRD_DIR}/libspeexdsp.a ${YVRTC_THIRD_DIR}/libyuv.a ${YVRTC_THIRD_DIR}/libusrsctp.a
+        ${YVRTC_THIRD_DIR}/libyangh264decoder.a ${YVRTC_THIRD_DIR}/libopus.a
         # Links the target library to the log library
         # included in the NDK.
         EGL GLESv2 OpenSLES android log mediandk)

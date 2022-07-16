@@ -2,6 +2,8 @@
 #define INCLUDE_YVRTC_INTERFACE_H_
 
 #include <stdint.h>
+#include <iostream>
+#include <string>
 
 namespace yvrtc
 {
@@ -28,6 +30,16 @@ namespace yvrtc
         virtual ~YVRTCEngine();
 
         int32_t putVideoFrame(YVRFrame *pFrame);
+    };
+
+    class YVPlayEngine {
+    public:
+        YVPlayEngine();
+        virtual ~YVPlayEngine();
+
+        int32_t YVPlayStart(std::string url);
+        int32_t YVPlayStop();
+        int32_t PollVideoFrame(YVRFrame *pFrame);
     };
 }
 

@@ -7,6 +7,7 @@
 #include <memory.h>
 #include <yangutil/sys/YangLog.h>
 #include <yangutil/sys/YangEndian.h>
+#include <yangutil/sys/YangAmf.h>
 #include <yangavutil/video/YangMeta.h>
 
 int32_t yang_getH264KeyframeNalu( YangFrame *videoFrame) {
@@ -46,7 +47,7 @@ static int32_t getNextNaluLength(const char* nalus, uint32_t nalusLength, uint32
 {
     int32_t retStatus = 0;
     uint32_t zeroCount = 0, offset;
-    BOOL naluFound = FALSE;
+    _Bool naluFound = FALSE;
     char* pCurrent = NULL;
 
     if (nalus == NULL || pStart == NULL || pNaluLength == NULL) {
@@ -130,6 +131,7 @@ int32_t player_parseH264Nalu( YangFrame *videoFrame,  YangH264NaluData *pnalu) {
 int32_t yang_parseH264Nalu( YangFrame *videoFrame,  YangH264NaluData *pnalu) {
 	uint32_t remainNalusLength = videoFrame->nb;
 	char* curPtrInNalus = videoFrame->payload;
+	char* originPosition = videoFrame->payload;
 	uint32_t startIndex = 0;
 	uint32_t nextNaluLength = 0;
 
@@ -147,11 +149,11 @@ int32_t yang_parseH264Nalu( YangFrame *videoFrame,  YangH264NaluData *pnalu) {
 		}
 		// SPS
 		if (ret == 0x67) {
-			pnalu->spsppsPos = curPtrInNalus - videoFrame->payload;
+			pnalu->spsppsPos = curPtrInNalus - originPosition;
 		}
 		// IDR
 		else if (ret == 0x65) {
-			pnalu->keyframePos = curPtrInNalus - videoFrame->payload;
+			pnalu->keyframePos = curPtrInNalus - originPosition;
 			return 0;
 		}
 

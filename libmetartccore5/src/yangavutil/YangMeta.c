@@ -4,8 +4,10 @@
 #include <yangavutil/video/YangCMeta.h>
 #include <yangutil/sys/YangLog.h>
 #include <yangutil/sys/YangEndian.h>
+#include <yangutil/sys/YangAmf.h>
 #include <yangutil/yangavtype.h>
 #include <memory.h>
+#include <stdbool.h>
 
 void yang_find_start_code(YangVideoCodec pve,uint8_t *buf,int32_t bufLen,int32_t *vpsPos,int32_t *vpsLen,int32_t *spsPos,int32_t *spsLen,int32_t *ppsPos,int32_t *ppsLen)
 {
@@ -64,7 +66,7 @@ static int32_t getNextNaluLength(const char* nalus, uint32_t nalusLength, uint32
 {
     int32_t retStatus = 0;
     uint32_t zeroCount = 0, offset;
-    BOOL naluFound = FALSE;
+    _Bool naluFound = FALSE;
     char* pCurrent = NULL;
 
     if (nalus == NULL || pStart == NULL || pNaluLength == NULL) {

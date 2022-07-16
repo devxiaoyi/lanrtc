@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
-project(libmetartc5)
+project(libyvrtc)
 
 add_definitions(-D__STDC_FORMAT_MACROS)
 
@@ -34,6 +34,7 @@ aux_source_directory(./src/yangpush DIR_SRCS)
 aux_source_directory(./src/yangplayer DIR_SRCS)
 aux_source_directory(./src/yangp2p DIR_SRCS)
 aux_source_directory(./src/yangrtc DIR_SRCS)
+aux_source_directory(./src/interface DIR_SRCS)
 if ((CMAKE_SYSTEM_NAME MATCHES "Windows") OR (CMAKE_SYSTEM_NAME MATCHES "Linux"))
 aux_source_directory(./src/yangdecoder/pc DIR_SRCS)
 aux_source_directory(./src/yangsrt DIR_SRCS)
@@ -56,7 +57,7 @@ endif()
 
 include(utils.cmake)
 # 排除不参与编译的文件
-add_library(metartc5 ${DIR_SRCS})
+add_library(yvrtc ${DIR_SRCS})
 #if ((CMAKE_SYSTEM_NAME MATCHES "Windows") OR (CMAKE_SYSTEM_NAME MATCHES "Linux"))
 #add_library(metartc5 ${DIR_SRCS})
 #else()

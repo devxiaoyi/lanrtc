@@ -377,7 +377,7 @@ int32_t YangP2pRtc::publishAudioData(YangStreamCapture* data){
 	return ret;
 }
 
-#define _DEBUG 0
+#define DON_DEBUG 0
 
 void YangP2pRtc::startLoop() {
 
@@ -406,7 +406,7 @@ void YangP2pRtc::startLoop() {
 
 	YangH264NaluData nalu;
 
-#if _DEBUG
+#if DON_DEBUG
 	int index = 0;
 	char tmpstr[64] = {0};
 	snprintf(tmpstr, 64, "./transvideofile-0715-%03d.h264", index++);
@@ -441,7 +441,7 @@ void YangP2pRtc::startLoop() {
 
 			videoFrame.payload = m_in_videoBuffer->getEVideoRef(&videoFrame);
 
-#if _DEBUG
+#if DON_DEBUG
 			if (fp) {
 				fwrite(videoFrame.payload, videoFrame.nb, 1, fp);
 			}
@@ -493,7 +493,7 @@ void YangP2pRtc::startLoop() {
 		}			//end
 	}
 
-#if _DEBUG
+#if DON_DEBUG
 	fclose(fp);
 #endif
 

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
-project(libmetartccore5)
+project(libyvrtccore)
 add_definitions(-D__STDC_FORMAT_MACROS)
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu11 -ffunction-sections -fdata-sections")
@@ -31,4 +31,4 @@ include(utils.cmake)
 # 排除不参与编译的文件
 
 
-add_library(metartccore5 ${DIR_SRCS})
+add_library(yvrtccore ${DIR_SRCS})

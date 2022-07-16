@@ -70,11 +70,10 @@ CleanUp:
     return retStatus;
 }
 
-yvrtc::YVRTCEngine* lanrtc;
-
 void *senderThread(void *arg)
 {
-    uint32_t fileIndex = 0, frameSize;
+    yvrtc::YVRTCEngine* lanrtc = (yvrtc::YVRTCEngine*)arg;
+    uint32_t fileIndex = 0;
     const int MAX_PATH_LEN = 4096;
     char filePath[MAX_PATH_LEN + 1];
     const int NUMBER_OF_H264_FRAME_FILES = 403;
@@ -95,7 +94,7 @@ void *senderThread(void *arg)
     {
         if (flag == 0)
         {
-            snprintf(filePath, MAX_PATH_LEN, "C:\\YVR\\webrtc\\metaRTC\\win5b0\\bin\\app_win_debug\\alvr_server_out_small.h264");
+            snprintf(filePath, MAX_PATH_LEN, "C:\\YVR\\webrtc\\metaRTC\\win5b0\\bin\\app_win_debug\\alvr_server_out_two.h264");
             memset(tmpbuff, 0, buffLen);
             int ret = readFile(filePath, tmpbuff, &tmpsize);
             if (ret != 0)
@@ -103,7 +102,7 @@ void *senderThread(void *arg)
                 printf("senderThread::failed:%d...size:%d\n", ret, tmpsize);
             }
 
-            pFile = fopen("C:\\YVR\\webrtc\\metaRTC\\win5b0\\bin\\app_win_debug\\alvr_server_out_small.txt", "r");
+            pFile = fopen("C:\\YVR\\webrtc\\metaRTC\\win5b0\\bin\\app_win_debug\\alvr_server_out_two.txt", "r");
             if (pFile == NULL)
                 perror("Error opening file");
 
@@ -133,10 +132,10 @@ void *senderThread(void *arg)
 
 int main(int argc, char *argv[])
 {
-    lanrtc = new yvrtc::YVRTCEngine();
+    yvrtc::YVRTCEngine* lanrtc = new yvrtc::YVRTCEngine();
 
     pthread_t m_thread;
-    pthread_create(&m_thread, 0, senderThread, NULL);
+    pthread_create(&m_thread, 0, senderThread, lanrtc);
 
     pthread_join(m_thread, NULL);
 

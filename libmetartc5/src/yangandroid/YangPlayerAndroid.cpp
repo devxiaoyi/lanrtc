@@ -9,7 +9,7 @@
 
 YangPlayerAndroid::YangPlayerAndroid(YangContext* pcontext) {
 	m_context=pcontext;
-	m_player= YangPlayerHandle::createPlayerHandle(m_context,this);
+	m_player= YangPlayerHandle::createPlayerHandle(m_context);
 
 
 	m_localPort=16000;

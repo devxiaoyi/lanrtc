@@ -50,7 +50,7 @@ MainWindow::MainWindow(QWidget *parent)
     m_context->avinfo.sys.rtcLocalPort=10000+yang_random()%15000;
     memset(m_context->avinfo.sys.localIp,0,sizeof(m_context->avinfo.sys.localIp));
     yang_getLocalInfo(m_context->avinfo.sys.localIp);
-    m_player= YangPlayerHandle::createPlayerHandle(m_context,this);
+    m_player= YangPlayerHandle::createPlayerHandle(m_context);
     yang_setLogLevle(5);
     yang_setLogFile(1);
 

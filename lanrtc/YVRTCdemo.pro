@@ -8,9 +8,9 @@ CONFIG += c++11
 #vc
 
 HOME_BASE=../
-unix{
+INCLUDEPATH += $$HOME_BASE/include
 
-    INCLUDEPATH += $$HOME_BASE/include
+unix{
     CONFIG(debug, debug|release) {
         LIBS += -L$$HOME_BASE/bin/lib_debug
         DESTDIR += $$HOME_BASE/bin/app_debug
@@ -28,7 +28,6 @@ unix{
 }
 
 win32{
-    INCLUDEPATH += $$HOME_BASE\include
     CONFIG(debug, debug|release) {
         LIBS += -L$$HOME_BASE/bin/lib_win_debug
         DESTDIR += $$HOME_BASE/bin/app_win_debug
