@@ -60,7 +60,9 @@ void yang_destroy_rtcContext(YangRtcContext *context) {
 	context->streamConfig = NULL;
 	yang_free(context->stun.data);
 	if (context->udp) {
-		context->udp->stop(&context->udp->session);
+		if (context->udp->stop) {
+			context->udp->stop(&context->udp->session);
+		}
 		yang_destroy_rtcudp(context->udp);
 		yang_free(context->udp);
 	}

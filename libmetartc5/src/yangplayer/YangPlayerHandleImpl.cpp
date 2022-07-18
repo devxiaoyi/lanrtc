@@ -176,10 +176,10 @@ int32_t YangPlayerHandleImpl::getVideoFrame(YangFrame* pFrame)
 {
 	int32_t ret = -1;
 	if (m_outVideoBuffer == NULL) {
-		ret = -2;
+		return -2;
 	}
 	if (m_outVideoBuffer->size() == 0) {
-		ret = -3;
+		return -3;
 	}
 	// std::cout << "checkConnectionState:" << ret << std::endl;
 	if (checkConnectionState() == 1) {

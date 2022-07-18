@@ -123,6 +123,12 @@ void *senderThread(void *arg)
         pframe.timestamp = getCurrentTimeMillis();
         ret = lanrtc->putVideoFrame(&pframe);
         offset += frameSize;
+        if (offset == tmpsize) {
+            printf("senderThread loop\n");
+            offset = 0;
+            fileIndex = 0;
+            rewind(pFile);
+        }
 
         Sleep(11);
     }
