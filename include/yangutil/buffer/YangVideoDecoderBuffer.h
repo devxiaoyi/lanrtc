@@ -13,7 +13,7 @@ public:
 	~YangVideoDecoderBuffer(void);
 
 	void putEVideo(YangFrame* pframe);
-	void getEVideo(YangFrame* pframe);
+	int32_t getEVideo(YangFrame* pframe);
 private:
 
 

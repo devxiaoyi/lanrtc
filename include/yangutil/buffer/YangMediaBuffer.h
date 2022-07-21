@@ -31,7 +31,7 @@ protected:
 	void initFrames(int pnum,int unitsize);
 
 	void putFrame(YangFrame* pframe);
-	void getFrame(YangFrame* pframe);
+	int32_t getFrame(YangFrame* pframe);
 	YangFrame* getCurFrameRef();
 	int64_t getNextFrameTimestamp();
 	uint8_t* getFrameRef(YangFrame* pframe);
