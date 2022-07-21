@@ -20,7 +20,7 @@ void g_qt_p2p_receiveData(void *context, YangFrame *msgFrame)
 RecordMainWindow::RecordMainWindow()
 {
     m_context = new YangContext();
-    m_context->init((char *)"yvr_config.ini");
+    m_context->init((char *)"yvrtc_config.ini");
     m_context->avinfo.video.videoEncoderFormat = YangI420;
 #if Yang_Using_Openh264
     m_context->avinfo.enc.createMeta = 0;
@@ -40,7 +40,6 @@ RecordMainWindow::RecordMainWindow()
     strcpy(m_context->avinfo.bgFilename, settingsread.value("sys/bgFilename", QVariant("d:\\bg.jpeg")).toString().toStdString().c_str());
 #endif
 
-    init();
     yang_setLogLevle(m_context->avinfo.sys.logLevel);
     yang_setLogFile(m_context->avinfo.sys.hasLogFile);
 
@@ -62,10 +61,6 @@ RecordMainWindow::RecordMainWindow()
     m_context->channeldataRecv.receiveData = g_qt_p2p_receiveData;
 
     m_context->avinfo.rtc.usingDatachannel = 1;
-
-    strcpy(m_context->avinfo.rtc.iceServerIP, "182.92.163.143");
-    m_context->avinfo.rtc.iceStunPort = 3478;
-    m_context->avinfo.rtc.hasIceServer = 0;
 }
 
 RecordMainWindow::~RecordMainWindow()
@@ -91,24 +86,6 @@ void RecordMainWindow::closeAll()
 void RecordMainWindow::streamStateNotify(int32_t puid, YangStreamOptType opt, bool isConnect)
 {
     std::cout << "online user play count==" << m_context->streams.getPlayOnlineCount() << ",push count==" << m_context->streams.getPushOnlineCount();
-}
-void RecordMainWindow::init()
-{
-    m_context->avinfo.audio.usingMono = 0;
-    m_context->avinfo.audio.sample = 48000;
-    m_context->avinfo.audio.channel = 2;
-    m_context->avinfo.audio.hasAec = 1;
-    m_context->avinfo.audio.audioCacheNum = 8;
-    m_context->avinfo.audio.audioCacheSize = 8;
-    m_context->avinfo.audio.audioPlayCacheNum = 8;
-
-    m_context->avinfo.video.videoCacheNum = 10;
-    m_context->avinfo.video.evideoCacheNum = 10;
-    m_context->avinfo.video.videoPlayCacheNum = 10;
-
-    m_context->avinfo.audio.audioEncoderType = Yang_AED_OPUS;
-    m_context->avinfo.sys.rtcLocalPort = 17000;
-    m_context->avinfo.enc.enc_threads = 4;
 }
 
 void RecordMainWindow::success()

@@ -32,7 +32,6 @@ public:
     void receiveSysMessage(YangSysMessage *psm, int32_t phandleRet);
 
 private:
-    void init();
     void closeAll();
     void read_ip_address();
 

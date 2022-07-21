@@ -160,12 +160,12 @@ int32_t YangIni::readIntValue(const char *section, const char *key,	int32_t p_de
 
 void YangIni::initVideo(YangVideoInfo* video){
 	memset(video,0,sizeof(YangVideoInfo));
-	video->width = readIntValue("video", "width", 1280);
-		video->height = readIntValue("video", "height", 720);
-		video->outWidth = readIntValue("video", "outWidth", 1280);
-		video->outHeight = readIntValue("video", "outHeight", 720);
-		video->rate = readIntValue("video", "rate", 2048);
-		video->frame = readIntValue("video", "frame", 10);
+	video->width = readIntValue("video", "width", 3200);
+		video->height = readIntValue("video", "height", 1600);
+		video->outWidth = readIntValue("video", "outWidth", 3200);
+		video->outHeight = readIntValue("video", "outHeight", 1600);
+		video->rate = readIntValue("video", "rate", 30 * 1024);
+		video->frame = readIntValue("video", "frame", 90);
 		video->rotate = readIntValue("video", "rotate", 0);
 		video->bitDepth = readIntValue("video", "bitDepth", 8);
 
@@ -218,7 +218,7 @@ void YangIni::initVideo(YangVideoInfo* video){
     	   memset(sys,0,sizeof(YangSysInfo));
 
 		   sys->transType = readIntValue("sys", "transType", 2);
-		   sys->mediaServer = readIntValue("sys", "mediaServer", 0);
+		   sys->mediaServer = readIntValue("sys", "mediaServer", 9);
     	   sys->isMultCamera = readIntValue("sys", "isMultCamera", 0);
     	   sys->usingDataServer = readIntValue("sys", "usingDataServer", 0);
 
@@ -248,7 +248,7 @@ void YangIni::initVideo(YangVideoInfo* video){
     	   enc->keyint_max = readIntValue("enc", "keyint_max", 30);
     	   enc->enc_threads = readIntValue("enc", "enc_threads", 4);
     	   enc->createMeta = readIntValue("enc", "createMeta", 1)==0?false:true;
-    	   enc->gop = readIntValue("enc", "gop", 30);
+    	   enc->gop = readIntValue("enc", "gop", 180);
 
        }
 
