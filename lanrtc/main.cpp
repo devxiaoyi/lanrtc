@@ -136,7 +136,7 @@ void *senderThread(void *arg)
         fclose(pFile);
 }
 
-int main(int argc, char *argv[])
+int main()
 {
     yvrtc::YVRTCEngine* lanrtc = new yvrtc::YVRTCEngine();
 

@@ -19,8 +19,8 @@ YangVideoDecoderBuffer::~YangVideoDecoderBuffer(void) {
 
 }
 
-void YangVideoDecoderBuffer::getEVideo(YangFrame* pframe) {
-	getFrame(pframe);
+int32_t YangVideoDecoderBuffer::getEVideo(YangFrame* pframe) {
+	return getFrame(pframe);
 }
 
 void YangVideoDecoderBuffer::putEVideo(YangFrame* pframe) {

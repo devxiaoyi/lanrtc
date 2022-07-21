@@ -34,11 +34,17 @@ int32_t yang_sdp_querySrs(YangRtcSession* session,SrsSdpResponseType* srs,int32_
 {
 
 	int32_t err=Yang_Ok;
-
+	int32_t loopFlag = 1;
 	char* sdp=(char*)calloc(1,Yang_SDP_BUFFERLEN);
-	if(yang_http_post(sdp,ip, port, purl, (uint8_t*)psdp, strlen(psdp))){
-		yang_free(sdp);
-		return yang_error_wrap(1,"query srs sdp failure!");
+	while (loopFlag) {
+		if(yang_http_post(sdp,ip, port, purl, (uint8_t*)psdp, strlen(psdp))){
+			// yang_free(sdp);
+			// return yang_error_wrap(1,"query srs sdp failure!");
+			yang_sleep(1);
+			continue;
+		} else {
+			loopFlag = 0;
+		}
 	}
 	char* sBuffer=(char*)calloc(1,Yang_SDP_BUFFERLEN);
 

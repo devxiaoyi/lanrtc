@@ -184,7 +184,8 @@ int32_t yang_rtcconn_dispatch_rtcp(YangRtcSession *session,YangRtcpCommon *rtcp)
 	uint16_t rtcpType = rtcp->header.type;
 	// For TWCC packet.
 	if (YangRtcpType_rtpfb == rtcpType && 15 == rtcp->header.rc) {
-		return yang_rtcconn_on_rtcp_feedback_twcc(session, rtcp);
+		//return yang_rtcconn_on_rtcp_feedback_twcc(session, rtcp);
+		return 0;
 	}
 
 	// For REMB packet.

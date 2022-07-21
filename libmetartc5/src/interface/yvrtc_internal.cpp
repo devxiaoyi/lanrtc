@@ -4,21 +4,21 @@
 #include <iostream>
 #include <string>
 
-static YangP2pFactory *g_p2p = NULL;
-static YangPlayerHandle *g_player = nullptr;
+static std::unique_ptr<YangP2pFactory> g_p2p;
+static std::unique_ptr<YangPlayerHandle> g_player;
+
 
 yvrtc::YVRTCEngine::YVRTCEngine()
 {
-    g_p2p = new YangP2pFactory();
-    g_p2p->init();
+    if (!g_p2p) {
+        g_p2p.reset(new YangP2pFactory());
+        g_p2p->init();
+    }
 }
 
 yvrtc::YVRTCEngine::~YVRTCEngine()
 {
-    if (g_p2p)
-    {
-        delete (g_p2p);
-    }
+
 }
 
 int32_t yvrtc::YVRTCEngine::putVideoFrame(YVRFrame *pFrame)
@@ -45,14 +45,13 @@ int32_t yvrtc::YVRTCEngine::putVideoFrame(YVRFrame *pFrame)
 
 yvrtc::YVPlayEngine::YVPlayEngine()
 {
-    if (g_player == NULL)
-        g_player = YangPlayerHandle::createPlayerHandle();
+    if (!g_player)
+        g_player.reset(YangPlayerHandle::createPlayerHandle());
 }
 
 yvrtc::YVPlayEngine::~YVPlayEngine()
 {
-    if (g_player == NULL)
-        delete(g_player);
+
 }
 
 int32_t yvrtc::YVPlayEngine::YVPlayStart(std::string url)
@@ -79,13 +78,27 @@ int32_t yvrtc::YVPlayEngine::PollVideoFrame(YVRFrame *pFrame)
     int32_t ret = -1;
     if (nullptr != g_player)
     {
-        YangFrame Frame;
-        Frame.payload = pFrame->payload;
+        YangFrame Frame = {0};
         ret = g_player->getVideoFrame(&Frame);
-        pFrame->frameType = (VideoFrameType)Frame.frametype;
-        pFrame->size = Frame.nb;
-        pFrame->timestamp = Frame.dts;
-        pFrame->uid = Frame.uid;
+        if (ret == 0) {
+            pFrame->payload = Frame.payload;
+            pFrame->frameType = (VideoFrameType)Frame.frametype;
+            pFrame->size = Frame.nb;
+            pFrame->timestamp = Frame.dts;
+            pFrame->uid = Frame.uid;
+        }
+        else {
+            pFrame->payload = nullptr;
+            pFrame->frameType = VideoFrameUnknow;
+            pFrame->size = 0;
+            pFrame->timestamp = 0;
+            pFrame->uid = 0;
+        }
     }
     return ret;
+}
+
+int32_t yvrtc::YVPlayEngine::RegisterVideoReceiver(int32_t (*receiver)(YVRFrame *pFrame))
+{
+    return 0;
 }

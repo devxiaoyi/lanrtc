@@ -50,7 +50,7 @@ int32_t g_p2pice_rtcrecv_notify(void* user,int puid,YangRtcMessageType mess){
 	return Yang_Ok;
 }
 
-void g_yang_doTask(int32_t taskId, void *user) {
+static void g_yang_doTask(int32_t taskId, void *user) {
 	if (user == NULL)	return;
 
 	YangP2pRtcIce *rtc = (YangP2pRtcIce*) user;

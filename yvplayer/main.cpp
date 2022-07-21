@@ -20,8 +20,6 @@ void *pollingThread(void *arg)
     yvplay->YVPlayStart("webrtc://172.18.0.27:1988/live/livestream");
 
     yvrtc::YVRFrame Frame;
-    int32_t max_len = 120 * 1024 * 1024;
-    Frame.payload = (uint8_t *) calloc(1, max_len);
 
     int32_t ret = 0;
 

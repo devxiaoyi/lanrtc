@@ -65,14 +65,15 @@ void YangMediaBuffer::putFrame(YangFrame *pframe) {
 	pthread_mutex_unlock(&m_lock);
 
 }
-void YangMediaBuffer::getFrame(YangFrame *pframe) {
-	if (!pframe||!size())	return;
+int32_t YangMediaBuffer::getFrame(YangFrame *pframe) {
+	if (!pframe||!size())	return -1;
 
 	pthread_mutex_lock(&m_lock);
 	yang_frame_copy_buffer(m_frames[m_getIndex++], pframe);
 	if (m_getIndex >= m_cache_num)		m_getIndex = 0;
 	m_size--;
 	pthread_mutex_unlock(&m_lock);
+	return 0;
 }
 uint8_t* YangMediaBuffer::getFrameRef(YangFrame *pframe) {
 	if (!size()||!pframe)				return NULL;

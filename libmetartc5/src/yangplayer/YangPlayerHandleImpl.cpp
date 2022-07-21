@@ -44,6 +44,8 @@ YangPlayerHandleImpl::YangPlayerHandleImpl(YangContext* pcontext) {
 	m_outAudioBuffer = NULL;
 	m_url.netType=0;
 	m_url.port=1935;
+
+	externalBuffer = new uint8_t[150 * 1024];
 }
 
 YangPlayerHandleImpl::~YangPlayerHandleImpl() {
@@ -54,6 +56,7 @@ YangPlayerHandleImpl::~YangPlayerHandleImpl() {
 	yang_delete(m_outVideoBuffer);
 	yang_delete(m_outAudioBuffer);
 	yang_delete(m_context);
+	yang_delete(externalBuffer);
 }
 
 void YangPlayerHandleImpl::stopPlay(){
@@ -183,8 +186,8 @@ int32_t YangPlayerHandleImpl::getVideoFrame(YangFrame* pFrame)
 	}
 	// std::cout << "checkConnectionState:" << ret << std::endl;
 	if (checkConnectionState() == 1) {
-		m_outVideoBuffer->getEVideo(pFrame);
-		ret = 0;
+		pFrame->payload = externalBuffer;
+		ret = m_outVideoBuffer->getEVideo(pFrame);
 	}
 	else {
 		ret = -4;
