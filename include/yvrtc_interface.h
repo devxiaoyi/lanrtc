@@ -24,6 +24,8 @@ namespace yvrtc
         uint8_t *payload;
     } YVRFrame;
 
+    typedef void (*YVRDataChannelRecvCallback)(void* context,YVRFrame* msgFrame);
+
     class YVRTCEngine {
     public:
         YVRTCEngine();

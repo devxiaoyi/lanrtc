@@ -203,3 +203,18 @@ int32_t YangPlayerHandleImpl::checkConnectionState()
 	}
 	return ret;
 }
+
+//wf_yvr 他的基类里要声明一个纯虚函数
+void YangPlayerHandleImpl::initDataChannel(dataChannelRecvCallback callback, void* pUser)
+{
+    //init recv
+    m_context->channeldataRecv.context = pUser;
+    m_context->channeldataRecv.receiveData = callback;
+    m_context->avinfo.rtc.usingDatachannel=1;
+}
+
+//wf_yvr 他的基类里要声明一个纯虚函数
+void YangPlayerHandleImpl::dataChannelSend(void* context,YangFrame* msgFrame)
+{
+    m_rtcRecv->publishMsg(msgFrame);
+}

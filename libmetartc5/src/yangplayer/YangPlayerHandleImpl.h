@@ -24,6 +24,9 @@ public:
 
 	int32_t getVideoFrame(YangFrame* pFrame);
 	int32_t checkConnectionState();
+
+	void initDataChannel(dataChannelRecvCallback callback, void* pUser);//wf_yvr
+    void dataChannelSend(void* context,YangFrame* msgFrame);//wf_yvr
 protected:
 
 	YangUrlData m_url;

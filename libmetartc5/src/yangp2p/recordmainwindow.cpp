@@ -15,7 +15,7 @@ void g_qt_p2p_receiveData(void *context, YangFrame *msgFrame)
 {
     RecordMainWindow *win = (RecordMainWindow *)context;
 
-    win->setRecvText((char *)msgFrame->payload, msgFrame->nb);
+    //win->setRecvText((char *)msgFrame->payload, msgFrame->nb);
 }
 RecordMainWindow::RecordMainWindow()
 {
@@ -58,10 +58,12 @@ RecordMainWindow::RecordMainWindow()
     m_context->streams.m_streamState = this;
     m_context->avinfo.audio.hasAec = 1;
 
-    m_context->channeldataRecv.context = this;
-    m_context->channeldataRecv.receiveData = g_qt_p2p_receiveData;
+    //m_context->channeldataRecv.context = this;
+    //m_context->channeldataRecv.receiveData = g_qt_p2p_receiveData;
 
-    m_context->avinfo.rtc.usingDatachannel = 1;
+    //m_context->avinfo.rtc.usingDatachannel = 1;
+
+    m_context->initDataChannel(g_qt_p2p_receiveData, this);//wf_yvr
 
     strcpy(m_context->avinfo.rtc.iceServerIP, "182.92.163.143");
     m_context->avinfo.rtc.iceStunPort = 3478;

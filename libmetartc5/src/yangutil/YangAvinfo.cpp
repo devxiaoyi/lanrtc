@@ -81,6 +81,24 @@ void YangContext::initExt(void *filename) {
 
 }
 
+//wf_yvr
+void YangContext::initDataChannel(dataChannelRecvCallback callback, void* pUser)
+{
+    channeldataRecv.context = pUser;
+    channeldataRecv.receiveData = callback;
+    avinfo.rtc.usingDatachannel = 1;
+}
+
+//wf_yvr
+void YangContext::dataChannelSend(void* context,YangFrame* msgFrame)
+{
+    if (channeldataSend.sendData)
+    {
+        channeldataSend.sendData(context,msgFrame);
+    }
+
+}
+
 YangBufferManager::YangBufferManager() {
 	m_curindex = 0;
 	m_size = 0;

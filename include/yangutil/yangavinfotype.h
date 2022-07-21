@@ -117,6 +117,9 @@ typedef struct{
 	void* context;
 	void (*sendData)(void* context,YangFrame* msgFrame);
 }YangChannelDataSendI;
+
+typedef void (*dataChannelRecvCallback)(void* context,YangFrame* msgFrame);//wf_yvr
+
 #ifdef __cplusplus
 #include <yangstream/YangStreamManager.h>
 class YangContext {
@@ -128,6 +131,9 @@ public:
 
 	virtual void initExt(void *filename);
 	virtual void initExt();
+
+	void initDataChannel(dataChannelRecvCallback callback, void* pUser);//wf_yvr
+        void dataChannelSend(void* context,YangFrame* msgFrame);//wf_yvr
 public:
 
 	YangAVInfo avinfo;

@@ -150,6 +150,7 @@ void yang_rtcconn_init(YangRtcSession *session, YangStreamOptType role) {
 	}
 #if Yang_HaveDtls
 #if Yang_HaveDatachannel
+	session->usingDatachannel = 1;//wf_yvr
 	if(session->usingDatachannel){
 		if(session->datachannel==NULL){
 			session->datachannel=(YangDatachannel*)calloc(sizeof(YangDatachannel),1);
