@@ -6,6 +6,13 @@
 #include <windows.h>
 #include <pthread.h>
 
+#define TEST_DATACHANNEL
+//test
+typedef struct stYvrSendInfo
+{
+    long long timestamp;
+}YvrSendInfo;
+
 uint64_t getCurrentTimeMillis()
 {
     timeb t;
@@ -136,14 +143,48 @@ void *senderThread(void *arg)
         fclose(pFile);
 }
 
+void Send(yvrtc::YVRTCEngine* rtc)
+{
+    YvrSendInfo sendInfo = { 0 };
+    sendInfo.timestamp = 2222;
+
+    std::string cstr = "11111111111";
+    uint8_t* pContent = new uint8_t[cstr.size()];
+    memset(pContent, 0, cstr.size());
+    memcpy(pContent, cstr.c_str(), cstr.size());
+
+    int total = cstr.size() + sizeof(YvrSendInfo);
+
+    uint8_t* pBuffer = new uint8_t[total];
+    uint8_t* pTemp = pBuffer;
+    memset(pBuffer, 0, total);
+
+    memcpy(pTemp, &sendInfo, sizeof(YvrSendInfo));
+    pTemp += sizeof(YvrSendInfo);
+    memcpy(pTemp, pContent, cstr.size());
+
+    yvrtc::YVRFrame frame;
+    memset(&frame,0,sizeof(yvrtc::YVRFrame));
+    frame.payload = pBuffer;
+    frame.size = total;
+    rtc->sendDataChannelData(&frame);
+}
 int main()
 {
     yvrtc::YVRTCEngine* lanrtc = new yvrtc::YVRTCEngine();
 
+#ifdef TEST_DATACHANNEL
+    while(1)
+    {
+        Sleep(30000);
+        Send(lanrtc);
+    }
+#else
     pthread_t m_thread;
     pthread_create(&m_thread, 0, senderThread, lanrtc);
 
     pthread_join(m_thread, NULL);
+#endif
 
     return 0;
 }

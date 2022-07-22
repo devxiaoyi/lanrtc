@@ -14,7 +14,7 @@
 void g_qt_p2p_receiveData(void *context, YangFrame *msgFrame)
 {
     RecordMainWindow *win = (RecordMainWindow *)context;
-
+    win->m_datachannelCallback(win->m_pUser,msgFrame);
     //win->setRecvText((char *)msgFrame->payload, msgFrame->nb);
 }
 RecordMainWindow::RecordMainWindow()
@@ -68,6 +68,7 @@ RecordMainWindow::RecordMainWindow()
     strcpy(m_context->avinfo.rtc.iceServerIP, "182.92.163.143");
     m_context->avinfo.rtc.iceStunPort = 3478;
     m_context->avinfo.rtc.hasIceServer = 0;
+    m_pUser = nullptr;
 }
 
 RecordMainWindow::~RecordMainWindow()
@@ -145,4 +146,18 @@ void RecordMainWindow::receiveSysMessage(YangSysMessage *mss, int32_t err)
         break;
     }
     std::cout << "receiveSysMessage::mss->messageId:" << mss->messageId << std::endl;
+}
+
+void RecordMainWindow::setDataChannelCallback(dataChannelRecvCallback callback, void*pUser)
+{
+    m_datachannelCallback = callback;
+    m_pUser = pUser;
+}
+
+void RecordMainWindow::sendDataChannelData(YangFrame* msgFrame)
+{
+    if (m_context->channeldataSend.sendData)
+    {
+        m_context->channeldataSend.sendData(m_context->channeldataSend.context,msgFrame);
+    }
 }

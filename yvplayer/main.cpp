@@ -6,6 +6,13 @@
 #include <windows.h>
 #include <pthread.h>
 
+typedef struct stYvrSendInfo
+{
+    long long timestamp;
+}YvrSendInfo;
+
+#define TEST_DATACHANNEL
+
 uint64_t getCurrentTimeMillis()
 {
     timeb t;
@@ -37,14 +44,35 @@ void *pollingThread(void *arg)
     fclose(fp);
 }
 
+void ReceiveData(yvrtc::YVRFrame* msgFrame,void* pUser)
+{
+    YvrSendInfo* pInfo = (YvrSendInfo*)msgFrame->payload;
+    char* pBuffer = new char[ msgFrame->size - sizeof(YvrSendInfo)];
+    memset(pBuffer, 0, msgFrame->size - sizeof(YvrSendInfo));
+    memcpy(pBuffer, msgFrame->payload+sizeof(YvrSendInfo) ,msgFrame->size - sizeof(YvrSendInfo));
+
+    return;
+
+}
+
 int main(int argc, char *argv[])
 {
     yvrtc::YVPlayEngine* yvplay = new yvrtc::YVPlayEngine();
+#ifdef TEST_DATACHANNEL
+    yvplay->setReceiveDataChannel(ReceiveData,NULL);
+    yvplay->YVPlayStart("webrtc://192.168.1.102:1988/live/livestream");
+
+    while(1)
+    {
+        Sleep(10);
+    }
+#else
 
     pthread_t m_thread;
     pthread_create(&m_thread, 0, pollingThread, yvplay);
 
     pthread_join(m_thread, NULL);
+#endif
 
     return 0;
 }

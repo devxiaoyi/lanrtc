@@ -7,18 +7,44 @@
 static std::unique_ptr<YangP2pFactory> g_p2p;
 static std::unique_ptr<YangPlayerHandle> g_player;
 
+void g_qt_Engine_receiveData(void *context, YangFrame *msgFrame)
+{
+    yvrtc::YVRTCEngine *engin = (yvrtc::YVRTCEngine *)context;
+    yvrtc::YVRFrame yvrFrame = {0};
+    yvrFrame.payload = msgFrame->payload;
+    yvrFrame.size = msgFrame->nb;
+    engin->m_callback(&yvrFrame, engin->m_pUser);
+}
 
 yvrtc::YVRTCEngine::YVRTCEngine()
 {
     if (!g_p2p) {
         g_p2p.reset(new YangP2pFactory());
-        g_p2p->init();
+        g_p2p->init(g_qt_Engine_receiveData, this);
     }
 }
 
 yvrtc::YVRTCEngine::~YVRTCEngine()
 {
 
+}
+
+void yvrtc::YVRTCEngine::setReceiveDataChannel(YVRDataChannelRecvCallback callback,void* pUser)
+{
+    m_callback = callback;
+    m_pUser = pUser;
+}
+
+void yvrtc::YVRTCEngine::sendDataChannelData(YVRFrame* yvrFrame)
+{
+    YangFrame YFrame;
+    YFrame.payload = yvrFrame->payload;
+    YFrame.nb = yvrFrame->size;
+    YFrame.mediaType=YANG_DATA_CHANNEL_STRING;
+    if (g_p2p)
+    {
+        g_p2p->sendDataChannelData(&YFrame);
+    }
 }
 
 int32_t yvrtc::YVRTCEngine::putVideoFrame(YVRFrame *pFrame)
@@ -43,15 +69,45 @@ int32_t yvrtc::YVRTCEngine::putVideoFrame(YVRFrame *pFrame)
     return ret;
 }
 
+void g_qt_play_receiveData(void* context,YangFrame* msgFrame){
+    yvrtc::YVPlayEngine* play=(yvrtc::YVPlayEngine*)context;
+    yvrtc::YVRFrame yvrFrame = {0};
+    yvrFrame.payload = msgFrame->payload;
+    yvrFrame.size = msgFrame->nb;
+    play->m_callback(&yvrFrame, play->m_pUser);
+}
+
 yvrtc::YVPlayEngine::YVPlayEngine()
 {
     if (!g_player)
+    {
         g_player.reset(YangPlayerHandle::createPlayerHandle());
+        g_player->initDataChannel(g_qt_play_receiveData,this);
+    }
+
 }
 
 yvrtc::YVPlayEngine::~YVPlayEngine()
 {
 
+}
+
+void yvrtc::YVPlayEngine::setReceiveDataChannel(YVRDataChannelRecvCallback callback,void* pUser)
+{
+    m_callback = callback;
+    m_pUser = pUser;
+}
+
+void yvrtc::YVPlayEngine::sendDataChannelData(YVRFrame* yvrFrame)
+{
+    YangFrame YFrame;
+    YFrame.payload = yvrFrame->payload;
+    YFrame.nb = yvrFrame->size;
+    YFrame.mediaType=YANG_DATA_CHANNEL_STRING;
+    if (g_player)
+    {
+        g_player->dataChannelSend(&YFrame);
+    }
 }
 
 int32_t yvrtc::YVPlayEngine::YVPlayStart(std::string url)
@@ -102,3 +158,5 @@ int32_t yvrtc::YVPlayEngine::RegisterVideoReceiver(int32_t (*receiver)(YVRFrame 
 {
     return 0;
 }
+
+

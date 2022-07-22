@@ -266,6 +266,7 @@ Makefile: ..\libmetartc5\YVRTCEngine.pro D:\qt\5.14.2\msvc2017_64\mkspecs\win32-
 		D:\qt\5.14.2\msvc2017_64\mkspecs\features\qt_config.prf \
 		D:\qt\5.14.2\msvc2017_64\mkspecs\win32-msvc\qmake.conf \
 		D:\qt\5.14.2\msvc2017_64\mkspecs\features\spec_post.prf \
+		.qmake.stash \
 		D:\qt\5.14.2\msvc2017_64\mkspecs\features\exclusive_builds.prf \
 		D:\qt\5.14.2\msvc2017_64\mkspecs\common\msvc-version.conf \
 		D:\qt\5.14.2\msvc2017_64\mkspecs\features\toolchain.prf \
@@ -285,7 +286,6 @@ Makefile: ..\libmetartc5\YVRTCEngine.pro D:\qt\5.14.2\msvc2017_64\mkspecs\win32-
 		D:\qt\5.14.2\msvc2017_64\mkspecs\features\yacc.prf \
 		D:\qt\5.14.2\msvc2017_64\mkspecs\features\lex.prf \
 		..\libmetartc5\YVRTCEngine.pro \
-		.qmake.stash \
 		D:\qt\5.14.2\msvc2017_64\mkspecs\features\build_pass.prf
 	$(QMAKE) -o Makefile ..\libmetartc5\YVRTCEngine.pro -spec win32-msvc "CONFIG+=debug" "CONFIG+=qml_debug"
 D:\qt\5.14.2\msvc2017_64\mkspecs\features\spec_pre.prf:
@@ -470,6 +470,7 @@ D:\qt\5.14.2\msvc2017_64\mkspecs\features\qt_functions.prf:
 D:\qt\5.14.2\msvc2017_64\mkspecs\features\qt_config.prf:
 D:\qt\5.14.2\msvc2017_64\mkspecs\win32-msvc\qmake.conf:
 D:\qt\5.14.2\msvc2017_64\mkspecs\features\spec_post.prf:
+.qmake.stash:
 D:\qt\5.14.2\msvc2017_64\mkspecs\features\exclusive_builds.prf:
 D:\qt\5.14.2\msvc2017_64\mkspecs\common\msvc-version.conf:
 D:\qt\5.14.2\msvc2017_64\mkspecs\features\toolchain.prf:
@@ -489,7 +490,6 @@ D:\qt\5.14.2\msvc2017_64\mkspecs\features\exceptions.prf:
 D:\qt\5.14.2\msvc2017_64\mkspecs\features\yacc.prf:
 D:\qt\5.14.2\msvc2017_64\mkspecs\features\lex.prf:
 ..\libmetartc5\YVRTCEngine.pro:
-.qmake.stash:
 D:\qt\5.14.2\msvc2017_64\mkspecs\features\build_pass.prf:
 qmake: FORCE
 	@$(QMAKE) -o Makefile ..\libmetartc5\YVRTCEngine.pro -spec win32-msvc "CONFIG+=debug" "CONFIG+=qml_debug"

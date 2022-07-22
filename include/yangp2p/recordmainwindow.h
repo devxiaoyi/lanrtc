@@ -22,7 +22,8 @@ public:
 
     bool m_hasAudio;
     YangSysMessageHandle *m_message; 
-
+    dataChannelRecvCallback m_datachannelCallback;
+    void* m_pUser;
 public:
     void setRecvText(char* data,int32_t nb);
     void initPreview();
@@ -30,6 +31,9 @@ public:
     void success();
     void failure(int32_t errcode);
     void receiveSysMessage(YangSysMessage *psm, int32_t phandleRet);
+    void setDataChannelCallback(dataChannelRecvCallback callback, void*pUser);
+    void sendDataChannelData(YangFrame* msgFrame);
+
 
 private:
     void init();

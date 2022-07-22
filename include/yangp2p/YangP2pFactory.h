@@ -18,8 +18,13 @@ public:
 	std::vector<YangVideoBuffer*>* getPlayVideoBuffer(YangSysMessageHandle* pmessageHandle);
 	void* getP2pCapture(int32_t pcapturetype,YangContext *pcontext);
 	int32_t putTxVideo(YangFrame *pFrame);
-	int32_t init();
+        int32_t init(dataChannelRecvCallback callback, void*pUser);
     int32_t deinit();
+    void sendDataChannelData(YangFrame* msgFrame);
+
+public:
+    dataChannelRecvCallback m_recvCallback;
+    void* m_pUser;
 
 private:
     RecordMainWindow* w;

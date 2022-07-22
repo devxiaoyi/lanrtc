@@ -214,7 +214,7 @@ void YangPlayerHandleImpl::initDataChannel(dataChannelRecvCallback callback, voi
 }
 
 //wf_yvr 他的基类里要声明一个纯虚函数
-void YangPlayerHandleImpl::dataChannelSend(void* context,YangFrame* msgFrame)
+void YangPlayerHandleImpl::dataChannelSend(YangFrame* msgFrame)
 {
     m_rtcRecv->publishMsg(msgFrame);
 }

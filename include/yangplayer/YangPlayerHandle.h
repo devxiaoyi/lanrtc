@@ -20,7 +20,7 @@ public:
 	virtual int32_t getVideoFrame(YangFrame* pFrame) = 0;
 
 	virtual void initDataChannel(dataChannelRecvCallback callback, void* pUser) = 0;//wf_yvr
-    virtual void dataChannelSend(void* context,YangFrame* msgFrame) = 0;//wf_yvr
+    virtual void dataChannelSend(YangFrame* msgFrame) = 0;//wf_yvr
 };
 
 #endif /* INCLUDE_YANGPLAYER_YANGPLAYERHANDLE_H_ */

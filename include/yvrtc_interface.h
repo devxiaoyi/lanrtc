@@ -24,14 +24,21 @@ namespace yvrtc
         uint8_t *payload;
     } YVRFrame;
 
-    typedef void (*YVRDataChannelRecvCallback)(void* context,YVRFrame* msgFrame);
+    typedef void (*YVRDataChannelRecvCallback)(YVRFrame* msgFrame, void* pUser);
 
     class YVRTCEngine {
     public:
         YVRTCEngine();
         virtual ~YVRTCEngine();
 
+        void setReceiveDataChannel(YVRDataChannelRecvCallback callback,void* pUser);
+        void sendDataChannelData(YVRFrame* yvrFrame);
+
         int32_t putVideoFrame(YVRFrame *pFrame);
+
+    public:
+        YVRDataChannelRecvCallback m_callback;
+        void* m_pUser;
     };
 
     class YVPlayEngine {
@@ -43,6 +50,13 @@ namespace yvrtc
         int32_t YVPlayStop();
         int32_t PollVideoFrame(YVRFrame *pFrame);
         int32_t RegisterVideoReceiver(int32_t (*receiver)(YVRFrame *pFrame));
+
+        void setReceiveDataChannel(YVRDataChannelRecvCallback callback,void* pUser);
+        void sendDataChannelData(YVRFrame* yvrFrame);
+
+    public:
+        YVRDataChannelRecvCallback m_callback;
+        void* m_pUser;
     };
 }
 
