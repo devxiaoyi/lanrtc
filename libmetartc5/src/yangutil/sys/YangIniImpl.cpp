@@ -187,7 +187,7 @@ void YangIni::initVideo(YangVideoInfo* video){
 }
        void YangIni::initAudio(YangAudioInfo* audio){
     		memset(audio,0,sizeof(YangAudioInfo));
-    		audio->sample=readIntValue("audio", "sample", 44100);
+    		audio->sample=readIntValue("audio", "sample", 48000);
     		audio->frameSize=readIntValue("audio", "frameSize", 1024);
     		audio->channel=readIntValue("audio", "channel", 2);
     		audio->bitrate = readIntValue("audio", "bitrate", 128);
@@ -199,8 +199,8 @@ void YangIni::initVideo(YangVideoInfo* video){
     		audio->audioEncoderType = readIntValue("audio", "audioEncoderType", 0);
     		audio->audioDecoderType = readIntValue("audio", "audioDecoderType", 0);
     		audio->audioPlayType = readIntValue("audio", "audioPlayType", 0);
-       		audio->audioCacheNum = readIntValue("audio", "audioCacheNum", 100);
-    		audio->audioCacheSize = readIntValue("audio", "audioCacheSize", 100);
+       		audio->audioCacheNum = readIntValue("audio", "audioCacheNum", 8);
+    		audio->audioCacheSize = readIntValue("audio", "audioCacheSize", 8);
     		audio->audioPlayCacheNum = readIntValue("audio", "audioPlayCacheNum", 10);
 
     		audio->aIndex = readIntValue("audio", "aIndex", 0);
