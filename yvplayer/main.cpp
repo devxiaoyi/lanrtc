@@ -23,7 +23,7 @@ void *pollingThread(void *arg)
 
     int32_t ret = 0;
 
-    FILE* fp = fopen("./yvplay_0718.h264", "ab+");
+    FILE* fp = fopen("./yvplay_0723.h264", "ab+");
 
     while (1) {
 

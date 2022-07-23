@@ -237,7 +237,7 @@ void yang_create_rtcpush(YangRtcPush *ppush, uint32_t audioSsrc,
 	yang_create_pubNackbuffer(pub->audio_queue, 100);
 
 	pub->video_queue = (YangPublishNackBuffer*) calloc(1,sizeof(YangPublishNackBuffer));
-	yang_create_pubNackbuffer(pub->video_queue, 1000);
+	yang_create_pubNackbuffer(pub->video_queue, 3000);
 
 	pub->audioSsrc = audioSsrc;
 	pub->videoSsrc = videoSsrc;
