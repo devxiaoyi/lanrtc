@@ -2445,7 +2445,33 @@ debug\YangDecoderH264.obj: ..\libmetartc5\src\yangdecoder\YangDecoderH264.cpp ..
 		..\libmetartc5\src\yangdecoder\YangH264Dec.h \
 		..\include\yangutil\yangavtype.h \
 		..\include\yangutil\yangavctype.h \
-		..\include\yangutil\yangavctype_H.h
+		..\include\yangutil\yangavctype_H.h \
+		..\thirdparty\user_include\h264decoder\libavcodec\avcodec.h \
+		..\thirdparty\user_include\h264decoder\libavcodec\version.h \
+		..\thirdparty\user_include\h264decoder\libavutil\version.h \
+		..\thirdparty\user_include\h264decoder\libavutil\macros.h \
+		..\thirdparty\user_include\h264decoder\libavutil\attributes.h \
+		..\thirdparty\user_include\h264decoder\libavutil\avutil.h \
+		..\thirdparty\user_include\h264decoder\libavutil\common.h \
+		..\thirdparty\user_include\h264decoder\libavutil\avconfig.h \
+		..\thirdparty\user_include\h264decoder\libavutil\internal.h \
+		..\thirdparty\user_include\h264decoder\config.h \
+		..\thirdparty\user_include\h264decoder\libavutil\timer.h \
+		..\thirdparty\user_include\h264decoder\libavutil\log.h \
+		..\thirdparty\user_include\h264decoder\libavutil\cpu.h \
+		..\thirdparty\user_include\h264decoder\libavutil\dict.h \
+		..\thirdparty\user_include\h264decoder\libavutil\pixfmt.h \
+		..\thirdparty\user_include\h264decoder\libavutil\libm.h \
+		..\thirdparty\user_include\h264decoder\libavutil\intfloat.h \
+		..\thirdparty\user_include\h264decoder\libavutil\mathematics.h \
+		..\thirdparty\user_include\h264decoder\libavutil\rational.h \
+		..\thirdparty\user_include\h264decoder\libavutil\intmath.h \
+		..\thirdparty\user_include\h264decoder\libavutil\mem.h \
+		..\thirdparty\user_include\h264decoder\libavutil\error.h \
+		..\thirdparty\user_include\h264decoder\libavutil\buffer.h \
+		..\thirdparty\user_include\h264decoder\libavutil\channel_layout.h \
+		..\thirdparty\user_include\h264decoder\libavutil\frame.h \
+		..\thirdparty\user_include\h264decoder\libavutil\samplefmt.h
 
 debug\YangDecoderLibde265.obj: ..\libmetartc5\src\yangdecoder\YangDecoderLibde265.cpp ..\libmetartc5\src\yangdecoder\YangDecoderLibde265.h \
 		..\include\yangutil\yangtype.h \
@@ -5607,6 +5633,7 @@ debug\yvrtc_internal.obj: ..\libmetartc5\src\interface\yvrtc_internal.cpp ..\inc
 		..\include\yangrecliving\YangLivingType.h \
 		..\include\yangplayer\YangWinPlayFactroy.h \
 		..\include\yvrtc_interface.h \
+		..\include\yvr_comm.h \
 		..\include\yangplayer\YangPlayerHandle.h
 
 ####### Install

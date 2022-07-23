@@ -5,13 +5,15 @@
 #include <yvrtc_interface.h>
 #include <windows.h>
 #include <pthread.h>
+#include "testdatachannel.h"
+
 
 #define TEST_DATACHANNEL
 //test
-typedef struct stYvrSendInfo
+typedef struct stYvrSendInfo1
 {
     long long timestamp;
-}YvrSendInfo;
+}YvrSendInfo1;
 
 uint64_t getCurrentTimeMillis()
 {
@@ -168,9 +170,19 @@ void Send(yvrtc::YVRTCEngine* rtc)
     frame.payload = pBuffer;
     frame.size = total;
     rtc->sendDataChannelData(&frame);
+    delete[] pBuffer;
+    pBuffer = NULL;
 }
 int main()
 {
+    testDatachannel datachannel;
+
+    while(1)
+    {
+        Sleep(1000);
+    }
+
+    /*
     yvrtc::YVRTCEngine* lanrtc = new yvrtc::YVRTCEngine();
 
 #ifdef TEST_DATACHANNEL
@@ -179,12 +191,16 @@ int main()
         Sleep(30000);
         Send(lanrtc);
     }
+
 #else
     pthread_t m_thread;
     pthread_create(&m_thread, 0, senderThread, lanrtc);
 
     pthread_join(m_thread, NULL);
 #endif
+*/
 
     return 0;
 }
+
+

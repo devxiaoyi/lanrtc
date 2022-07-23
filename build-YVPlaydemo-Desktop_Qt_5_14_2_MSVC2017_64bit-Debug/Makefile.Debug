@@ -19,7 +19,7 @@ CXXFLAGS      = -nologo -Zc:wchar_t -FS -Zc:rvalueCast -Zc:inline -Zc:strictStri
 INCPATH       = -I..\yvplayer -I. -I..\include -I..\thirdparty\include\win\include -ID:\qt\5.14.2\msvc2017_64\include -ID:\qt\5.14.2\msvc2017_64\include\QtGui -ID:\qt\5.14.2\msvc2017_64\include\QtANGLE -ID:\qt\5.14.2\msvc2017_64\include\QtCore -Idebug -IC:\VulkanSDK\1.2.182.0\include -ID:\qt\5.14.2\msvc2017_64\mkspecs\win32-msvc 
 LINKER        = link
 LFLAGS        = /NOLOGO /DYNAMICBASE /NXCOMPAT /ignore:4099 /DEBUG /SUBSYSTEM:WINDOWS "/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' publicKeyToken='6595b64144ccf1df' language='*' processorArchitecture='*'"
-LIBS          = /LIBPATH:..\bin\lib_win_debug YVRTCEngine.lib YVRTCCore.lib yuv.lib opus.lib openh264.lib speexdsp.lib avutil.lib avcodec.lib usrsctp.lib ksuser.lib winmm.lib ole32.lib Strmiids.lib /LIBPATH:..\thirdparty\lib\win\msvc pthreadVC2.lib avrt.lib user32.lib Advapi32.lib srtp2.lib libcrypto.lib libssl.lib Crypt32.lib ws2_32.lib D:\qt\5.14.2\msvc2017_64\lib\Qt5Guid.lib D:\qt\5.14.2\msvc2017_64\lib\Qt5Cored.lib  D:\qt\5.14.2\msvc2017_64\lib\qtmaind.lib /LIBPATH:C:\openssl\lib /LIBPATH:C:\Utils\my_sql\mysql-5.7.25-winx64\lib /LIBPATH:C:\Utils\postgresql\pgsql\lib shell32.lib 
+LIBS          = /LIBPATH:..\bin\lib_win_debug ..\bin\lib_win_debug\YVRTCEngine.lib ..\bin\lib_win_debug\YVRTCCore.lib ..\bin\lib_win_debug\yuv.lib ..\bin\lib_win_debug\opus.lib ..\bin\lib_win_debug\openh264.lib ..\bin\lib_win_debug\speexdsp.lib ..\bin\lib_win_debug\avutil.lib ..\bin\lib_win_debug\avcodec.lib ..\bin\lib_win_debug\usrsctp.lib ksuser.lib winmm.lib ole32.lib Strmiids.lib /LIBPATH:..\thirdparty\lib\win\msvc ..\bin\lib_win_debug\pthreadVC2.lib avrt.lib user32.lib Advapi32.lib ..\bin\lib_win_debug\srtp2.lib ..\bin\lib_win_debug\libcrypto.lib ..\bin\lib_win_debug\libssl.lib Crypt32.lib ws2_32.lib D:\qt\5.14.2\msvc2017_64\lib\Qt5Guid.lib D:\qt\5.14.2\msvc2017_64\lib\Qt5Cored.lib  D:\qt\5.14.2\msvc2017_64\lib\qtmaind.lib /LIBPATH:C:\openssl\lib /LIBPATH:C:\Utils\my_sql\mysql-5.7.25-winx64\lib /LIBPATH:C:\Utils\postgresql\pgsql\lib shell32.lib 
 QMAKE         = D:\qt\5.14.2\msvc2017_64\bin\qmake.exe
 DEL_FILE      = del
 CHK_DIR_EXISTS= if not exist
@@ -169,7 +169,72 @@ compiler_clean: compiler_moc_predefs_clean
 
 debug\main.obj: ..\yvplayer\main.cpp ..\include\yvrtc_interface.h \
 		..\yvplayer\pthread.h \
-		..\thirdparty\include\win\include\sched.h
+		..\thirdparty\include\win\include\sched.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\QDebug \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qdebug.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qalgorithms.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qglobal.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qconfig-bootstrapped.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qconfig.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qtcore-config.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qsystemdetection.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qprocessordetection.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qcompilerdetection.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qtypeinfo.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qsysinfo.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qlogging.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qflags.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qatomic.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qbasicatomic.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qatomic_bootstrap.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qgenericatomic.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qatomic_cxx11.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qatomic_msvc.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qglobalstatic.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qmutex.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qnumeric.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qversiontagging.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qhash.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qchar.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qiterator.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qlist.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qrefcount.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qarraydata.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qhashfunctions.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qstring.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qbytearray.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qnamespace.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qstringliteral.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qstringalgorithms.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qstringview.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qstringbuilder.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qpair.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qvector.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qcontainertools_impl.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qpoint.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qbytearraylist.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qstringlist.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qregexp.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qstringmatcher.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qmap.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qtextstream.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qiodevice.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qobject.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qobjectdefs.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qobjectdefs_impl.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qcoreevent.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qscopedpointer.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qmetatype.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qvarlengtharray.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qcontainerfwd.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qobject_impl.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qlocale.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qvariant.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qshareddata.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qset.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qcontiguouscache.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qsharedpointer.h \
+		D:\qt\5.14.2\msvc2017_64\include\QtCore\qsharedpointer_impl.h
 
 ####### Install
 

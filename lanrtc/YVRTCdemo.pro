@@ -57,10 +57,12 @@ win32{
 }
 
 SOURCES += \
-    main.cpp
+    main.cpp \
+    testdatachannel.cpp
 
 
  HEADERS += \
+    testdatachannel.h \
      yvrtc_interface.h
 
 # Default rules for deployment.

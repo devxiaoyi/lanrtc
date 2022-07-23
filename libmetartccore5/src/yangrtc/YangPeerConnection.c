@@ -27,6 +27,10 @@ void g_yang_pc_init(YangPeer* peer){
 int32_t g_yang_pc_isConnected(YangPeer* peer){
 	if(peer==NULL||peer->conn==NULL) return Yang_Ok;
 	YangRtcConnection *conn = (YangRtcConnection*) peer->conn;
+    if (!conn)
+    {
+        return -1;
+    }
 	return conn->isConnected(conn->session);
 }
 
