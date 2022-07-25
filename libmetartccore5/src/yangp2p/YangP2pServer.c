@@ -128,6 +128,7 @@ void* yang_run_http_thread(void *obj){
 		}
 		break;
 	}
+	closesocket(connfd);
 	yang_free(buf);
 	yang_free(rets);
 	yang_free(answer);

@@ -257,25 +257,23 @@ int32_t yang_rtcconn_on_rtcp(YangRtcSession *session, char *data,int32_t nb_data
 	yang_init_buffer(&buffer, unprotected_buf, nb_unprotected_buf);
 
 
-	YangRtcpCompound rtcp_compound;
-	memset(&rtcp_compound,0,sizeof(YangRtcpCompound));
-	yang_create_rtcpCompound(&rtcp_compound);
-	if (Yang_Ok != (err = yang_decode_rtcpCompound(&rtcp_compound, &buffer))) {
+	if (Yang_Ok != (err = yang_decode_rtcpCompound(&session->rtcp_compound, &buffer))) {
 		return yang_error_wrap(err, "decode rtcp plaintext=%u",	nb_unprotected_buf);
 	}
 
 	YangRtcpCommon *rtcp = NULL;
-	for (int i = 0; i < rtcp_compound.rtcpVector.vsize; i++) {
-		rtcp = &rtcp_compound.rtcpVector.payload[i];
+	for (int i = 0; i < session->rtcp_compound.rtcpVector.vsize; i++) {
+		rtcp = &session->rtcp_compound.rtcpVector.payload[i];
 		err = yang_rtcconn_dispatch_rtcp(session, rtcp);
 		if (Yang_Ok != err) {
+			yang_rtcpCompound_clear(&session->rtcp_compound);
 			return yang_error_wrap(err,
 					"cipher=%u, plaintext=%u,  rtcp=(%u,%u,%u,%u)", nb_data,
 					nb_unprotected_buf, rtcp->nb_data, rtcp->header.rc,
 					rtcp->header.type, rtcp->ssrc);
 		}
 	}
-	yang_destroy_rtcpCompound(&rtcp_compound);
+	yang_rtcpCompound_clear(&session->rtcp_compound);
 	return err;
 
 }
@@ -553,6 +551,8 @@ void yang_create_rtcConnection(YangRtcConnection* conn,YangAVInfo* avinfo){
 	conn->session=session;
 	yang_create_rtcContext(&session->context);
 	yang_create_ice(&session->ice,avinfo);
+	memset(&session->rtcp_compound,0,sizeof(YangRtcpCompound));
+	yang_create_rtcpCompound(&session->rtcp_compound);
 	session->context.udp->session.user = conn;
 	session->context.udp->session.receive = g_session_receive;
 	session->context.udp->session.startStunTimer = g_startStunTimer;
@@ -624,6 +624,9 @@ void yang_destroy_rtcConnection(YangRtcConnection *conn) {
 		yang_destroy_rtpBuffer(session->playRtpBuffer);
 		yang_free(session->playRtpBuffer);
 	}
+
+	yang_destroy_rtcpCompound(&session->rtcp_compound);
+
 	if(session->pushAudioRtpBuffer){
 		yang_destroy_rtpBuffer(session->pushAudioRtpBuffer);
 		yang_free(session->pushAudioRtpBuffer);

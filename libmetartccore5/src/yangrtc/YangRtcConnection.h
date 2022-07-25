@@ -13,6 +13,8 @@ typedef struct{
 	int32_t (*createOffer)(YangRtcSession *session, char **psdp);
 
 	int32_t (*requestStunServer)(YangRtcSession *session);
+	int32_t (*requestTurnServer)(YangRtcSession *session);
+
 	int32_t (*createAnswer)(YangRtcSession* session,char* answer);
 	int32_t (*createHttpAnswer)(YangRtcSession* session,char* answer);
 	int32_t (*setRemoteDescription)(YangRtcSession* session,char* sdp);

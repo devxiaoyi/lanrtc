@@ -13,10 +13,14 @@ typedef struct YangSendNackBuffer{
 }YangSendNackBuffer;
 
 typedef struct YangPublishNackBuffer{
+	 uint32_t capacityIndex;
 	 uint32_t capacity;
-	 uint32_t vlen;
-	 YangSendNackBuffer** queue;
+	// uint32_t vlen;
+	 YangSendNackBuffer* queue;
 }YangPublishNackBuffer;
+
+#define Yang_Video_Publish_NackBuffer_Count 1024 * 3
+#define Yang_AUDIO_Publish_NackBuffer_Count 128
 
 #ifdef __cplusplus
 extern "C"{

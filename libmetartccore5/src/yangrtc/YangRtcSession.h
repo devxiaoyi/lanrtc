@@ -15,7 +15,7 @@
 
 #include <yangice/YangIce.h>
 #include <yangutil/sys/YangCTimer.h>
-
+#include <yangrtp/YangRtcpCompound.h>
 typedef struct {
 	int32_t isSendDtls;
 	int32_t startRecv;
@@ -52,6 +52,7 @@ typedef struct {
 
 	YangRtcContext context;
 	YangRtpPacket pushPacket;
+	YangRtcpCompound rtcp_compound;
 	YangVideoCodec codec;
 	YangIce ice;
 
