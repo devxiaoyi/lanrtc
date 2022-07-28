@@ -333,8 +333,8 @@ void YangP2pRtc::stop() {
 
 void YangP2pRtc::run() {
 	m_isStart = 1;
-	startLoop();
-	m_isStart = 0;
+	// startLoop();
+	// m_isStart = 0;
 }
 
 void YangP2pRtc::setInAudioList(YangAudioEncoderBuffer *pbuf) {
@@ -361,11 +361,73 @@ int32_t YangP2pRtc::publishVideoData(YangStreamCapture* data){
 
 		if(rtc->isConnected(&rtc->peer)){
 			ret = rtc->on_video(&rtc->peer,data->getVideoFrame(data->context));
-			// ret = rtc->on_video(&rtc->peer,data);
 		}
 	}
 	return ret;
 }
+
+int32_t YangP2pRtc::publishVideoFrame(YangFrame *pFrame)
+{
+	int32_t ret = 0;
+
+	if (m_isStart == 0) {
+		return -1;
+	}
+
+	if (pFrame->frametype == YANG_Frametype_I)
+	{
+		YangFrame spsppsFrame;
+		spsppsFrame.dts = pFrame->dts;
+		spsppsFrame.frametype = pFrame->frametype;
+		spsppsFrame.mediaType = pFrame->mediaType;
+		spsppsFrame.pts = pFrame->pts;
+		spsppsFrame.uid = pFrame->uid;
+		uint8_t tmpBuffer[64] = {0};
+		spsppsFrame.payload = tmpBuffer;
+		YangVideoMeta vmd = {0};
+		yang_createH264Meta(&vmd, pFrame);
+		yang_getConfig_Flv_H264(&vmd.mp4Meta, spsppsFrame.payload, &spsppsFrame.nb);
+		
+		for (size_t i = 0; i < m_pushs.size(); i++)
+		{
+			YangPeerConnection *rtc = m_pushs.at(i);
+
+			if (rtc->isConnected(&rtc->peer))
+			{
+				ret = rtc->on_video(&rtc->peer, &spsppsFrame);
+			}
+		}
+
+		YangH264NaluData nalu = {0};
+		yang_parseH264Nalu(pFrame, &nalu);
+		if (nalu.keyframePos > -1)
+		{
+			pFrame->payload += nalu.keyframePos;
+			pFrame->nb -= (nalu.keyframePos);
+		}
+		else
+		{
+			return -1;
+		}
+	}
+	else
+	{
+		pFrame->payload += 4;
+		pFrame->nb -= 4;
+	}
+
+	for (size_t i = 0; i < m_pushs.size(); i++)
+	{
+		YangPeerConnection *rtc = m_pushs.at(i);
+
+		if (rtc->isConnected(&rtc->peer))
+		{
+			ret = rtc->on_video(&rtc->peer, pFrame);
+		}
+	}
+	return ret;
+}
+
 int32_t YangP2pRtc::publishAudioData(YangStreamCapture* data){
 	int32_t ret=0;
 	for(size_t i=0;i<m_pushs.size();i++){
@@ -416,11 +478,11 @@ void YangP2pRtc::startLoop() {
 	while (m_isConvert == 1) {
 		if ((m_in_videoBuffer && m_in_videoBuffer->size() == 0)
 				&& (m_in_audioBuffer && m_in_audioBuffer->size() == 0)) {
-			yang_usleep(2000);
+			yang_usleep(1000);
 			continue;
 		}
 		if (m_pushs.size() == 0) {
-			yang_usleep(2000);
+			yang_usleep(1000);
 			continue;
 		}
 

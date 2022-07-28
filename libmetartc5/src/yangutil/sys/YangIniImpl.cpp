@@ -192,12 +192,12 @@ void YangIni::initVideo(YangVideoInfo* video){
     		audio->channel=readIntValue("audio", "channel", 2);
     		audio->bitrate = readIntValue("audio", "bitrate", 128);
     		audio->usingMono=readIntValue("audio", "usingMono", 0);
-    		audio->hasAec = readIntValue("audio", "hasAec", 0);
+    		audio->hasAec = readIntValue("audio", "hasAec", 1);
     		audio->echoPath = readIntValue("audio", "echoPath", 10);
     		audio->aecBufferFrames=readIntValue("audio", "aecBufferFrames", 0);
     		audio->hasAudioHeader = readIntValue("audio", "hasAudioHeader", 0);
-    		audio->audioEncoderType = readIntValue("audio", "audioEncoderType", 0);
-    		audio->audioDecoderType = readIntValue("audio", "audioDecoderType", 0);
+    		audio->audioEncoderType = readIntValue("audio", "audioEncoderType", 3);
+    		audio->audioDecoderType = readIntValue("audio", "audioDecoderType", 3);
     		audio->audioPlayType = readIntValue("audio", "audioPlayType", 0);
        		audio->audioCacheNum = readIntValue("audio", "audioCacheNum", 8);
     		audio->audioCacheSize = readIntValue("audio", "audioCacheSize", 8);

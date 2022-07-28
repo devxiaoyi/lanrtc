@@ -19,7 +19,7 @@ typedef struct YangPublishNackBuffer{
 	 YangSendNackBuffer* queue;
 }YangPublishNackBuffer;
 
-#define Yang_Video_Publish_NackBuffer_Count 1024 * 3
+#define Yang_Video_Publish_NackBuffer_Count 1024
 #define Yang_AUDIO_Publish_NackBuffer_Count 128
 
 #ifdef __cplusplus

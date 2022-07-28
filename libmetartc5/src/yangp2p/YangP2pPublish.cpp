@@ -177,9 +177,3 @@ void YangP2pPublish::startCamera() {
 void YangP2pPublish::stopCamera() {
 	if (m_capture ) m_capture->stopVideoSource();
 }
-
-YangVideoEncoderBuffer* YangP2pPublish::getTxVideoBuffer(){
-    if (m_encoder)
-        return m_encoder->getOutVideoBuffer();
-    return NULL;
-}

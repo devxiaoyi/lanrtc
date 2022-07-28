@@ -64,6 +64,9 @@ public:
 
 	YangP2pRtcI* m_p2pRtcI;
 	void stop();
+
+	int32_t publishVideoFrame(YangFrame* pFrame);
+
 protected:
 	void run();
 	void handleError(int32_t perrCode);

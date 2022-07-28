@@ -46,7 +46,7 @@ public:
 	YangVideoBuffer* getPreVideoBuffer();
 	YangVideoBuffer* getOutPreVideoBuffer();
 	YangVideoBuffer* getOutVideoBuffer();
-	YangVideoEncoderBuffer* getTxVideoBuffer();
+	// YangVideoEncoderBuffer* getTxVideoBuffer();
 	void stopAll();
 	void setInAudioBuffer(vector<YangAudioPlayBuffer*> *pbuf);
 	void change(int32_t st);

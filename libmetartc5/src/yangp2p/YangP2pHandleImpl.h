@@ -26,14 +26,14 @@ public:
     int32_t initRtc2(bool hasPlay);
 	YangVideoBuffer* getPreVideoBuffer();
 	vector<YangVideoBuffer*>* getPlayVideoBuffer();
-	YangVideoEncoderBuffer* getTxVideoBuffer();
+	// YangVideoEncoderBuffer* getTxVideoBuffer();
 	void disconnect();
 	void receiveTcp(char *data, int32_t nb_data);
 
 	void removePlayBuffer(int32_t puid,int32_t playcount);
 	void sendKeyframe();
 
-
+	YangP2pRtc* m_pub;
 
 private:
     void startCamera();
@@ -51,7 +51,6 @@ private:
 	YangP2pDecoder *m_decoder;
 
 	YangP2pPublish* m_cap;
-	YangP2pRtc* m_pub;
 
 	YangContext* m_context;
 	YangUrlData m_url;

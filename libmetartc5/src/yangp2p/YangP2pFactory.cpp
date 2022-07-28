@@ -57,21 +57,17 @@ void* YangP2pFactory::getP2pCapture(int32_t pcapturetype,YangContext *pcontext){
     return new YangP2pCaputreCamera(pcontext);
 }
 
-YangVideoEncoderBuffer* YangP2pFactory::getTxVideoBuffer(){
-    if(!sysmessage) return NULL;
-    YangP2pMessageHandle* mess=dynamic_cast<YangP2pMessageHandle*>(sysmessage);
-    if(mess&&mess->m_p2p) return mess->m_p2p->getTxVideoBuffer();
-    return NULL;
-}
-
 int32_t YangP2pFactory::putTxVideo(YangFrame *pFrame)
 {
 	int32_t ret = 0;
-    YangVideoEncoderBuffer* txBuf = getTxVideoBuffer();
-	if (txBuf) {
-		txBuf->putEVideo(pFrame);
-	} else {
-		ret = -1;
-	}
+
+    if(!sysmessage)
+		return -1;
+
+    YangP2pMessageHandle* mess=dynamic_cast<YangP2pMessageHandle*>(sysmessage);
+
+    if(mess && mess->m_p2p && mess->m_p2p->m_pub)
+		ret = mess->m_p2p->m_pub->publishVideoFrame(pFrame);
+
 	return ret;
 }

@@ -24,7 +24,6 @@ public:
 private:
     RecordMainWindow* w;
 	YangSysMessageHandle *sysmessage;
-	YangVideoEncoderBuffer* getTxVideoBuffer();
 };
 
 #endif /* INCLUDE_YANGPUSH_YANGPUSHFACTORY_H_ */
