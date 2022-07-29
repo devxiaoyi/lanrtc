@@ -170,12 +170,14 @@ typedef struct  {
 	int32_t vpsLen;
 	int32_t spsLen;
 	int32_t ppsLen;
+    int32_t seiLen;
 	uint8_t vps[128];
 	uint8_t sps[128];
 	uint8_t pps[64];
+    uint8_t sei[128];
 }YangH2645Conf;
 typedef struct  {
-	uint8_t buffer[128];
+	uint8_t buffer[256];
 	int32_t bufLen;
 }YangRtmpMeta;
 typedef struct  {

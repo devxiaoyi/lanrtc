@@ -101,12 +101,16 @@ int32_t yang_push_h264_package_stap_a(void *psession,
 
 	YangSample sps_sample;
 	YangSample pps_sample;
-	yang_decodeMetaH264(videoFrame->payload, videoFrame->nb, &sps_sample,&pps_sample);
+	YangSample sei_sample = {0};
+	yang_decodeMetaH264Sei(videoFrame->payload, videoFrame->nb, &sps_sample,&pps_sample, &sei_sample);
 
 
 	uint8_t header = (uint8_t) sps_sample.bytes[0];
 	rtp->stapData.nri = (YangAvcNaluType) header;
 
+	if(sei_sample.nb > 0 && sei_sample.bytes != NULL) {
+		yang_insert_YangSampleVector(&rtp->stapData.nalus, &sei_sample);
+	}
 	yang_insert_YangSampleVector(&rtp->stapData.nalus, &sps_sample);
 	yang_insert_YangSampleVector(&rtp->stapData.nalus, &pps_sample);
 

@@ -23,7 +23,7 @@ void yang_getH264RtmpHeader(uint8_t *buf, uint8_t *src, int32_t *hLen);
 void yang_decodeMetaH264(uint8_t *configBuf,int32_t p_configLen, YangSample* sps, YangSample* pps);
 void yang_decodeMetaH265(uint8_t *configBuf,int32_t p_configLen, YangSample* vps, YangSample* sps, YangSample* pps);
 
-
+void yang_decodeMetaH264Sei(uint8_t *configBuf,int32_t p_configLen, YangSample* sps, YangSample* pps, YangSample* sei);
 
 
 #endif /* INCLUDE_YANGAVUTIL_VIDEO_YANGCMETA_H_ */

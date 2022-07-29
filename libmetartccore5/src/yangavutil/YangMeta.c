@@ -143,8 +143,13 @@ void yang_createH264Meta( YangVideoMeta* pvmd, YangFrame *videoFrame){
         if (remainNalusLength == 0) {
 			return;
 		}
+		// sei [06 05]
+		if (ret == 0x06 && curPtrInNalus[1] == 0x05) {
+			pvmd->mp4Meta.seiLen = nextNaluLength;
+			memcpy(pvmd->mp4Meta.sei, curPtrInNalus, nextNaluLength);
+		}
 		// SPS
-		if (ret == 0x67) {
+		else if (ret == 0x67) {
 			pvmd->mp4Meta.spsLen = nextNaluLength;
 			memcpy(pvmd->mp4Meta.sps, curPtrInNalus, nextNaluLength);
 		}
@@ -195,16 +200,19 @@ void yang_getConfig_Flv_H264( YangH2645Conf *p_264, uint8_t *configBuf,
 
     *szTmp++=0x00;
     *szTmp++=p_264->spsLen;
-
 	memcpy(szTmp, p_264->sps, p_264->spsLen);
 	szTmp += p_264->spsLen;
-	// *szTmp = 0x01;
-	// szTmp += 1;
+
     *szTmp++=0x00;
     *szTmp++=p_264->ppsLen;
 	memcpy(szTmp, p_264->pps, p_264->ppsLen);
-
 	szTmp += p_264->ppsLen;
+
+    *szTmp++=0x00;
+    *szTmp++=p_264->seiLen;
+	memcpy(szTmp, p_264->sei, p_264->seiLen);
+	szTmp += p_264->seiLen;
+
 	*p_configLen = szTmp - configBuf;
 	szTmp = NULL;
 }
@@ -472,4 +480,16 @@ void yang_decodeMetaH265(uint8_t *meta,int32_t p_configLen, YangSample* vps, Yan
 
 	pps->nb=*(meta+32+vpsLen+5+spsLen+5);
 	pps->bytes=(char*)meta+32+vpsLen+5+spsLen+5+1;
+}
+
+void yang_decodeMetaH264Sei(uint8_t *buf,int32_t p_configLen, YangSample* sps, YangSample* pps, YangSample* sei){
+	sps->nb= *(buf + 12);
+	sps->bytes = (char*)buf + 13;
+	pps->nb = *(sps->bytes + sps->nb + 1);
+	pps->bytes= sps->bytes + sps->nb + 2;
+	if (sps->nb + pps->nb + 11 + 2 + 2 + 1 >= p_configLen) {
+		return;
+	}
+	sei->nb = *(pps->bytes + pps->nb + 1);
+	sei->bytes= pps->bytes + pps->nb + 2;
 }
