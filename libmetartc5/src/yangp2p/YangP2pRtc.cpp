@@ -63,14 +63,14 @@ void g_yang_doTask(int32_t taskId, void *user) {
 YangP2pRtc::YangP2pRtc(YangContext *pcontext) {
 	m_context = pcontext;
 
-	m_in_videoBuffer = NULL;
-	m_in_audioBuffer = NULL;
-	m_out_videoBuffer = NULL;
-	m_out_audioBuffer = NULL;
+	// m_in_videoBuffer = NULL;
+	// m_in_audioBuffer = NULL;
+	// m_out_videoBuffer = NULL;
+	// m_out_audioBuffer = NULL;
 	m_isStart = 0;
 	m_isConvert = 0;
 	m_uidSeq=0;
-	m_vmd = NULL;
+	// m_vmd = NULL;
 	m_audioEncoderType = m_context->avinfo.audio.audioEncoderType;
 	m_netState = 1;
 	m_isInit = 0;
@@ -110,9 +110,9 @@ YangP2pRtc::~YangP2pRtc() {
 	}
 	m_pushs.clear();
 	m_context = NULL;
-	m_in_videoBuffer = NULL;
-	m_in_audioBuffer = NULL;
-	m_vmd = NULL;
+	// m_in_videoBuffer = NULL;
+	// m_in_audioBuffer = NULL;
+	// m_vmd = NULL;
 	pthread_mutex_destroy(&m_mutex);
 	yang_timer_stop(m_5stimer);
 	yang_destroy_timer(m_5stimer);
@@ -121,13 +121,13 @@ YangP2pRtc::~YangP2pRtc() {
 
 void YangP2pRtc::receiveAudio(YangFrame *audioFrame) {
     if(audioFrame==NULL||!audioFrame->payload) return;
-	if(m_out_audioBuffer) m_out_audioBuffer->putPlayAudio(audioFrame);
+	// if(m_out_audioBuffer) m_out_audioBuffer->putPlayAudio(audioFrame);
 }
 
 void YangP2pRtc::receiveVideo(YangFrame *videoFrame) {
     if(videoFrame==NULL||videoFrame->payload==NULL) return;
 
-   if(m_out_videoBuffer) m_out_videoBuffer->putEVideo(videoFrame);
+//    if(m_out_videoBuffer) m_out_videoBuffer->putEVideo(videoFrame);
 }
 
 void YangP2pRtc::receiveMsg(YangFrame* msgFrame){
@@ -146,10 +146,6 @@ int32_t YangP2pRtc::publishMsg(YangFrame* msgFrame){
 		}
 	}
 	return ret;
-}
-
-YangVideoDecoderBuffer* YangP2pRtc::getOutVideoList(){
-	return m_out_videoBuffer;
 }
 
 void YangP2pRtc::setMediaConfig(int32_t puid, YangAudioParam *audio,YangVideoParam *video){
@@ -212,8 +208,8 @@ int32_t YangP2pRtc::connectPeer(int32_t nettype, string server,int32_t localPort
 	m_pushs.push_back(sh);
 	if(m_context) m_context->streams.connectNotify(sh->peer.streamconfig.uid,sh->peer.streamconfig.streamOptType, true);
 	if(m_pushs.size()==1){
-		yang_reindex(m_in_audioBuffer);
-		yang_reindex(m_in_videoBuffer);
+		// yang_reindex(m_in_audioBuffer);
+		// yang_reindex(m_in_videoBuffer);
 	}
 	if(m_p2pRtcI) m_p2pRtcI->sendKeyframe();
 
@@ -258,8 +254,8 @@ int32_t YangP2pRtc::addPeer(char* sdp,char* answer,char* remoteIp,int32_t localP
 	}
 	if(m_context) m_context->streams.connectNotify(sh->peer.streamconfig.uid,sh->peer.streamconfig.streamOptType, true);
 	if(m_pushs.size()==1){
-		yang_reindex(m_in_audioBuffer);
-		yang_reindex(m_in_videoBuffer);
+		// yang_reindex(m_in_audioBuffer);
+		// yang_reindex(m_in_videoBuffer);
 	}
 	if(m_p2pRtcI) m_p2pRtcI->sendKeyframe();
     *phasplay=sh->peer.streamconfig.streamOptType==Yang_Stream_Both?1:0;
@@ -297,7 +293,7 @@ int32_t YangP2pRtc::erasePeer(int32_t uid){
 			if(streamOpt==Yang_Stream_Both||streamOpt==Yang_Stream_Play){
 				m_playCount--;
 				if(m_playCount<1)   yang_post_message(YangM_P2p_Play_Stop,0,NULL);
-	            if(m_p2pRtcI) m_p2pRtcI->removePlayBuffer(uid,m_playCount);
+	            // if(m_p2pRtcI) m_p2pRtcI->removePlayBuffer(uid,m_playCount);
 			}
 
 			return Yang_Ok;
@@ -331,28 +327,6 @@ void YangP2pRtc::stop() {
 	m_isConvert = 0;
 }
 
-void YangP2pRtc::run() {
-	m_isStart = 1;
-	// startLoop();
-	// m_isStart = 0;
-}
-
-void YangP2pRtc::setInAudioList(YangAudioEncoderBuffer *pbuf) {
-	m_in_audioBuffer = pbuf;
-}
-void YangP2pRtc::setInVideoList(YangVideoEncoderBuffer *pbuf) {
-	m_in_videoBuffer = pbuf;
-}
-void YangP2pRtc::setInVideoMetaData(YangVideoMeta *pvmd) {
-	m_vmd = pvmd;
-}
-void YangP2pRtc::setOutAudioList(YangAudioEncoderBuffer *pbuf){
-	m_out_audioBuffer=pbuf;
-}
-void YangP2pRtc::setOutVideoList(YangVideoDecoderBuffer *pbuf){
-	m_out_videoBuffer=pbuf;
-}
-
 int32_t YangP2pRtc::publishVideoData(YangStreamCapture* data){
 	int32_t ret=0;
 
@@ -378,11 +352,11 @@ int32_t YangP2pRtc::publishVideoFrame(YangFrame *pFrame)
 	{
 		YangFrame spsppsFrame;
 		spsppsFrame.dts = pFrame->dts;
-		spsppsFrame.frametype = pFrame->frametype;
+		spsppsFrame.frametype = YANG_Frametype_Spspps;
 		spsppsFrame.mediaType = pFrame->mediaType;
 		spsppsFrame.pts = pFrame->pts;
 		spsppsFrame.uid = pFrame->uid;
-		uint8_t tmpBuffer[64] = {0};
+		uint8_t tmpBuffer[128] = {0};
 		spsppsFrame.payload = tmpBuffer;
 		YangVideoMeta vmd = {0};
 		yang_createH264Meta(&vmd, pFrame);
@@ -437,6 +411,33 @@ int32_t YangP2pRtc::publishAudioData(YangStreamCapture* data){
 		}
 	}
 	return ret;
+}
+
+#if 0
+void YangP2pRtc::run() {
+	m_isStart = 1;
+	// startLoop();
+	// m_isStart = 0;
+}
+
+YangVideoDecoderBuffer* YangP2pRtc::getOutVideoList(){
+	return m_out_videoBuffer;
+}
+
+void YangP2pRtc::setInAudioList(YangAudioEncoderBuffer *pbuf) {
+	m_in_audioBuffer = pbuf;
+}
+void YangP2pRtc::setInVideoList(YangVideoEncoderBuffer *pbuf) {
+	m_in_videoBuffer = pbuf;
+}
+void YangP2pRtc::setInVideoMetaData(YangVideoMeta *pvmd) {
+	m_vmd = pvmd;
+}
+void YangP2pRtc::setOutAudioList(YangAudioEncoderBuffer *pbuf){
+	m_out_audioBuffer=pbuf;
+}
+void YangP2pRtc::setOutVideoList(YangVideoDecoderBuffer *pbuf){
+	m_out_videoBuffer=pbuf;
 }
 
 #define DON_DEBUG 0
@@ -563,3 +564,5 @@ void YangP2pRtc::startLoop() {
 	yang_destroy_streamCapture(&data);
 	yang_free(vmd);
 }
+
+#endif

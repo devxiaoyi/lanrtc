@@ -37,7 +37,7 @@ void YangP2pMessageHandle::handleMessage(YangSysMessage *mss) {
 	switch (mss->messageId) {
 	case YangM_P2p_StartVideoCapture:
 	{
-		if(m_p2p) m_p2p->init();
+		// if(m_p2p) m_p2p->init();
 		break;
 	}
 	case YangM_P2p_Connect:

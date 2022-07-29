@@ -16,9 +16,9 @@ public:
     virtual int32_t startRtc(char* remoteIp,char* sdp,char* response)=0;
     virtual int32_t connectRtc(char* url)=0;
     virtual void disconnect()=0;
-    virtual void init()=0;
-    virtual YangVideoBuffer* getPreVideoBuffer()=0;
-    virtual std::vector<YangVideoBuffer*>* getPlayVideoBuffer()=0;
+    // virtual void init()=0;
+    // virtual YangVideoBuffer* getPreVideoBuffer()=0;
+    // virtual std::vector<YangVideoBuffer*>* getPlayVideoBuffer()=0;
 };
 
 

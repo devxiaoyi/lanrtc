@@ -22,12 +22,12 @@ class YangP2pRtcI{
 public:
 	YangP2pRtcI(){};
 	virtual ~YangP2pRtcI(){};
-	virtual void removePlayBuffer(int32_t puid,int32_t playcount)=0;
+	// virtual void removePlayBuffer(int32_t puid,int32_t playcount)=0;
 	virtual void sendKeyframe()=0;
 };
 
 
-class YangP2pRtc: public YangThread ,public YangMediaConfigCallback{
+class YangP2pRtc: public YangMediaConfigCallback{
 public:
 	YangP2pRtc(YangContext *pcontext);
 	virtual ~YangP2pRtc();
@@ -43,20 +43,23 @@ public:
 
 	void checkAlive();
 
+#if 0
 	void setInVideoMetaData(YangVideoMeta *pvmd);
 	void setInAudioList(YangAudioEncoderBuffer *pbuf);
 	void setInVideoList(YangVideoEncoderBuffer *pbuf);
 	void setOutAudioList(YangAudioEncoderBuffer *pbuf);
 	void setOutVideoList(YangVideoDecoderBuffer *pbuf);
 	YangVideoDecoderBuffer* getOutVideoList();
+#endif
+
 	void receiveAudio(YangFrame* audioFrame);
 	void receiveVideo(YangFrame* videoFrame);
 	void receiveMsg(YangFrame* videoFrame);
     int32_t publishMsg(YangFrame* msgFrame);
     void sendRtcMessage(int32_t puid,YangRtcMessageType mess);
 	void setMediaConfig(int32_t puid, YangAudioParam *audio,YangVideoParam *video);
-	int32_t stopPublishAudioData();
-	int32_t stopPublishVideoData();
+	// int32_t stopPublishAudioData();
+	// int32_t stopPublishVideoData();
 
 	int32_t m_netState;
 	int32_t isPublished;
@@ -68,17 +71,17 @@ public:
 	int32_t publishVideoFrame(YangFrame* pFrame);
 
 protected:
-	void run();
+	// void run();
 	void handleError(int32_t perrCode);
-	void startLoop();
-	void startLoop_h265();
+	// void startLoop();
+	// void startLoop_h265();
 	int32_t publishVideoData(YangStreamCapture* data);
 	int32_t publishAudioData(YangStreamCapture* data);
 	void removeStream();
 	YangContext *m_context;
-	YangVideoMeta *m_vmd;
-	YangVideoEncoderBuffer *m_in_videoBuffer;
-	YangAudioEncoderBuffer *m_in_audioBuffer;
+	// YangVideoMeta *m_vmd;
+	// YangVideoEncoderBuffer *m_in_videoBuffer;
+	// YangAudioEncoderBuffer *m_in_audioBuffer;
 
 	int32_t m_isConvert;
 	int32_t m_isInit;
@@ -94,10 +97,10 @@ private:
 	pthread_mutex_t m_mutex;
 	vector<int> m_removeList;
 
-	YangH264NaluData m_nalu;
+	// YangH264NaluData m_nalu;
 
-	YangAudioEncoderBuffer *m_out_audioBuffer;
-	YangVideoDecoderBuffer *m_out_videoBuffer;
+	// YangAudioEncoderBuffer *m_out_audioBuffer;
+	// YangVideoDecoderBuffer *m_out_videoBuffer;
 };
 
 #endif /* SRC_YANGMEETING_INCLUDE_YangP2pRtc_H_ */

@@ -7,7 +7,7 @@
 //
 #ifndef YANGPUSH_YANGPUSHHANDLEIMPL_H_
 #define YANGPUSH_YANGPUSHHANDLEIMPL_H_
-#include <yangp2p/YangP2pPublish.h>
+//#include <yangp2p/YangP2pPublish.h>
 #include <yangp2p/YangP2pHandle.h>
 #include <yangp2p/YangP2pRtc.h>
 #include <yangutil/sys/YangUrl.h>
@@ -18,19 +18,19 @@ class YangP2pHandleImpl :public YangP2pHandle,public YangP2pRtcI{
 public:
 	YangP2pHandleImpl(bool hasAudio,YangContext* pcontext,YangSysMessageI* pmessage);
 	virtual ~YangP2pHandleImpl();
-	void init();
+	// void init();
 
 	int32_t connectRtc(char* url);
     int32_t startRtc(char* remoteIp,char* sdp,char* response);
     int32_t initRtc();
     int32_t initRtc2(bool hasPlay);
-	YangVideoBuffer* getPreVideoBuffer();
+	// YangVideoBuffer* getPreVideoBuffer();
 	vector<YangVideoBuffer*>* getPlayVideoBuffer();
 	// YangVideoEncoderBuffer* getTxVideoBuffer();
 	void disconnect();
 	void receiveTcp(char *data, int32_t nb_data);
 
-	void removePlayBuffer(int32_t puid,int32_t playcount);
+	// void removePlayBuffer(int32_t puid,int32_t playcount);
 	void sendKeyframe();
 
 	YangP2pRtc* m_pub;
@@ -50,7 +50,7 @@ private:
 
 	YangP2pDecoder *m_decoder;
 
-	YangP2pPublish* m_cap;
+	// YangP2pPublish* m_cap;
 
 	YangContext* m_context;
 	YangUrlData m_url;

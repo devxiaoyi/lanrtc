@@ -20,12 +20,12 @@ YangP2pHandleImpl::YangP2pHandleImpl(bool phasAudio,YangContext* pcontext,YangSy
 	m_videoState=Yang_VideoSrc_Camera;
 	m_context = pcontext;
 	m_message = pmessage;
-	m_cap = new YangP2pPublish(m_context);
-	m_cap->setCaptureType(m_videoState);
+	// m_cap = new YangP2pPublish(m_context);
+	// m_cap->setCaptureType(m_videoState);
 	m_hasAudio = phasAudio;
 	m_isInit=false;
 	m_isInitRtc=false;
-	init();
+	// init();
 
 	m_p2pServer=(YangP2pServer*)calloc(sizeof(YangP2pServer),1);
 	yang_create_p2pserver(m_p2pServer,m_context->avinfo.sys.httpPort);
@@ -38,11 +38,11 @@ YangP2pHandleImpl::YangP2pHandleImpl(bool phasAudio,YangContext* pcontext,YangSy
 }
 
 YangP2pHandleImpl::~YangP2pHandleImpl() {
-	if (m_cap)		m_cap->stopAll();
+	// if (m_cap)		m_cap->stopAll();
 	if (m_pub)		m_pub->stop();
 	if(m_decoder) 		m_decoder->stopAll();
 
-	yang_delete(m_cap);
+	// yang_delete(m_cap);
 	yang_delete(m_decoder);
 	yang_delete(m_pub);
 	yang_destroy_p2pserver(m_p2pServer);
@@ -56,6 +56,23 @@ void YangP2pHandleImpl::disconnect() {
 
 }
 
+void YangP2pHandleImpl::stopPublish() {
+	if (m_pub) {
+		m_pub->disConnectPeer();
+	}
+	yang_stop(m_pub);
+	if(m_decoder) m_decoder->stopAll();
+	yang_stop_thread(m_pub);
+	yang_delete(m_pub);
+	// if(m_cap) m_cap->deleteVideoEncoding();
+	yang_delete(m_decoder);
+}
+
+void YangP2pHandleImpl::sendKeyframe(){
+	// if(m_cap) m_cap->sendMsgToEncoder(Yang_Req_Sendkeyframe);
+}
+
+#if 0
 void YangP2pHandleImpl::init() {
 	if(m_isInit) return;
 	m_videoState = Yang_VideoSrc_Camera;
@@ -77,21 +94,6 @@ void YangP2pHandleImpl::removePlayBuffer(int32_t puid,int32_t playcount){
 
 }
 
-void YangP2pHandleImpl::sendKeyframe(){
-	if(m_cap) m_cap->sendMsgToEncoder(Yang_Req_Sendkeyframe);
-}
-
-void YangP2pHandleImpl::stopPublish() {
-	if (m_pub) {
-		m_pub->disConnectPeer();
-	}
-	yang_stop(m_pub);
-	if(m_decoder) m_decoder->stopAll();
-	yang_stop_thread(m_pub);
-	yang_delete(m_pub);
-	if(m_cap) m_cap->deleteVideoEncoding();
-	yang_delete(m_decoder);
-}
 YangVideoBuffer* YangP2pHandleImpl::getPreVideoBuffer() {
 	if (m_cap)	return m_cap->getPreVideoBuffer();
 	return NULL;
@@ -150,6 +152,47 @@ int32_t YangP2pHandleImpl::initRtc2(bool hasPlay){
 	return Yang_Ok;
 }
 
+void YangP2pHandleImpl::startCamera() {
+	if(m_cap) m_cap->startCamera();
+}
+
+
+void YangP2pHandleImpl::stopCamera() {
+	if(m_cap) m_cap->stopCamera();
+}
+
+void YangP2pHandleImpl::initPlayList() {
+	if (m_outAudioBuffer == NULL) {
+		m_outAudioBuffer = new YangAudioEncoderBuffer(30);
+	}
+	if (m_outVideoBuffer == NULL)
+		m_outVideoBuffer = new YangVideoDecoderBuffer();
+
+}
+
+#endif
+
+int32_t YangP2pHandleImpl::initRtc()
+{
+	if (m_pub == NULL)
+	{
+		m_pub = new YangP2pRtc(m_context);
+		m_pub->m_p2pRtcI = this;
+	}
+	return Yang_Ok;
+}
+
+int32_t YangP2pHandleImpl::initRtc2(bool hasPlay)
+{
+	if (!m_isInitRtc)
+	{
+		if (m_pub->m_isStart == 0)
+			m_pub->m_isStart = 1;
+		m_isInitRtc = true;
+	}
+	return Yang_Ok;
+}
+
 int32_t YangP2pHandleImpl::connectRtc(char* url) {
 	int32_t localPort=m_context->avinfo.sys.rtcLocalPort++;
 	int err = Yang_Ok;
@@ -180,23 +223,5 @@ int YangP2pHandleImpl::startRtc(char* remoteIp,char* sdp,char* response ) {
 	}
 	initRtc2(false);
 	return err;
-
-}
-
-void YangP2pHandleImpl::startCamera() {
-	if(m_cap) m_cap->startCamera();
-}
-
-
-void YangP2pHandleImpl::stopCamera() {
-	if(m_cap) m_cap->stopCamera();
-}
-
-void YangP2pHandleImpl::initPlayList() {
-	if (m_outAudioBuffer == NULL) {
-		m_outAudioBuffer = new YangAudioEncoderBuffer(30);
-	}
-	if (m_outVideoBuffer == NULL)
-		m_outVideoBuffer = new YangVideoDecoderBuffer();
 
 }

@@ -38,6 +38,7 @@ YangSysMessageHandle* YangP2pFactory::createP2pMessageHandle(bool hasAudio, Yang
     return new YangP2pMessageHandle(hasAudio,pcontext, pmessage,pmessagehandle);
 }
 
+#if 0
 YangVideoBuffer* YangP2pFactory::getPreVideoBuffer(YangSysMessageHandle* pmessageHandle){
 	if(!pmessageHandle) return NULL;
 	YangP2pMessageHandle* mess=dynamic_cast<YangP2pMessageHandle*>(pmessageHandle);
@@ -52,6 +53,9 @@ vector<YangVideoBuffer*>* YangP2pFactory::getPlayVideoBuffer(YangSysMessageHandl
 	if(mess&&mess->m_p2p) return mess->m_p2p->getPlayVideoBuffer();
 	return NULL;
 }
+
+#endif
+
 void* YangP2pFactory::getP2pCapture(int32_t pcapturetype,YangContext *pcontext){
   
     return new YangP2pCaputreCamera(pcontext);
