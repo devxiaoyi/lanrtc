@@ -57,8 +57,8 @@ private:
 	YangSysMessageI* m_message;
 	YangP2pServer* m_p2pServer;
 
-	YangVideoDecoderBuffer* m_outVideoBuffer;
-	YangAudioEncoderBuffer* m_outAudioBuffer;
+	// YangVideoDecoderBuffer* m_outVideoBuffer;
+	// YangAudioEncoderBuffer* m_outAudioBuffer;
 
 
 };

@@ -40,12 +40,12 @@ YangPlayerHandleImpl::YangPlayerHandleImpl(YangContext* pcontext) {
 	// m_recv = NULL;
 	// m_play = NULL;
 	m_rtcRecv=NULL;
-	m_outVideoBuffer = NULL;
-	m_outAudioBuffer = NULL;
+	// m_outVideoBuffer = NULL;
+	// m_outAudioBuffer = NULL;
 	m_url.netType=0;
 	m_url.port=1935;
 
-	externalBuffer = new uint8_t[150 * 1024];
+	// externalBuffer = new uint8_t[150 * 1024];
 
 	if(m_rtcRecv==NULL) {
 		m_rtcRecv=new YangRtcReceive(m_context);
@@ -58,10 +58,10 @@ YangPlayerHandleImpl::~YangPlayerHandleImpl() {
 	// yang_delete(m_recv);
 	// yang_delete(m_play);
 	yang_delete(m_rtcRecv);
-	yang_delete(m_outVideoBuffer);
-	yang_delete(m_outAudioBuffer);
+	// yang_delete(m_outVideoBuffer);
+	// yang_delete(m_outAudioBuffer);
 	yang_delete(m_context);
-	yang_delete(externalBuffer);
+	// yang_delete(externalBuffer);
 }
 
 void YangPlayerHandleImpl::stopPlay(){

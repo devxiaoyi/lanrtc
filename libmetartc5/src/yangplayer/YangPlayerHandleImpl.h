@@ -37,8 +37,8 @@ protected:
 
 private:
 	YangContext* m_context;
-	YangVideoDecoderBuffer* m_outVideoBuffer;
-	YangAudioEncoderBuffer* m_outAudioBuffer;
+	// YangVideoDecoderBuffer* m_outVideoBuffer;
+	// YangAudioEncoderBuffer* m_outAudioBuffer;
 
 	uint8_t* externalBuffer;
 	// YangSysMessageI* m_message;
