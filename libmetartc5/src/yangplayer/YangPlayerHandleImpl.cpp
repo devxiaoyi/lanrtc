@@ -46,6 +46,11 @@ YangPlayerHandleImpl::YangPlayerHandleImpl(YangContext* pcontext) {
 	m_url.port=1935;
 
 	externalBuffer = new uint8_t[150 * 1024];
+
+	if(m_rtcRecv==NULL) {
+		m_rtcRecv=new YangRtcReceive(m_context);
+		// m_rtcRecv->setBuffer(m_outAudioBuffer, m_outVideoBuffer);
+	}
 }
 
 YangPlayerHandleImpl::~YangPlayerHandleImpl() {
@@ -87,7 +92,7 @@ int YangPlayerHandleImpl::play(char* url) {
 	m_url.port=0;
 	if(yang_url_parse(url,&m_url)) return 1;
 
-	stopPlay();
+	// stopPlay();
 	yang_trace("\nnetType==%d,server=%s,port=%d,app=%s,stream=%s\n",m_url.netType,m_url.server,m_url.port,m_url.app,m_url.stream);
 	m_context->avinfo.sys.transType=m_url.netType;
 	// if(m_context->streams.m_playBuffer) m_context->streams.m_playBuffer->setTranstype(m_url.netType);
@@ -132,7 +137,7 @@ int YangPlayerHandleImpl::play(char* url) {
 
 int32_t YangPlayerHandleImpl::playRtc(int32_t puid,char* localIp,char* server, int32_t pport,char* app,char* stream){
 
-	stopPlay();
+	// stopPlay();
 	//if (!m_play)	{
 		//m_play = new YangPlayerBase();
 
@@ -149,12 +154,11 @@ int32_t YangPlayerHandleImpl::playRtc(int32_t puid,char* localIp,char* server, i
 
 	// m_play->startAudioPlay(m_context);
 
-
-	if(m_rtcRecv==NULL) {
-		m_rtcRecv=new YangRtcReceive(m_context);
-		// m_rtcRecv->setBuffer(m_outAudioBuffer, m_outVideoBuffer);
-		m_rtcRecv->init(puid,localIp,server,pport,app,stream);
+	if (!m_rtcRecv) {
+		return -1;
 	}
+
+	m_rtcRecv->init(puid,localIp,server,pport,app,stream);
 
 	 m_rtcRecv->start();
 

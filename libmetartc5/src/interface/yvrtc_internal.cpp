@@ -110,7 +110,9 @@ static int32_t interVideoReceiver(YangFrame *pFrame)
     Frame.size = pFrame->nb;
     Frame.timestamp = pFrame->pts;
     Frame.uid = pFrame->uid;
-    pVideoReceiver(&Frame, pVideoReceiverUser);
+    if (pVideoReceiver) {
+        pVideoReceiver(&Frame, pVideoReceiverUser);
+    }
     return 0;
 }
 

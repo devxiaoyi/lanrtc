@@ -57,10 +57,10 @@ int main(int argc, char *argv[])
     // pthread_create(&m_thread, 0, pollingThread, yvplay);
     // pthread_join(m_thread, NULL);
 
+    yvplay->RegisterVideoReceiver(myVideoReceiver, NULL);
+
     yvplay->YVPlayStart("webrtc://172.18.0.223:1988/live/livestream");
     fp = fopen("./yvplay_0730.h264", "ab+");
-
-    yvplay->RegisterVideoReceiver(myVideoReceiver, NULL);
 
     while (1)
     {
