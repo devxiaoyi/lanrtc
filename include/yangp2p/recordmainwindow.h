@@ -9,8 +9,8 @@
 #include <yangutil/sys/YangSysMessageI.h>
 #include <yangutil/sys/YangSysMessageHandle.h>
 // #include <yangp2p/YangP2pFactory.h>
-#include "yangrecliving/YangLivingType.h"
-#include "yangplayer/YangWinPlayFactroy.h"
+//#include "yangrecliving/YangLivingType.h"
+//#include "yangplayer/YangWinPlayFactroy.h"
 #include "yangutil/buffer/YangVideoBuffer.h"
 
 class RecordMainWindow : public YangSysMessageI,public YangSysMessageHandleI,public YangStreamStateNotify

@@ -11,7 +11,7 @@
 #include <yangp2p/YangP2pHandle.h>
 #include <yangp2p/YangP2pRtc.h>
 #include <yangutil/sys/YangUrl.h>
-#include <yangplayer/YangPlayerBase.h>
+//#include <yangplayer/YangPlayerBase.h>
 #include <yangp2p/YangP2pServer.h>
 //#include <yangp2p/YangP2pDecoder.h>
 class YangP2pHandleImpl :public YangP2pHandle,public YangP2pRtcI{

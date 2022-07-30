@@ -4,8 +4,8 @@
 #ifndef YANGMEETING_INCLUDE_YANGPLAYERHANDLE_H_
 #define YANGMEETING_INCLUDE_YANGPLAYERHANDLE_H_
 #include <yangplayer/YangPlayerHandle.h>
-#include <yangplayer/YangPlayerBase.h>
-#include <yangplayer/YangPlayReceive.h>
+//#include <yangplayer/YangPlayerBase.h>
+//#include <yangplayer/YangPlayReceive.h>
 #include <yangstream/YangSynBuffer.h>
 #include <yangutil/yangavinfotype.h>
 #include <yangutil/sys/YangUrl.h>

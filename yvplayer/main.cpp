@@ -42,9 +42,10 @@ void *pollingThread(void *arg)
 
 FILE* fp = NULL;
 
-static int32_t myVideoReceiver(yvrtc::YVRFrame *pFrame)
+static int32_t myVideoReceiver(yvrtc::YVRFrame *pFrame, void* user)
 {
     fwrite(pFrame->payload, pFrame->size, 1, fp);
+
     return 0;
 } 
 
@@ -59,7 +60,7 @@ int main(int argc, char *argv[])
     yvplay->YVPlayStart("webrtc://172.18.0.223:1988/live/livestream");
     fp = fopen("./yvplay_0730.h264", "ab+");
 
-    yvplay->RegisterVideoReceiver(myVideoReceiver);
+    yvplay->RegisterVideoReceiver(myVideoReceiver, NULL);
 
     while (1)
     {

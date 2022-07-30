@@ -22,23 +22,6 @@ RecordMainWindow::RecordMainWindow()
     m_context = new YangContext();
     m_context->init((char *)"yvrtc_config.ini");
     m_context->avinfo.video.videoEncoderFormat = YangI420;
-#if Yang_Using_Openh264
-    m_context->avinfo.enc.createMeta = 0;
-#else
-    m_context->avinfo.enc.createMeta = 1;
-#endif
-#if Yang_GPU_Encoding
-    // using gpu encode
-    m_context->avinfo.video.videoEncHwType = YangV_Hw_Nvdia; // YangV_Hw_Intel,  YangV_Hw_Nvdia,
-    m_context->avinfo.video.videoEncoderFormat = YangArgb;   // YangI420;//YangArgb;
-    m_context->avinfo.enc.createMeta = 0;
-#endif
-#if Yang_HaveVr
-    // using vr bg file name
-    memset(m_context->avinfo.bgFilename, 0, sizeof(m_ini->bgFilename));
-    QSettings settingsread((char *)"yvr_config.ini", QSettings::IniFormat);
-    strcpy(m_context->avinfo.bgFilename, settingsread.value("sys/bgFilename", QVariant("d:\\bg.jpeg")).toString().toStdString().c_str());
-#endif
 
     yang_setLogLevle(m_context->avinfo.sys.logLevel);
     yang_setLogFile(m_context->avinfo.sys.hasLogFile);

@@ -40,7 +40,7 @@ namespace yvrtc
         int32_t YVPlayStart(std::string url);
         int32_t YVPlayStop();
         // int32_t PollVideoFrame(YVRFrame *pFrame);
-        int32_t RegisterVideoReceiver(int32_t (*receiver)(YVRFrame *pFrame));
+        int32_t RegisterVideoReceiver(int32_t (*receiver)(YVRFrame *pFrame, void* pUser), void* user);
     };
 }
 

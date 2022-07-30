@@ -6,7 +6,7 @@
 #include <yangutil/buffer/YangVideoBuffer.h>
 #include <yangutil/yangavinfotype.h>
 #include <yangutil/sys/YangSysMessageI.h>
-#include <yangpush/YangPushCommon.h>
+//#include <yangpush/YangPushCommon.h>
 
 
 class YangP2pHandle {

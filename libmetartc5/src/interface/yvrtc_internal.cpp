@@ -99,7 +99,8 @@ int32_t yvrtc::YVPlayEngine::PollVideoFrame(YVRFrame *pFrame)
 }
 #endif
 
-static int32_t (*pVideoReceiver)(yvrtc::YVRFrame *pFrame);
+static int32_t (*pVideoReceiver)(yvrtc::YVRFrame *pFrame, void* user);
+static void* pVideoReceiverUser = nullptr;
 
 static int32_t interVideoReceiver(YangFrame *pFrame)
 {
@@ -109,15 +110,16 @@ static int32_t interVideoReceiver(YangFrame *pFrame)
     Frame.size = pFrame->nb;
     Frame.timestamp = pFrame->pts;
     Frame.uid = pFrame->uid;
-    pVideoReceiver(&Frame);
+    pVideoReceiver(&Frame, pVideoReceiverUser);
     return 0;
 }
 
-int32_t yvrtc::YVPlayEngine::RegisterVideoReceiver(int32_t (*receiver)(YVRFrame *pFrame))
+int32_t yvrtc::YVPlayEngine::RegisterVideoReceiver(int32_t (*receiver)(YVRFrame *pFrame, void* pUser), void* user)
 {
     if (nullptr != g_player)
     {
         pVideoReceiver = receiver;
+        pVideoReceiverUser = user;
         g_player->setVideoReceiver(interVideoReceiver);
     }
     return 0;

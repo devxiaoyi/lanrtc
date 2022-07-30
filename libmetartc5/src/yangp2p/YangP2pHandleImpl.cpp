@@ -17,7 +17,7 @@ void g_p2p_receive(char *data, int32_t nb_data,char* response,char* remoteIp, vo
 YangP2pHandleImpl::YangP2pHandleImpl(bool phasAudio,YangContext* pcontext,YangSysMessageI* pmessage) {
 	m_pub = NULL;
 	//m_decoder=NULL;
-	m_videoState=Yang_VideoSrc_Camera;
+	//m_videoState=Yang_VideoSrc_Camera;
 	m_context = pcontext;
 	m_message = pmessage;
 	// m_cap = new YangP2pPublish(m_context);
