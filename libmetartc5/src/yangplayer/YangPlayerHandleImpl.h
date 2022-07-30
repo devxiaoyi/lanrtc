@@ -16,7 +16,7 @@ class YangPlayerHandleImpl :public YangPlayerHandle{
 public:
     YangPlayerHandleImpl(YangContext* pcontext);
 	virtual ~YangPlayerHandleImpl();
-	YangVideoBuffer* getVideoBuffer();
+	// YangVideoBuffer* getVideoBuffer();
 	int play(char* url);
 
 	int32_t playRtc(int32_t puid,char* localIp, char* server, int32_t pport,char* app,char* stream);
@@ -24,12 +24,15 @@ public:
 
 	int32_t getVideoFrame(YangFrame* pFrame);
 	int32_t checkConnectionState();
+
+	int32_t setVideoReceiver(int32_t (*func)(YangFrame *pFrame));
+
 protected:
 
 	YangUrlData m_url;
 	void initList();
-	YangPlayReceive *m_recv;
-	YangPlayerBase *m_play;
+	// YangPlayReceive *m_recv;
+	// YangPlayerBase *m_play;
 	YangRtcReceive *m_rtcRecv;
 
 private:

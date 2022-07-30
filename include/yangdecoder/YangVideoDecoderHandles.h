@@ -26,7 +26,7 @@ private:
 public:
 	int32_t m_isStart;
 	YangVideoDecoder *getDecoder(int32_t puid);
-	YangVideoBuffer* getVideoBuffer(int32_t puid);
+	// YangVideoBuffer* getVideoBuffer(int32_t puid);
 	int32_t getDecoderIndex(int32_t puid);
 	void parseVideoHeader(uint8_t *p,int32_t pind);
 	void addVideoStream(uint8_t *ps,int32_t pind,int32_t pisAdd);

@@ -13,7 +13,7 @@
 #include <yangutil/sys/YangUrl.h>
 #include <yangplayer/YangPlayerBase.h>
 #include <yangp2p/YangP2pServer.h>
-#include <yangp2p/YangP2pDecoder.h>
+//#include <yangp2p/YangP2pDecoder.h>
 class YangP2pHandleImpl :public YangP2pHandle,public YangP2pRtcI{
 public:
 	YangP2pHandleImpl(bool hasAudio,YangContext* pcontext,YangSysMessageI* pmessage);
@@ -48,7 +48,7 @@ private:
 	bool m_isInit;
 	bool m_isInitRtc;
 
-	YangP2pDecoder *m_decoder;
+	//YangP2pDecoder *m_decoder;
 
 	// YangP2pPublish* m_cap;
 

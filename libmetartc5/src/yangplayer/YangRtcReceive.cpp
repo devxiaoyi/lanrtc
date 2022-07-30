@@ -14,7 +14,8 @@ void g_rtcrecv_receiveAudio(void* user,YangFrame *audioFrame){
 void g_rtcrecv_receiveVideo(void* user,YangFrame *videoFrame){
 	if(user==NULL) return;
 	YangRtcReceive* rtcHandle=(YangRtcReceive*)user;
-	rtcHandle->receiveVideo(videoFrame);
+	// rtcHandle->receiveVideo(videoFrame);
+	rtcHandle->videoReceiver(videoFrame);
 }
 
 void g_rtcrecv_receiveMsg(void* user,YangFrame *msgFrame){
@@ -107,12 +108,12 @@ int32_t YangRtcReceive::receiveMsg(YangFrame* msgFrame){
 
 void YangRtcReceive::receiveAudio(YangFrame *audioFrame) {
     if(audioFrame==NULL||!audioFrame->payload) return;
-	m_out_audioBuffer->putPlayAudio(audioFrame);
+	// m_out_audioBuffer->putPlayAudio(audioFrame);
 
 }
 void YangRtcReceive::receiveVideo(YangFrame *videoFrame) {
     if(videoFrame==NULL||videoFrame->payload==NULL) return;
-    m_out_videoBuffer->putEVideo(videoFrame);
+    // m_out_videoBuffer->putEVideo(videoFrame);
 }
 
 int32_t YangRtcReceive::init(int32_t puid, char* localIp,
@@ -159,8 +160,8 @@ void YangRtcReceive::run() {
 	m_isStart = 0;
 }
 void YangRtcReceive::startLoop() {
-	yang_reindex(m_out_audioBuffer);
-	yang_reindex(m_out_videoBuffer);
+	// yang_reindex(m_out_audioBuffer);
+	// yang_reindex(m_out_videoBuffer);
 	m_loops = 1;
 	m_isReceived = 1;
 	int err=Yang_Ok;

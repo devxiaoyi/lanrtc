@@ -3,7 +3,7 @@
 //
 #include <yangp2p/YangP2pFactory.h>
 #include "YangP2pMessageHandle.h"
-#include <yangp2p/YangP2pCaputreCamera.h>
+//#include <yangp2p/YangP2pCaputreCamera.h>
 #include <yangp2p/recordmainwindow.h>
 
 YangP2pFactory::YangP2pFactory() {
@@ -54,12 +54,12 @@ vector<YangVideoBuffer*>* YangP2pFactory::getPlayVideoBuffer(YangSysMessageHandl
 	return NULL;
 }
 
-#endif
-
 void* YangP2pFactory::getP2pCapture(int32_t pcapturetype,YangContext *pcontext){
   
     return new YangP2pCaputreCamera(pcontext);
 }
+
+#endif
 
 int32_t YangP2pFactory::putTxVideo(YangFrame *pFrame)
 {

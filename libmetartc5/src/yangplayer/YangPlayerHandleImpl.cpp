@@ -18,7 +18,7 @@ YangPlayerHandle* YangPlayerHandle::createPlayerHandle(){
 	// strcpy(context->avinfo.rtc.iceServerIP,"127.0.0.1");//stun server ip
     // context->avinfo.rtc.iceStunPort=3478;
     // context->avinfo.rtc.hasIceServer=0;
-    context->streams.m_playBuffer = new YangSynBuffer();
+    // context->streams.m_playBuffer = new YangSynBuffer();
     context->avinfo.rtc.usingDatachannel = 0;
     context->avinfo.sys.mediaServer = Yang_Server_Srs; // Yang_Server_Srs/Yang_Server_Zlm
 
@@ -37,8 +37,8 @@ YangPlayerHandle* YangPlayerHandle::createPlayerHandle(){
 YangPlayerHandleImpl::YangPlayerHandleImpl(YangContext* pcontext) {
 	m_context=pcontext;
 	// m_message=pmessage;
-	m_recv = NULL;
-	m_play = NULL;
+	// m_recv = NULL;
+	// m_play = NULL;
 	m_rtcRecv=NULL;
 	m_outVideoBuffer = NULL;
 	m_outAudioBuffer = NULL;
@@ -50,8 +50,8 @@ YangPlayerHandleImpl::YangPlayerHandleImpl(YangContext* pcontext) {
 
 YangPlayerHandleImpl::~YangPlayerHandleImpl() {
 	if(m_rtcRecv) m_rtcRecv->disConnect();
-	yang_delete(m_recv);
-	yang_delete(m_play);
+	// yang_delete(m_recv);
+	// yang_delete(m_play);
 	yang_delete(m_rtcRecv);
 	yang_delete(m_outVideoBuffer);
 	yang_delete(m_outAudioBuffer);
@@ -63,23 +63,23 @@ void YangPlayerHandleImpl::stopPlay(){
 	if(m_rtcRecv) {
 		m_rtcRecv->disConnect();
 	}
-	if(m_recv){
-		m_recv->disConnect();
-	}
-	if(m_play) m_play->stopAll();
+	// if(m_recv){
+	// 	m_recv->disConnect();
+	// }
+	//if(m_play) m_play->stopAll();
 	if(m_rtcRecv){
 		yang_stop(m_rtcRecv);
 		yang_stop_thread(m_rtcRecv);
 		yang_delete(m_rtcRecv);
 	}
 
-	if(m_recv){
-		yang_stop(m_recv);
-		yang_stop_thread(m_recv);
-		yang_delete(m_recv);
-	}
+	// if(m_recv){
+	// 	yang_stop(m_recv);
+	// 	yang_stop_thread(m_recv);
+	// 	yang_delete(m_recv);
+	// }
 
-    yang_delete(m_play);
+    // yang_delete(m_play);
 
 }
 int YangPlayerHandleImpl::play(char* url) {
@@ -90,13 +90,14 @@ int YangPlayerHandleImpl::play(char* url) {
 	stopPlay();
 	yang_trace("\nnetType==%d,server=%s,port=%d,app=%s,stream=%s\n",m_url.netType,m_url.server,m_url.port,m_url.app,m_url.stream);
 	m_context->avinfo.sys.transType=m_url.netType;
-	if(m_context->streams.m_playBuffer) m_context->streams.m_playBuffer->setTranstype(m_url.netType);
+	// if(m_context->streams.m_playBuffer) m_context->streams.m_playBuffer->setTranstype(m_url.netType);
     if(m_url.netType ==Yang_Webrtc){
 
         return playRtc(0,m_url.server,m_url.server,m_url.port,m_url.app,m_url.stream);
 
     }
 
+#if 0
 	if (!m_play)	{
 		m_play = new YangPlayerBase();
 
@@ -125,32 +126,33 @@ int YangPlayerHandleImpl::play(char* url) {
 	m_recv->start();
 	return Yang_Ok;
 
+#endif
 
 }
 
 int32_t YangPlayerHandleImpl::playRtc(int32_t puid,char* localIp,char* server, int32_t pport,char* app,char* stream){
 
 	stopPlay();
-	if (!m_play)	{
-		m_play = new YangPlayerBase();
+	//if (!m_play)	{
+		//m_play = new YangPlayerBase();
 
 		m_context->avinfo.audio.sample=48000;
 		m_context->avinfo.audio.channel=2;
 		m_context->avinfo.audio.audioDecoderType=Yang_AED_OPUS;//3;
 		m_context->avinfo.audio.usingMono=0;
         m_context->avinfo.audio.aIndex=-1;
-		m_play->init(m_context);
-	}
-	initList();
-	m_play->startAudioDecoder(m_outAudioBuffer);
-	m_play->startVideoDecoder(m_outVideoBuffer);
+		//m_play->init(m_context);
+	//}
+	// initList();
+	// m_play->startAudioDecoder(m_outAudioBuffer);
+	// m_play->startVideoDecoder(m_outVideoBuffer);
 
-	m_play->startAudioPlay(m_context);
+	// m_play->startAudioPlay(m_context);
 
 
 	if(m_rtcRecv==NULL) {
 		m_rtcRecv=new YangRtcReceive(m_context);
-		m_rtcRecv->setBuffer(m_outAudioBuffer, m_outVideoBuffer);
+		// m_rtcRecv->setBuffer(m_outAudioBuffer, m_outVideoBuffer);
 		m_rtcRecv->init(puid,localIp,server,pport,app,stream);
 	}
 
@@ -159,6 +161,14 @@ int32_t YangPlayerHandleImpl::playRtc(int32_t puid,char* localIp,char* server, i
 	 return Yang_Ok;
 }
 
+
+int32_t YangPlayerHandleImpl::setVideoReceiver(int32_t (*func)(YangFrame *pFrame))
+{
+    m_rtcRecv->videoReceiver = func;
+    return 0;
+}
+
+#if 0
 YangVideoBuffer* YangPlayerHandleImpl::getVideoBuffer(){
 	if(m_play) return m_play->m_ydb->getOutVideoBuffer();
 	return NULL;
@@ -203,3 +213,5 @@ int32_t YangPlayerHandleImpl::checkConnectionState()
 	}
 	return ret;
 }
+
+#endif

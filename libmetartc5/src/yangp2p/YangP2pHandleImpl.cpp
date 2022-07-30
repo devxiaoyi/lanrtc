@@ -16,7 +16,7 @@ void g_p2p_receive(char *data, int32_t nb_data,char* response,char* remoteIp, vo
 
 YangP2pHandleImpl::YangP2pHandleImpl(bool phasAudio,YangContext* pcontext,YangSysMessageI* pmessage) {
 	m_pub = NULL;
-	m_decoder=NULL;
+	//m_decoder=NULL;
 	m_videoState=Yang_VideoSrc_Camera;
 	m_context = pcontext;
 	m_message = pmessage;
@@ -33,22 +33,22 @@ YangP2pHandleImpl::YangP2pHandleImpl(bool phasAudio,YangContext* pcontext,YangSy
 	m_p2pServer->user=this;
 	yang_start_p2pserver(m_p2pServer);
 
-	m_outVideoBuffer = NULL;
-	m_outAudioBuffer = NULL;
+	// m_outVideoBuffer = NULL;
+	// m_outAudioBuffer = NULL;
 }
 
 YangP2pHandleImpl::~YangP2pHandleImpl() {
 	// if (m_cap)		m_cap->stopAll();
 	if (m_pub)		m_pub->stop();
-	if(m_decoder) 		m_decoder->stopAll();
+	//if(m_decoder) 		m_decoder->stopAll();
 
 	// yang_delete(m_cap);
-	yang_delete(m_decoder);
+	//yang_delete(m_decoder);
 	yang_delete(m_pub);
 	yang_destroy_p2pserver(m_p2pServer);
 	yang_free(m_p2pServer);
-	yang_delete(m_outVideoBuffer);
-	yang_delete(m_outAudioBuffer);
+	// yang_delete(m_outVideoBuffer);
+	// yang_delete(m_outAudioBuffer);
 }
 
 void YangP2pHandleImpl::disconnect() {
@@ -61,11 +61,11 @@ void YangP2pHandleImpl::stopPublish() {
 		m_pub->disConnectPeer();
 	}
 	yang_stop(m_pub);
-	if(m_decoder) m_decoder->stopAll();
+	//if(m_decoder) m_decoder->stopAll();
 	yang_stop_thread(m_pub);
 	yang_delete(m_pub);
 	// if(m_cap) m_cap->deleteVideoEncoding();
-	yang_delete(m_decoder);
+	//yang_delete(m_decoder);
 }
 
 void YangP2pHandleImpl::sendKeyframe(){

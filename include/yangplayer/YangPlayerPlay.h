@@ -5,9 +5,9 @@
 #ifndef YANGAPP_YANGPLAYAPP_H_
 #define YANGAPP_YANGPLAYAPP_H_
 #include <yangdecoder/YangVideoDecoderHandles.h>
-#include <yangaudiodev/linux/YangAudioPlayLinux.h>
-#include <yangaudiodev/android/YangAudioPlayAndroid.h>
-#include <yangaudiodev/win/YangWinAudioApiRender.h>
+//#include <yangaudiodev/linux/YangAudioPlayLinux.h>
+//#include <yangaudiodev/android/YangAudioPlayAndroid.h>
+//#include <yangaudiodev/win/YangWinAudioApiRender.h>
 
 #include <vector>
 
@@ -27,18 +27,11 @@ public:
 	void setInAudioList(YangAudioPlayBuffer *paudioList);
 	void stopAll();
 private:
-#ifdef _WIN32
-        YangWinAudioApiRender *m_audioPlay;
-#else
 
 #ifdef __ANDROID__
         YangAudioPlayAndroid *m_audioPlay;
-#else
-        YangAudioPlayLinux *m_audioPlay;
 #endif
 
-
-#endif
 	int32_t vm_audio_player_start;
 
 };

@@ -26,7 +26,7 @@ public:
 
 
 	int getIndex(int puid);
-	YangSynBuffer* getSynBuffer(int puid);
+	// YangSynBuffer* getSynBuffer(int puid);
 
 	int32_t getPlayOnlineCount();
 	int32_t getPushOnlineCount();

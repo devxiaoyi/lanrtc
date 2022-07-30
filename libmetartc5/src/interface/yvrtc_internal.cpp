@@ -7,10 +7,10 @@
 static std::unique_ptr<YangP2pFactory> g_p2p;
 static std::unique_ptr<YangPlayerHandle> g_player;
 
-
 yvrtc::YVRTCEngine::YVRTCEngine()
 {
-    if (!g_p2p) {
+    if (!g_p2p)
+    {
         g_p2p.reset(new YangP2pFactory());
         g_p2p->init();
     }
@@ -18,7 +18,6 @@ yvrtc::YVRTCEngine::YVRTCEngine()
 
 yvrtc::YVRTCEngine::~YVRTCEngine()
 {
-
 }
 
 int32_t yvrtc::YVRTCEngine::putVideoFrame(YVRFrame *pFrame)
@@ -57,7 +56,7 @@ yvrtc::YVPlayEngine::~YVPlayEngine()
 int32_t yvrtc::YVPlayEngine::YVPlayStart(std::string url)
 {
     int ret = -1;
-    if (g_player->play((char*)url.c_str()) == Yang_Ok)
+    if (g_player->play((char *)url.c_str()) == Yang_Ok)
     {
         ret = 0;
     }
@@ -73,6 +72,7 @@ int32_t yvrtc::YVPlayEngine::YVPlayStop()
     return 0;
 }
 
+#if 0
 int32_t yvrtc::YVPlayEngine::PollVideoFrame(YVRFrame *pFrame)
 {
     int32_t ret = -1;
@@ -97,8 +97,28 @@ int32_t yvrtc::YVPlayEngine::PollVideoFrame(YVRFrame *pFrame)
     }
     return ret;
 }
+#endif
+
+static int32_t (*pVideoReceiver)(yvrtc::YVRFrame *pFrame);
+
+static int32_t interVideoReceiver(YangFrame *pFrame)
+{
+    yvrtc::YVRFrame Frame;
+    Frame.frameType = (yvrtc::VideoFrameType)pFrame->frametype;
+    Frame.payload = pFrame->payload;
+    Frame.size = pFrame->nb;
+    Frame.timestamp = pFrame->pts;
+    Frame.uid = pFrame->uid;
+    pVideoReceiver(&Frame);
+    return 0;
+}
 
 int32_t yvrtc::YVPlayEngine::RegisterVideoReceiver(int32_t (*receiver)(YVRFrame *pFrame))
 {
+    if (nullptr != g_player)
+    {
+        pVideoReceiver = receiver;
+        g_player->setVideoReceiver(interVideoReceiver);
+    }
     return 0;
 }
