@@ -89,8 +89,8 @@ int32_t yang_http_post(char *rets, char *ip, int32_t port, char *api,
 	if (connect(socketfd, (struct sockaddr*) &serverAddress,
 			sizeof(struct sockaddr)) == -1) {
 		closesocket(socketfd);
-		return yang_error_wrap(ERROR_SOCKET, "http connect socket error(%d)",
-				GetSockError());
+		return yang_error_wrap(ERROR_SOCKET, "http connect socket error(%d) ip(%s)",
+				GetSockError(), ip);
 	}
 
 	char *buf = (char*) malloc(Yang_Http_Buffer);

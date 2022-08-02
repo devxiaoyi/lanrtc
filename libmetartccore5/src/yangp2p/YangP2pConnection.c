@@ -1,7 +1,7 @@
 ﻿//
 // Copyright (c) 2019-2022 yanggaofeng
 //
-#include <yangice/YangRtcStun.h>
+//#include <yangice/YangRtcStun.h>
 #include <yangp2p/YangP2pConnection.h>
 
 #include <yangrtc/YangRtcConnection.h>

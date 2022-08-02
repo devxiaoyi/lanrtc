@@ -7,7 +7,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <errno.h>
 
 #ifndef _WIN32
 #define GetSockError()	errno
@@ -16,6 +16,7 @@
 #define closesocket(s)	close(s)
 #endif
 
+extern int errno;
 
 int32_t yang_rtc_sendData(YangUdpSession *session, char *data, int32_t nb) {
 	if (session == NULL || !session->isStart || session->notRemoteInit || data==NULL)	return ERROR_RTC_UDP;
@@ -47,12 +48,12 @@ void* yang_run_rtcudp_thread(void *obj) {
 	setsockopt(udp->fd, SOL_SOCKET, SO_RCVTIMEO, (const char*) &tv,	sizeof(struct timeval));
 #endif
 
-
-	if (bind(udp->fd, (struct sockaddr*) &udp->local_addr,
-			sizeof(struct sockaddr_in)) < 0) {
-
-		yang_error("Udp server bind error");
-		exit(1);
+	int32_t ret = bind(udp->fd, (struct sockaddr*) &udp->local_addr, sizeof(struct sockaddr_in));
+	if (ret < 0) {
+		yang_error("Udp server bind ret:%d error:%d", ret, errno);
+		closesocket(udp->fd);
+		udp->fd = -1;
+		return NULL;
 	}
 
 	char buffer[2048] = { 0 };

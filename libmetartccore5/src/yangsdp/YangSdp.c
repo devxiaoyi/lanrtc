@@ -26,12 +26,7 @@ void  yang_sdp_genLocalSdp_candidate(YangRtcSession *session,YangMediaDesc *medi
     int32_t index=media_desc->candidates.vsize-1;
     strcpy(media_desc->candidates.payload[index].ip,localIp);
     media_desc->candidates.payload[index].port = localport;
-    if(session->context.avinfo->rtc.hasIceServer&&session->ice.server.stunPort>0){
-    	strcpy(media_desc->candidates.payload[index].type, "srflx");
-    }else{
-    	strcpy(media_desc->candidates.payload[index].type, "host");
-    }
-
+    strcpy(media_desc->candidates.payload[index].type, "host");
 }
 
 #define Yang_SDP_BUFFERLEN 1024*12
@@ -155,7 +150,9 @@ int32_t yang_sdp_genLocalSdp2(YangRtcSession *session, int32_t localport,char *d
 #else
 	strcpy(audio_media_desc->session_info.fingerprint,"EF:7A:50:9C:05:8C:EF:84:4D:72:B2:74:30:BA:FD:82:76:D1:C3:FE:0C:A0:10:43:B8:6C:B2:ED:B3:F7:77:8B");
 	strcpy(video_media_desc->session_info.fingerprint,"EF:7A:50:9C:05:8C:EF:84:4D:72:B2:74:30:BA:FD:82:76:D1:C3:FE:0C:A0:10:43:B8:6C:B2:ED:B3:F7:77:8B");
+#if Yang_HaveDatachannel
 	if(data_media_desc) strcpy(data_media_desc->session_info.fingerprint,"EF:7A:50:9C:05:8C:EF:84:4D:72:B2:74:30:BA:FD:82:76:D1:C3:FE:0C:A0:10:43:B8:6C:B2:ED:B3:F7:77:8B");
+#endif
 #endif
 	strcpy(audio_media_desc->session_info.setup, session->isServer?"passive":"actpass");
 	strcpy(video_media_desc->session_info.setup, session->isServer?"passive":"actpass");
@@ -262,22 +259,16 @@ int32_t yang_sdp_genLocalSdp2(YangRtcSession *session, int32_t localport,char *d
     strcpy(video_media_desc->ssrc_infos.payload[0].msid, "-");
     strcpy(video_media_desc->ssrc_infos.payload[0].msid_tracker, randstr);
     strcpy(video_media_desc->ssrc_infos.payload[0].label, randstr);
-   if(mediaServer==Yang_Server_P2p&&(session->isServer||(session->context.avinfo->rtc.hasIceServer&&session->ice.server.stunPort>0))){
+   if(mediaServer==Yang_Server_P2p && session->isServer){
 	    yang_create_YangCandidateVector(&audio_media_desc->candidates);
 	    yang_create_YangCandidateVector(&video_media_desc->candidates);
 	   	int32_t localport=session->context.streamConfig->localPort;
 	   	char* localip=session->context.avinfo->sys.localIp;
 	   	int32_t hasIplist=0;
-	   	if(session->context.avinfo->rtc.hasIceServer&&session->ice.server.stunPort>0){
-	   		struct sockaddr_in addr;
-	   		addr.sin_addr.s_addr= session->ice.server.stunIp;
-	   		localip=inet_ntoa(addr.sin_addr);
-	   		localport=session->ice.server.stunPort;
-	   	}else{
+
 #ifdef _WIN32
-	   		hasIplist=1;
+	   	hasIplist=1;
 #endif
-	   	}
 
 	   	if(hasIplist){
 			YangStringVector iplists;

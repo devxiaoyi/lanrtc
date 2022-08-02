@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
     yvplay->RegisterVideoReceiver(myVideoReceiver, NULL);
 
     yvplay->YVPlayStart("webrtc://172.18.0.223:1988/live/livestream");
-    fp = fopen("./yvplay_0730.h264", "ab+");
+    fp = fopen("./yvplay_0802.h264", "ab+");
 
     while (1)
     {
