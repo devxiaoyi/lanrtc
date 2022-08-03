@@ -22,8 +22,8 @@ int32_t yang_destroy_srtp(YangSRtp* srtp){
     if (srtp->sendCtx) {
         srtp_dealloc(srtp->sendCtx);
     }
-
-    pthread_mutex_destroy(&srtp->lock);
+    pthread_mutex_destroy(&srtp->rtpLock);
+    pthread_mutex_destroy(&srtp->rtcpLock);
 	return Yang_Ok;
 }
 int32_t yang_create_srtp(YangSRtp* srtp,char* recv_key,int precvkeylen, char* send_key,int psendkeylen)
@@ -69,8 +69,8 @@ int32_t yang_create_srtp(YangSRtp* srtp,char* recv_key,int precvkeylen, char* se
 
     yang_free(skey);
     yang_free(rkey);
-
-    pthread_mutex_init(&srtp->lock,NULL);
+    pthread_mutex_init(&srtp->rtpLock,NULL);
+    pthread_mutex_init(&srtp->rtcpLock,NULL);
     return err;
 }
 
@@ -84,10 +84,12 @@ int32_t yang_enc_rtp(YangSRtp* srtp,void* packet, int* nb_cipher)
     }
 
     srtp_err_status_t r0 = srtp_err_status_ok;
+    pthread_mutex_lock(&srtp->rtpLock);
     if ((r0 = srtp_protect(srtp->sendCtx, packet, nb_cipher)) != srtp_err_status_ok) {
+        pthread_mutex_unlock(&srtp->rtpLock);
         return yang_error_wrap(ERROR_RTC_SRTP_PROTECT, "rtp protect r0=%u", r0);
     }
-
+    pthread_mutex_unlock(&srtp->rtpLock);
     return err;
 }
 
@@ -101,10 +103,12 @@ int32_t yang_enc_rtcp(YangSRtp* srtp,void* packet, int* nb_cipher)
     }
 
     srtp_err_status_t r0 = srtp_err_status_ok;
+    pthread_mutex_lock(&srtp->rtcpLock);
     if ((r0 = srtp_protect_rtcp(srtp->sendCtx, packet, nb_cipher)) != srtp_err_status_ok) {
+        pthread_mutex_unlock(&srtp->rtcpLock);
         return yang_error_wrap(ERROR_RTC_SRTP_PROTECT, "rtcp protect r0=%u", r0);
     }
-
+    pthread_mutex_unlock(&srtp->rtcpLock);
     return err;
 }
 

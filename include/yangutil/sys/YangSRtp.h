@@ -11,7 +11,8 @@
 typedef struct{
 	 srtp_t recvCtx;
 	 srtp_t sendCtx;
-	 pthread_mutex_t lock;
+	 pthread_mutex_t rtpLock;
+	 pthread_mutex_t rtcpLock;
 }YangSRtp;
 #ifdef __cplusplus
 extern "C"{

@@ -8,7 +8,9 @@
 #if Yang_HaveDatachannel
 typedef struct{
 	YangSctp sctp;
+#if Yang_HaveDtls
 	YangRtcDtls* dtls;
+#endif
 }YangDatachannelContext;
 
 #define Yang_Sctp_BufferLen 8192
@@ -35,6 +37,7 @@ void yang_datachannel_receive_msg(void* user,uint16_t streamId, uint16_t ssn, ui
     context->streamConfig->recvCallback.receiveMsg(context->streamConfig->recvCallback.context,&frame);
 }
 
+#if Yang_HaveDtls
 void yang_datachannelsend_dtls_msg(void* user,char* data,int32_t nb){
 	if(user==NULL||data==NULL) return;
 
@@ -43,15 +46,18 @@ void yang_datachannelsend_dtls_msg(void* user,char* data,int32_t nb){
 
 	context->dtls->sendSctpData(&context->dtls->session,(uint8_t*)data,nb);
 }
+#endif
 
 void yang_create_datachannel(YangDatachannel *datachannel,YangRtcContext* ctx){
 	if(datachannel==NULL) return;
 	YangDatachannelContext* context=(YangDatachannelContext*)calloc(sizeof(YangDatachannelContext),1);
 	datachannel->context=context;
-	context->dtls=ctx->dtls;
 	yang_create_sctp(&context->sctp);
 	context->sctp.user=ctx;
+#if Yang_HaveDtls
+	context->dtls=ctx->dtls;
 	context->sctp.send_dtls_msg=yang_datachannelsend_dtls_msg;
+#endif
 	context->sctp.receive_msg=yang_datachannel_receive_msg;
 
 

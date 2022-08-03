@@ -80,7 +80,7 @@ void yang_clear_##x##Vector(x##Vector* vec){\
 void yang_remove_##x##Vector(x##Vector* vec,int32_t index){\
 	if(vec==NULL||vec->vsize==0||index>=vec->vsize) return;\
 	if(vec->vsize==1) {yang_clear_##x##Vector(vec);return;}\
-	memmove(vec->payload+index*sizeof(x),vec->payload+(index+1)*sizeof(x),sizeof(x)*(vec->vsize-index-1));\
+	if(vec->vsize!=index+1){memmove((char*)vec->payload+index*sizeof(x),(char*)vec->payload+(index+1)*sizeof(x),sizeof(x)*(vec->vsize-index-1));}\
 	vec->vsize--;\
 }\
 

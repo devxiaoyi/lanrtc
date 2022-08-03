@@ -612,12 +612,17 @@ int32_t yang_stun_encode_binding_request2(YangStunPacket* pkt, YangBuffer* strea
 	stream->data[2] = ((yang_buffer_pos(stream) - 20 + 20 + 4 ) & 0x0000FF00) >> 8;
 	stream->data[3] = ((yang_buffer_pos(stream) - 20 + 20 + 4 ) & 0x000000FF);
 
+#if Yang_HaveDtls
 	char hmac_buf[20] = {0};
 	uint32_t  hmac_buf_len = 0;
 	if ((err = hmac_encode("sha1", pwd, strlen(pwd), stream->data, yang_buffer_pos(stream), hmac_buf, &hmac_buf_len)) != Yang_Ok) {
 		return yang_error_wrap(err, "hmac encode failed");
 	}
 
+#else
+	char hmac_buf[20]={0x07,0xd4,0x3d,0x32,0xa1,0xd4,0xc1,0xb1,0x9d,0xf5,0xb5,0x56,0xb5,0x56,0x6d,0x20,0x5a,0xda,0xa1,0xac};
+	uint32_t  hmac_buf_len = 20;
+#endif
 
 
 	//MessageIntegrity

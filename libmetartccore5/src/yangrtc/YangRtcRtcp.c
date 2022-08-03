@@ -22,12 +22,9 @@ int32_t yang_send_rtcppacket(YangRtcContext *context, char *data, int32_t nb) {
 	int32_t err = Yang_Ok;
 	int32_t nn_encrypt = nb;
 #if Yang_HaveDtls
-    pthread_mutex_lock(&context->srtp.lock);
 	if ((err = yang_enc_rtcp(&context->srtp, data, &nn_encrypt)) != Yang_Ok) {
-          pthread_mutex_unlock(&context->srtp.lock);
 		return yang_error_wrap(err, "srtp protect");
 	}
-     pthread_mutex_unlock(&context->srtp.lock);
 
 #endif
 	return context->udp->sendData(&context->udp->session, data, nn_encrypt);
