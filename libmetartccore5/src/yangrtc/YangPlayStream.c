@@ -166,7 +166,7 @@ int32_t yang_rtcplay_on_rtp(YangRtcContext *context, YangRtcPlayStream *play,
 
 	char *plaintext = data;
 	int32_t nb_plaintext = nb_data;
-#if Yang_HaveDtls
+#if YVRTC_RTPRTCP_DTLS
 	if ((err = yang_dec_rtp(&context->srtp, plaintext, &nb_plaintext))!= Yang_Ok) {
 		if (err == srtp_err_status_replay_fail)
 			return Yang_Ok;

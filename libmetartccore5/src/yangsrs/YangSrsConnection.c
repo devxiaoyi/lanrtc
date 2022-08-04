@@ -110,17 +110,23 @@ int32_t yang_sdp_querySrs(YangRtcSession* session,SrsSdpResponseType* srs,int32_
 
 }
 
+#define COMPLEX_SDP 0
+
 int32_t yang_srs_getSignal(YangRtcSession* session,SrsSdpResponseType* srs,char* sdp) {
 	int32_t err = Yang_Ok;
-	char *srsSdp = (char*)calloc(1,1024*12);
-	char qt = '"';
+	char *srsSdp = NULL;
 	YangStreamOptType role=session->context.streamConfig->streamOptType;
 	const char* roleStr=role==Yang_Stream_Play?"play":"publish";
+#if COMPLEX_SDP
+	char qt = '"';
+    srsSdp = (char*)calloc(1,1024*12);
 	sprintf(srsSdp,
 			"{%capi%c:%chttp://%s:%d/rtc/v1/%s/%c,%cstreamurl%c:%cwebrtc://%s:%d/%s/%s%c,%cclientip%c:null,%csdp%c:%c%s%c}",
 			qt, qt, qt, session->context.streamConfig->remoteIp, session->context.streamConfig->remotePort,roleStr ,qt, qt, qt, qt, session->context.streamConfig->remoteIp,
 			session->context.streamConfig->remotePort, session->context.streamConfig->app, session->context.streamConfig->stream, qt, qt, qt, qt, qt, qt, sdp, qt);
-
+#else
+	srsSdp = sdp;
+#endif
 
 	char apiurl[256] ;
 	memset(apiurl,0,sizeof(apiurl));
@@ -128,9 +134,9 @@ int32_t yang_srs_getSignal(YangRtcSession* session,SrsSdpResponseType* srs,char*
 	sprintf(apiurl, "rtc/v1/%s/", roleStr);
 	err=yang_sdp_querySrs(session,srs,role==Yang_Stream_Play?1:0,(char*)session->context.streamConfig->remoteIp,session->context.streamConfig->remotePort,apiurl, srsSdp);
 
-
+#if COMPLEX_SDP
 	yang_free(srsSdp);
-
+#endif
 
 	return err;
 }

@@ -31,6 +31,9 @@ public:
     void failure(int32_t errcode);
     void receiveSysMessage(YangSysMessage *psm, int32_t phandleRet);
 
+	int32_t setDataReceiver(void (*func)(void *context, YangFrame *pFrame));
+    void (*mDataReceiver)(void *context, YangFrame *pFrame);
+
 private:
     void closeAll();
     void read_ip_address();

@@ -130,15 +130,30 @@ void *senderThread(void *arg)
             rewind(pFile);
         }
 
+        // yvrtc::YVRFrame pData;
+        // std::string datastr = "qwertyu";
+        // pData.payload = (uint8_t*)(datastr.c_str());
+        // pData.size = datastr.length();
+        // lanrtc->putDataFrame(&pData);
+
         Sleep(11);
     }
     if (pFile)
         fclose(pFile);
 }
 
+static int32_t myDataReceiver(yvrtc::YVRFrame *pFrame, void* user)
+{
+    std::cout << pFrame->payload << std::endl;
+
+    return 0;
+} 
+
 int main()
 {
     yvrtc::YVRTCEngine* lanrtc = new yvrtc::YVRTCEngine();
+
+    lanrtc->RegisterDataReceiver(myDataReceiver, NULL);
 
     pthread_t m_thread;
     pthread_create(&m_thread, 0, senderThread, lanrtc);

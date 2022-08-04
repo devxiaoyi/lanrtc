@@ -1,11 +1,16 @@
 #include <yangp2p/YangP2pFactory.h>
 #include <yvrtc_interface.h>
 #include <yangplayer/YangPlayerHandle.h>
+#include <yangutil/yangavtype.h>
 #include <iostream>
 #include <string>
 
+
+/*==================================================================
+  ---------------------  RTCEngine  -------------------------------
+===================================================================*/
+
 static std::unique_ptr<YangP2pFactory> g_p2p;
-static std::unique_ptr<YangPlayerHandle> g_player;
 
 yvrtc::YVRTCEngine::YVRTCEngine()
 {
@@ -42,6 +47,56 @@ int32_t yvrtc::YVRTCEngine::putVideoFrame(YVRFrame *pFrame)
     return ret;
 }
 
+int32_t yvrtc::YVRTCEngine::putDataFrame(YVRFrame *pFrame)
+{
+    int32_t ret = 0;
+    YangFrame YFrame = {0};
+    YFrame.payload = pFrame->payload;
+    YFrame.nb = pFrame->size;
+    YFrame.mediaType = YANG_DATA_CHANNEL_BINARY;
+    if (g_p2p)
+    {
+        ret = g_p2p->putTxData(&YFrame);
+    }
+    else
+    {
+        ret = -1;
+    }
+    return ret;
+}
+
+static int32_t (*pEngineDataReceiver)(yvrtc::YVRFrame *pFrame, void* user);
+static void* pEngineDataReceiverUser = nullptr;
+
+static void engineDataReceiver(void *context, YangFrame *pFrame)
+{
+    yvrtc::YVRFrame Frame = {0};
+    Frame.payload = pFrame->payload;
+    Frame.size = pFrame->nb;
+    Frame.uid = pFrame->uid;
+    if (pEngineDataReceiver) {
+        pEngineDataReceiver(&Frame, pEngineDataReceiverUser);
+    }
+}
+
+int32_t yvrtc::YVRTCEngine::RegisterDataReceiver(int32_t (*receiver)(YVRFrame *pFrame, void* pUser), void* user)
+{
+    if (nullptr != g_p2p)
+    {
+        pEngineDataReceiver = receiver;
+        pEngineDataReceiverUser = user;
+        g_p2p->w->setDataReceiver(engineDataReceiver);
+    }
+    return 0;
+}
+
+
+/*==================================================================
+  ---------------------  PlayEngine  -------------------------------
+===================================================================*/
+
+static std::unique_ptr<YangPlayerHandle> g_player;
+
 yvrtc::YVPlayEngine::YVPlayEngine()
 {
     if (!g_player)
@@ -72,33 +127,6 @@ int32_t yvrtc::YVPlayEngine::YVPlayStop()
     return 0;
 }
 
-#if 0
-int32_t yvrtc::YVPlayEngine::PollVideoFrame(YVRFrame *pFrame)
-{
-    int32_t ret = -1;
-    if (nullptr != g_player)
-    {
-        YangFrame Frame = {0};
-        ret = g_player->getVideoFrame(&Frame);
-        if (ret == 0) {
-            pFrame->payload = Frame.payload;
-            pFrame->frameType = (VideoFrameType)Frame.frametype;
-            pFrame->size = Frame.nb;
-            pFrame->timestamp = Frame.dts;
-            pFrame->uid = Frame.uid;
-        }
-        else {
-            pFrame->payload = nullptr;
-            pFrame->frameType = VideoFrameUnknow;
-            pFrame->size = 0;
-            pFrame->timestamp = 0;
-            pFrame->uid = 0;
-        }
-    }
-    return ret;
-}
-#endif
-
 static int32_t (*pVideoReceiver)(yvrtc::YVRFrame *pFrame, void* user);
 static void* pVideoReceiverUser = nullptr;
 
@@ -125,4 +153,48 @@ int32_t yvrtc::YVPlayEngine::RegisterVideoReceiver(int32_t (*receiver)(YVRFrame 
         g_player->setVideoReceiver(interVideoReceiver);
     }
     return 0;
+}
+
+static int32_t (*pDataReceiver)(yvrtc::YVRFrame *pFrame, void* user);
+static void* pDataReceiverUser = nullptr;
+
+static int32_t interDataReceiver(YangFrame *pFrame)
+{
+    yvrtc::YVRFrame Frame = {0};
+    Frame.payload = pFrame->payload;
+    Frame.size = pFrame->nb;
+    Frame.uid = pFrame->uid;
+    if (pDataReceiver) {
+        pDataReceiver(&Frame, pDataReceiverUser);
+    }
+    return 0;
+}
+
+int32_t yvrtc::YVPlayEngine::RegisterDataReceiver(int32_t (*receiver)(YVRFrame *pFrame, void* pUser), void* user)
+{
+    if (nullptr != g_player)
+    {
+        pDataReceiver = receiver;
+        pDataReceiverUser = user;
+        g_player->setDataReceiver(interDataReceiver);
+    }
+    return 0;
+}
+
+int32_t yvrtc::YVPlayEngine::putDataFrame(YVRFrame *pFrame)
+{
+    int32_t ret = 0;
+    YangFrame YFrame = {0};
+    YFrame.payload = pFrame->payload;
+    YFrame.nb = pFrame->size;
+    YFrame.mediaType = YANG_DATA_CHANNEL_BINARY;
+    if (g_player)
+    {
+        ret = g_player->putTxData(&YFrame);
+    }
+    else
+    {
+        ret = -1;
+    }
+    return ret;
 }

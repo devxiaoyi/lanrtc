@@ -19,6 +19,9 @@ public:
 	static YangPlayerHandle* createPlayerHandle();
 	// virtual int32_t getVideoFrame(YangFrame* pFrame) = 0;
 	virtual int32_t setVideoReceiver(int32_t (*func)(YangFrame *pFrame)) = 0;
+	virtual int32_t setDataReceiver(int32_t (*func)(YangFrame *pFrame)) = 0;
+
+	virtual int32_t putTxData(YangFrame *pFrame) = 0;
 };
 
 #endif /* INCLUDE_YANGPLAYER_YANGPLAYERHANDLE_H_ */

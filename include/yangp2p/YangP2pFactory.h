@@ -20,9 +20,10 @@ public:
 	int32_t putTxVideo(YangFrame *pFrame);
 	int32_t init();
     int32_t deinit();
+	int32_t putTxData(YangFrame *pFrame);
 
-private:
     RecordMainWindow* w;
+private:
 	YangSysMessageHandle *sysmessage;
 };
 

@@ -111,7 +111,7 @@ int32_t yang_sdp_genLocalSdp2(YangRtcSession *session, int32_t localport,char *d
 		video_media_desc->sendrecv = true;
 	}
 #if Yang_HaveDatachannel
-	//if(data_media_desc) data_media_desc->sendrecv = true;
+	// if(data_media_desc) data_media_desc->sendrecv = true;
 	if(data_media_desc) data_media_desc->sctp_port = true;
 #endif
 	//session info

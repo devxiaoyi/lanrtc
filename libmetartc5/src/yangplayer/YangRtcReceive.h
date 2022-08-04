@@ -36,6 +36,7 @@ public:
 	int32_t m_isStart;
 	void stop();
 	int32_t (*videoReceiver)(YangFrame* pFrame);
+	int32_t (*dataReceiver)(YangFrame* pFrame);
 protected:
 	void run();
 	void startLoop();

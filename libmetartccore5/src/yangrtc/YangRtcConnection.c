@@ -148,7 +148,7 @@ void yang_rtcconn_init(YangRtcSession *session, YangStreamOptType role) {
 			yang_create_rtcpush(session->push,session->context.audioSsrc, session->context.videoSsrc);
 		}
 	}
-#if Yang_HaveDtls
+// #if Yang_HaveDtls
 #if Yang_HaveDatachannel
 	if(session->usingDatachannel){
 		if(session->datachannel==NULL){
@@ -157,7 +157,7 @@ void yang_rtcconn_init(YangRtcSession *session, YangStreamOptType role) {
 		}
 	}
 #endif
-#endif
+// #endif
 	session->activeState = true;
 }
 
@@ -246,7 +246,7 @@ void yang_rtcconn_startTimers(YangRtcSession *session) {
 int32_t yang_rtcconn_on_rtcp(YangRtcSession *session, char *data,int32_t nb_data) {
 	int32_t err = Yang_Ok;
 	int32_t nb_unprotected_buf = nb_data;
-#if Yang_HaveDtls
+#if YVRTC_RTPRTCP_DTLS
 	if ((err = yang_dec_rtcp(&session->context.srtp, data, &nb_unprotected_buf))!= Yang_Ok) {
 		if (err == srtp_err_status_replay_fail)	return Yang_Ok;
 		return yang_error_wrap(err, "rtcp unprotect");
@@ -336,11 +336,12 @@ int32_t yang_rtcconn_onAudio(YangRtcSession *session, YangFrame *p) {
 }
 
 int32_t yang_rtcconn_onMessage(YangRtcSession *session, YangFrame *p) {
-#if Yang_HaveDtls
 #if Yang_HaveDatachannel
+#if Yang_HaveDtls
 	if(session==NULL||session->context.dtls->session.state!=YangDtlsStateClientDone||session->context.dtls->session.isStop==1||session->context.state!=1)	return Yang_Ok;
-	if(session->datachannel&&session->datachannel->send_message) session->datachannel->send_message(session->datachannel->context,p);
 #endif
+	if(session->datachannel && session->datachannel->send_message)
+		session->datachannel->send_message(session->datachannel->context,p);
 #endif
 	return Yang_Ok;
 }
@@ -476,7 +477,7 @@ void yang_rtcconn_on_ice(YangRtcSession *session,char* remoteIp,int32_t port) {
 
 int32_t yang_rtcconn_getRemoteSdp(YangRtcSession *session, char *sdpstr){
 	int32_t err = Yang_Ok;
-
+	// printf("RemoteSdp:%s", sdpstr);
 	YangSdp sdp;
 	memset(&sdp,0,sizeof(YangSdp));
 	yang_create_rtcsdp(&sdp);

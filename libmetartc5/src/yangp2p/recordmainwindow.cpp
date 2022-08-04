@@ -15,7 +15,9 @@ void g_qt_p2p_receiveData(void *context, YangFrame *msgFrame)
 {
     RecordMainWindow *win = (RecordMainWindow *)context;
 
-    win->setRecvText((char *)msgFrame->payload, msgFrame->nb);
+    if (win->mDataReceiver) {
+        win->mDataReceiver(context, msgFrame);
+    }
 }
 RecordMainWindow::RecordMainWindow()
 {
@@ -54,6 +56,11 @@ RecordMainWindow::~RecordMainWindow()
 void RecordMainWindow::setRecvText(char *data, int32_t nb)
 {
     printf("dataChannel receive:%s\n", data);
+}
+
+int32_t RecordMainWindow::setDataReceiver(void (*func)(void *context, YangFrame *pFrame)) {
+	mDataReceiver = func;
+	return 0;
 }
 
 void RecordMainWindow::closeAll()

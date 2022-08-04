@@ -49,6 +49,14 @@ static int32_t myVideoReceiver(yvrtc::YVRFrame *pFrame, void* user)
     return 0;
 } 
 
+static int32_t myDataReceiver(yvrtc::YVRFrame *pFrame, void* user)
+{
+    std::cout << pFrame->payload << std::endl;
+    //fwrite(pFrame->payload, pFrame->size, 1, fp);
+
+    return 0;
+} 
+
 int main(int argc, char *argv[])
 {
     yvrtc::YVPlayEngine* yvplay = new yvrtc::YVPlayEngine();
@@ -58,13 +66,20 @@ int main(int argc, char *argv[])
     // pthread_join(m_thread, NULL);
 
     yvplay->RegisterVideoReceiver(myVideoReceiver, NULL);
+    yvplay->RegisterDataReceiver(myDataReceiver, NULL);
 
     yvplay->YVPlayStart("webrtc://172.18.0.223:1988/live/livestream");
-    fp = fopen("./yvplay_0802.h264", "ab+");
+    fp = fopen("./yvplay_0804.h264", "ab+");
 
     while (1)
     {
         Sleep(1 * 1000);
+
+        yvrtc::YVRFrame pData;
+        std::string datastr = "qwertyu_for_player";
+        pData.payload = (uint8_t*)(datastr.c_str());
+        pData.size = datastr.length();
+        yvplay->putDataFrame(&pData);
     }
 
     fclose(fp);

@@ -75,3 +75,16 @@ int32_t YangP2pFactory::putTxVideo(YangFrame *pFrame)
 
 	return ret;
 }
+
+int32_t YangP2pFactory::putTxData(YangFrame *pFrame)
+{
+	int32_t ret = 0;
+
+    if(!w || !(w->m_context->channeldataSend.sendData))
+		return -1;
+
+    w->m_context->channeldataSend.sendData(w->m_context->channeldataSend.context, pFrame);
+
+	return ret;
+}
+

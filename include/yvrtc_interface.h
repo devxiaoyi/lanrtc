@@ -30,6 +30,9 @@ namespace yvrtc
         virtual ~YVRTCEngine();
 
         int32_t putVideoFrame(YVRFrame *pFrame);
+
+        int32_t putDataFrame(YVRFrame *pFrame);
+        int32_t RegisterDataReceiver(int32_t (*receiver)(YVRFrame *pFrame, void* pUser), void* user);
     };
 
     class YVPlayEngine {
@@ -39,8 +42,10 @@ namespace yvrtc
 
         int32_t YVPlayStart(std::string url);
         int32_t YVPlayStop();
-        // int32_t PollVideoFrame(YVRFrame *pFrame);
         int32_t RegisterVideoReceiver(int32_t (*receiver)(YVRFrame *pFrame, void* pUser), void* user);
+
+        int32_t putDataFrame(YVRFrame *pFrame);
+        int32_t RegisterDataReceiver(int32_t (*receiver)(YVRFrame *pFrame, void* pUser), void* user);
     };
 }
 

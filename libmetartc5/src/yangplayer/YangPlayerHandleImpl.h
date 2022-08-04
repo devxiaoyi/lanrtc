@@ -26,6 +26,9 @@ public:
 	int32_t checkConnectionState();
 
 	int32_t setVideoReceiver(int32_t (*func)(YangFrame *pFrame));
+	int32_t setDataReceiver(int32_t (*func)(YangFrame *pFrame));
+
+	int32_t putTxData(YangFrame *pFrame);
 
 protected:
 

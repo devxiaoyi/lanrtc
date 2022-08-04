@@ -21,8 +21,8 @@ void g_rtcrecv_receiveVideo(void* user,YangFrame *videoFrame){
 void g_rtcrecv_receiveMsg(void* user,YangFrame *msgFrame){
 	if(user==NULL) return;
 	YangRtcReceive* rtcHandle=(YangRtcReceive*)user;
-	rtcHandle->receiveMsg(msgFrame);
-
+	// rtcHandle->receiveMsg(msgFrame);
+	rtcHandle->dataReceiver(msgFrame);
 }
 int32_t g_rtcrecv_sendRtcMessage(void* user,int puid,YangRtcMessageType mess){
 	if(user==NULL) return 1;
