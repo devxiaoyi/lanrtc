@@ -1,0 +1,14 @@
+*.obj
+*.h264
+*.opus
+*.vcxproj*
+debug
+release
+*.stash
+tmp
+CMakeFiles
+*.cmake
+*.zip
+*.rar
+新建文件夹
+.vscode
