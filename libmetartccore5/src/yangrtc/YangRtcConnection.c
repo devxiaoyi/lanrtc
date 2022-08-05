@@ -484,10 +484,10 @@ int32_t yang_rtcconn_getRemoteSdp(YangRtcSession *session, char *sdpstr){
 	if(session->remote_audio==NULL) session->remote_audio=(YangAudioParam*)calloc(sizeof(YangAudioParam),1);
 	if(session->remote_video==NULL) session->remote_video=(YangVideoParam*)calloc(sizeof(YangVideoParam),1);
 	if((err=yang_rtcsdp_parse(&sdp,sdpstr))!=Yang_Ok){
-
+		yang_error("sdp parse error!");
 	}
 	if((err=yang_sdp_parseRemoteSdp(session,&sdp))!=Yang_Ok){
-
+		yang_error("parseRemoteSdp error!");
 	}
 	yang_destroy_rtcsdp(&sdp);
 

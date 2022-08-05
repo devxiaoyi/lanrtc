@@ -15,14 +15,18 @@ void g_rtcrecv_receiveVideo(void* user,YangFrame *videoFrame){
 	if(user==NULL) return;
 	YangRtcReceive* rtcHandle=(YangRtcReceive*)user;
 	// rtcHandle->receiveVideo(videoFrame);
-	rtcHandle->videoReceiver(videoFrame);
+	if (rtcHandle->videoReceiver) {
+		rtcHandle->videoReceiver(videoFrame);
+	}
 }
 
 void g_rtcrecv_receiveMsg(void* user,YangFrame *msgFrame){
 	if(user==NULL) return;
 	YangRtcReceive* rtcHandle=(YangRtcReceive*)user;
 	// rtcHandle->receiveMsg(msgFrame);
-	rtcHandle->dataReceiver(msgFrame);
+	if (rtcHandle->dataReceiver) {
+		rtcHandle->dataReceiver(msgFrame);
+	}
 }
 int32_t g_rtcrecv_sendRtcMessage(void* user,int puid,YangRtcMessageType mess){
 	if(user==NULL) return 1;

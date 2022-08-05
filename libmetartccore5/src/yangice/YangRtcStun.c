@@ -585,7 +585,8 @@ int32_t yang_decode_rtcstun(YangStunPacket* pkt,char* buf, const int32_t nb_buf)
 int32_t yang_stun_encode_binding_request2(YangStunPacket* pkt, YangBuffer* stream,YangRtcUdp* udp,char* pwd,char* username,uint32_t username_len){
 	int32_t err = Yang_Ok;
 
-	yang_write_2bytes(stream,BindingRequest);
+	//yang_write_2bytes(stream,BindingRequest);
+	yang_write_2bytes(stream,pkt->message_type);
 	yang_write_2bytes(stream,username_len);// +mapped_address_len);
 	yang_write_4bytes(stream,kStunMagicCookie);
 	yang_write_bytes(stream,pkt->transcation_id,strlen(pkt->transcation_id));

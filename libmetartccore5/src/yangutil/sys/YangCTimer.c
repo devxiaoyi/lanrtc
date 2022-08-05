@@ -132,11 +132,12 @@ void yang_timer_stop(YangCTimer *timer) {
 	while (timer->isStart)
 					yang_usleep(1000);
 #else
-	while (timer->isStart)
-					yang_usleep(1000);
-	   epoll_ctl(timer->efd, EPOLL_CTL_DEL, timer->timerfd, NULL);
-		    close(timer->timerfd);
-		    timer->timerfd = -1;
+	while (timer->isStart)			yang_usleep(1000);
+
+	epoll_ctl(timer->efd, EPOLL_CTL_DEL, timer->timerfd, NULL);
+	close(timer->efd);
+	close(timer->timerfd);
+	timer->timerfd = -1;
 
 #endif
 
