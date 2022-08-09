@@ -142,8 +142,7 @@ int32_t yang_playtrackH264_is_keyframe(YangRtpPacket *pkt) {
 
 		YangAvcNaluType nalu_type = (YangAvcNaluType) ((*(pkt->payload + 3))
 				& kNalTypeMask);
-		if (nalu_type == YangAvcNaluTypeSPS
-				|| nalu_type == YangAvcNaluTypePPS) {
+		if (nalu_type == YangAvcNaluTypeSPS || nalu_type == YangAvcNaluTypePPS || nalu_type == YangAvcNaluTypeSEI) {
 			return true;
 		}
 	} else if (pkt->nalu_type == kFuA) {
@@ -167,8 +166,7 @@ int32_t yang_playtrackH264_is_keyframe2(YangH264PacketCache *pkt) {
 
 		YangAvcNaluType nalu_type = (YangAvcNaluType) ((*(pkt->payload + 3))
 				& kNalTypeMask);
-		if (nalu_type == YangAvcNaluTypeSPS
-				|| nalu_type == YangAvcNaluTypePPS) {
+		if (nalu_type == YangAvcNaluTypeSPS || nalu_type == YangAvcNaluTypePPS || nalu_type == YangAvcNaluTypeSEI) {
 			return true;
 		}
 	} else if (pkt->nalu_type == kFuA) {
@@ -437,6 +435,8 @@ int32_t yang_playtrackH264_on_rtp(YangRtcContext *context, YangPlayTrackH264 *tr
 				if ((err = yang_playtrackH264_packet_video(context, track,track->header_sn, tail_sn)) != Yang_Ok) {
 					err = yang_error_wrap(err, "fail to pack video frame");
 				}
+			} else {
+				yang_warn("[Don] fail to playtrackH264_check_frame_complete");
 			}
 		} else if (-2 == sn) {
 			return yang_error_wrap(ERROR_RTC_RTP_MUXER,
