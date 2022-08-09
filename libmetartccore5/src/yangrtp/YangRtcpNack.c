@@ -25,8 +25,10 @@ void yang_create_rtcpNack(YangRtcpCommon *comm, uint32_t pssrc) {
     comm->nack->mediaSsrc = pssrc;
 }
 void yang_destroy_rtcpNack(YangRtcpCommon *comm) {
-	if (comm || comm->nack == NULL)
+	if (comm == NULL || comm->nack == NULL) {
+		// yang_trace("\n[Error] yang_destroy_rtcpNack is NULL\n");
 		return;
+	}
 	yang_free(comm->nack->nacks);
 	comm->nack->vsize = 0;
 	yang_free(comm->nack);
@@ -138,30 +140,36 @@ int32_t yang_encode_rtcpNack(YangRtcpCommon *comm, YangBuffer *buffer) {
 		for (int32_t i = 0; i < comm->nack->vsize; i++) {
 			uint16_t sn = comm->nack->nacks[i];
 			if (!chunk.in_use) {
-				chunk.pid = sn;
+				chunk.pid = 0;
+				chunks[vsize].pid = sn;
 				chunk.blp = 0;
 				chunk.in_use = true;
 				pid = sn;
+				// printf("[Don]1 sn(%d)-pid(%d)=(%d) pid:%d blp:%d\n",sn,pid,sn - pid,chunk.pid,chunk.blp);
 				continue;
 			}
 			if ((sn - pid) < 1) {
 				yang_info("skip seq %d", sn);
 			} else if ((sn - pid) > 16) {
-				// add new chunk
-
 				chunks[vsize].blp = chunk.blp;
-				chunks[vsize++].pid = chunk.pid;
-				chunk.in_use = false;
+
+				// add new chunk
+				vsize++;
+				chunks[vsize].pid = sn;
+				chunk.blp = 0;
+				chunk.in_use = true;
+				pid = sn;
 			} else {
 				chunk.blp |= 1 << (sn - pid - 1);
 			}
+			// printf("[Don]1 sn(%d)-pid(%d)=(%d) pid:%d blp:%d\n",sn,pid,sn - pid,chunk.pid,chunk.blp);
 		}
-		if (chunk.in_use) {
-
+		// if (chunk.in_use) {
 			chunks[vsize].blp = chunk.blp;
-			chunks[vsize++].pid = chunk.pid;
-		}
+		// }
 
+		// printf("[Don]2 pid1:%d pid2:%d blp:%d\n",pid,chunk.pid,chunk.blp);
+			vsize++;
 		comm->header.length = 2 + vsize;
 		if (Yang_Ok != (err = yang_encode_header_rtcpCommon(comm, buffer))) {
 			err = yang_error_wrap(err, "encode header");
