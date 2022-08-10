@@ -11,10 +11,6 @@ int64_t yang_get_system_micro_time();
 int64_t yang_get_milli_time();//haomiao
 int64_t yang_get_micro_time();//weimiao
 
-#define yang_get_milli_tick  yang_get_milli_time
-#define yang_get_micro_tick  yang_get_micro_time
-
-
 #ifdef _WIN32
 #include <winsock2.h>
 int gettimeofday(struct timeval *tp, void *tzp);

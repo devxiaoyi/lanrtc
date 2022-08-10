@@ -8,98 +8,59 @@
 #include <stdlib.h>
 
 
-
 #ifdef _MSC_VER
-#define FILETIME_1970 116444736000000000ull /* seconds between 1/1/1601 and 1/1/1970 */
-#define HECTONANOSEC_PER_SEC 10000000ull
- union yang_gettimeofday_type {
-        unsigned long long ns100; //time since 1 Jan 1601 in 100ns units
-        FILETIME ft;
-    }  ;
 int gettimeofday(struct timeval *tp, void *tzp)
 {
-    union yang_gettimeofday_type t_now;
-    GetSystemTimeAsFileTime(&t_now.ft);
-    //100 nano-seconds since 1-1-1970
-    t_now.ns100 -= FILETIME_1970;
-    tp->tv_sec=t_now.ns100 / HECTONANOSEC_PER_SEC;
-    tp->tv_usec=(t_now.ns100 % HECTONANOSEC_PER_SEC)/10;
-
+    time_t clock;
+    struct tm tm;
+    SYSTEMTIME wtm;
+    GetLocalTime(&wtm);
+    tm.tm_year = wtm.wYear - 1900;
+    tm.tm_mon = wtm.wMonth - 1;
+    tm.tm_mday = wtm.wDay;
+    tm.tm_hour = wtm.wHour;
+    tm.tm_min = wtm.wMinute;
+    tm.tm_sec = wtm.wSecond;
+    tm.tm_isdst = -1;
+    clock = mktime(&tm);
+    tp->tv_sec = clock;
+    tp->tv_usec = wtm.wMilliseconds * 1000;
     return (0);
 }
-int64_t yang_get_win_micro_time();
-#define yang_micro_time yang_get_win_micro_time
-#else
-#include <sys/time.h>
-#define yang_micro_time yang_get_micro_time
 #endif
 
-int64_t g_system_time_startup_time = 0;
-#ifdef _MSC_VER
- LARGE_INTEGER  g_large_interger;
- int64_t g_dff=0;
-#endif
-#define Yang_TIME_RESOLUTION_US 300*1000
-void yang_update_system_time() { //milli weimiao
-#ifdef _MSC_VER
-    if(g_dff==0){
-            QueryPerformanceFrequency(&g_large_interger);
-            g_dff = g_large_interger.QuadPart;
-        }
-        if(g_system_time_startup_time==0){
-            QueryPerformanceCounter(&g_large_interger);
-            g_system_time_startup_time=g_large_interger.QuadPart;
-        }
-#else
-    if(g_system_time_startup_time==0) g_system_time_startup_time = yang_get_micro_time();
-
-#endif
-
+#include <sys/timeb.h>
+static uint64_t _getCurrentTimeMillis()
+{
+    struct timeb t;
+    ftime(&t);
+    return t.time * 1000 + t.millitm;
 }
 
 int64_t yang_get_system_micro_time(){
-    if(g_system_time_startup_time==0) yang_update_system_time();
-    return yang_micro_time()-g_system_time_startup_time;
+#ifdef _MSC_VER
+    int64_t tmp = _getCurrentTimeMillis();
+    int64_t ret = tmp*1000;
+    return ret;
+#else
+    return yang_get_micro_time();
+#endif
 }
 
 int64_t yang_get_system_milli_time(){
-    if(g_system_time_startup_time==0) yang_update_system_time();
-
-    return yang_micro_time()/1000;
-
-}
-
-
-
 #ifdef _MSC_VER
-
-int64_t yang_get_win_micro_time(){
-   // if(g_system_time_startup_time==0) yang_update_system_time();
-    QueryPerformanceCounter(&g_large_interger);
-  return (g_large_interger.QuadPart-g_system_time_startup_time)*1000000/g_dff;
-}
-int64_t yang_get_win_milli_time(){
-    if(g_system_time_startup_time==0) yang_update_system_time();
-    QueryPerformanceCounter(&g_large_interger);
-    return (g_large_interger.QuadPart-g_system_time_startup_time)*1000/g_dff;
-
-}
+    return _getCurrentTimeMillis();
 #else
-//namiao
-int64_t yang_get_nano_tick(){
-    struct timespec ts;
-    clock_gettime(CLOCK_MONOTONIC, &ts);
-    return (ts.tv_sec * 1000000000 + ts.tv_nsec);
-}
-
+    return yang_get_milli_time();
 #endif
-
+}
 
 //weimiao
 int64_t yang_get_micro_time() {
     struct timeval time;
     gettimeofday(&time, 0);
-    return time.tv_sec * 1000000 + time.tv_usec ;
+    int64_t res = time.tv_sec;
+    return res * 1000000 + time.tv_usec ;
 }
 //haomiao
 int64_t yang_get_milli_time() {
