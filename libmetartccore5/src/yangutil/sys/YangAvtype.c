@@ -85,7 +85,7 @@ void yang_avinfo_initVideo(YangVideoInfo *video) {
 		sys->rtcLocalPort = 16000;
 		sys->httpPort = 8080;
 		sys->dataPort = 9999;
-		sys->hasLogFile = 0;
+		sys->hasLogFile = 1;
 		sys->logLevel = 1;
 		sys->logLevel = 1;
 		sys->cameraCount = 3;

@@ -34,7 +34,7 @@ void g_startStunTimer(void *user) {
 
 }
 
-void g_yang_doTask(int32_t taskId, void *user) {
+static void g_yang_doTask(int32_t taskId, void *user) {
 	if (user == NULL)	return;
 	YangRtcSession *session = (YangRtcSession*) user;
 	if (session->isSendStun && taskId == 1) {
@@ -233,7 +233,7 @@ void yang_rtcconn_startStunTimer(YangRtcSession *session) {
 
 	if (session->tm_1s)
 		yang_timer_start(session->tm_1s);
-	session->isSendStun = 1;
+	session->isSendStun = 0;
 }
 
 void yang_rtcconn_startTimers(YangRtcSession *session) {
@@ -541,6 +541,13 @@ int32_t yang_rtcconn_startRtc(YangRtcSession* session,char* sdp){
 	session->context.udp->updateRemoteAddress(&session->context.udp->session,session->context.streamConfig->remoteIp,session->isServer?0:session->listenPort);
 	yang_rtcconn_startudp(session);
 	session->context.udp->start(&session->context.udp->session);
+
+#if Yang_HaveDtls
+	if (!session->isSendDtls && !session->isServer) {
+		if (session->context.dtls->startHandShake(&session->context.dtls->session)) yang_error("dtls start handshake failed!");
+		session->isSendDtls = 1;
+	}
+#endif
 	return Yang_Ok;
 }
 int32_t yang_rtcconn_isConnected(YangRtcSession* session){

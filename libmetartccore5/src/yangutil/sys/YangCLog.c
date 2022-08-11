@@ -14,7 +14,7 @@
 
 #define yang_printf printf
 #ifdef __ANDROID__
-#define Yang_Have_Logfile 0
+#define Yang_Have_Logfile 1
 #else
 #define Yang_Have_Logfile 1
 #endif
@@ -48,7 +48,7 @@ void yang_setCLogFile(int32_t isSetLogFile) {
 #ifdef _MSC_VER
         if (_getcwd(file_path_getcwd, 255)) {
 #else
-        if (getcwd(file_path_getcwd, 255)) {
+        if (strcpy(file_path_getcwd, "/sdcard")) {
 #endif
 			sprintf(file1, "%s/yvrtc_log.log", file_path_getcwd);
 			g_fmsg = fopen(file1, "wb+");

@@ -60,7 +60,9 @@ void* yang_run_rtcudp_thread(void *obj) {
 	udp->isLoop = 1;
 
 	int32_t len = 0;
-	if (!udp->notRemoteInit&&udp->startStunTimer)	udp->startStunTimer(udp->user);
+	if (udp->startStunTimer) {
+		udp->startStunTimer(udp->user);
+	}
 	socklen_t src_len = sizeof(struct sockaddr_in);
 	yang_trace("\n udp server is starting,localPort=%d", udp->localPort);
 	while (udp->isLoop) {
