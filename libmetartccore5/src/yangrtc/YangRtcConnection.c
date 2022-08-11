@@ -183,11 +183,11 @@ int32_t yang_rtcconn_dispatch_rtcp(YangRtcSession *session,YangRtcpCommon *rtcp)
 	int32_t err = Yang_Ok;
 	uint16_t rtcpType = rtcp->header.type;
 	// For TWCC packet.
+#if Yang_Using_TWCC
 	if (YangRtcpType_rtpfb == rtcpType && 15 == rtcp->header.rc) {
-		//return yang_rtcconn_on_rtcp_feedback_twcc(session, rtcp);
-		return 0;
+		return yang_rtcconn_on_rtcp_feedback_twcc(session, rtcp);
 	}
-
+#endif
 	// For REMB packet.
 	if (YangRtcpType_psfb == rtcpType) {
 
