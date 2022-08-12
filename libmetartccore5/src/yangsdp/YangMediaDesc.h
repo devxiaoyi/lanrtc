@@ -11,7 +11,7 @@
 
 typedef struct
 {
-    char ip[32];
+    char ip[64];
     int32_t port;
     char type[32];
 }YangCandidate;

@@ -81,14 +81,14 @@ typedef struct YangSysInfo {
 	int32_t hasLogFile;
 	int32_t logLevel;
 	int32_t cameraCount;
-	char localIp[32];
-	char rtcServerIP[32];
+	char localIp[64];
+	char rtcServerIP[64];
 	char cameraIndexs[50];
-	char rtmpServerIP[32];
-	char srtServerIP[32];
+	char rtmpServerIP[64];
+	char srtServerIP[64];
 
-	char httpServerIP[32];
-	char dataServerIP[32];
+	char httpServerIP[64];
+	char dataServerIP[64];
 }YangSysInfo;
 
 typedef struct YangRtcInfo {
@@ -98,7 +98,7 @@ typedef struct YangRtcInfo {
 	int32_t audioQueueCount;
 	int32_t videoQueueCount;
 	int32_t iceStunPort;
-	char iceServerIP[32];
+	char iceServerIP[64];
 }YangRtcInfo;
 
 typedef struct YangAVInfo{

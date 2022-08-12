@@ -28,7 +28,7 @@ typedef struct {
 	pthread_t threadId;
 	int32_t serverPort;
 	void* user;
-	char remoteIp[32];
+	char remoteIp[64];
 
 	struct sockaddr_in local_addr;
 	struct sockaddr_in remote_addr;

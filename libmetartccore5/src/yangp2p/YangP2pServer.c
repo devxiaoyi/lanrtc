@@ -61,7 +61,7 @@ void* yang_run_http_thread(void *obj){
 
 	YangP2pServer* p2p=(YangP2pServer*)obj;
 	int connfd=p2p->connFd;
-	char remoteIp[32]={0};
+	char remoteIp[64]={0};
 	strcpy(remoteIp,p2p->remoteIp);
 
 	int32_t nBytes =0;
