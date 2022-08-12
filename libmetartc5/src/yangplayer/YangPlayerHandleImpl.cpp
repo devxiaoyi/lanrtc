@@ -19,7 +19,7 @@ YangPlayerHandle* YangPlayerHandle::createPlayerHandle(){
     // context->avinfo.rtc.iceStunPort=3478;
     // context->avinfo.rtc.hasIceServer=0;
     // context->streams.m_playBuffer = new YangSynBuffer();
-    context->avinfo.rtc.usingDatachannel = 1;
+    context->avinfo.rtc.usingDatachannel = 0;
     context->avinfo.sys.mediaServer = Yang_Server_P2p; // Yang_Server_Srs/Yang_Server_Zlm
 
     // YangV_Hw_Android mediacodec

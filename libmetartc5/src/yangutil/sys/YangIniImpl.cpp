@@ -230,7 +230,6 @@ void YangIni::initVideo(YangVideoInfo* video){
     		sys->dataPort = readIntValue("sys", "dataPort", 9999);
     		sys->hasLogFile=readIntValue("sys", "hasLogFile", 0);
     		sys->logLevel = readIntValue("sys", "logLevel", 1);
-    		sys->logLevel = readIntValue("sys", "logLevel", 1);
     		sys->cameraCount = readIntValue("sys", "cameraCount", 3);
     		readStringValue("sys", "cameraIndexs", sys->cameraIndexs, "1");
     		readStringValue("sys", "rtmpServerIP", sys->rtmpServerIP, "127.0.0.1");
@@ -255,7 +254,7 @@ void YangIni::initVideo(YangVideoInfo* video){
        void YangIni::initRtc(YangRtcInfo *rtc){
            memset(rtc,0,sizeof(YangRtcInfo));
            rtc->sessionTimeout = readIntValue("rtc", "sessionTimeout",  30*1000000);
-		   rtc->usingDatachannel = readIntValue("rtc", "usingDatachannel", 1);
+		   rtc->usingDatachannel = readIntValue("rtc", "usingDatachannel", 0);
            rtc->hasIceServer = readIntValue("rtc", "hasIceServer", 0);
            rtc->iceStunPort = readIntValue("rtc", "iceStunPort", 3478);
            rtc->audioQueueCount = readIntValue("rtc", "audioQueueCount", 5);

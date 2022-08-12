@@ -27,7 +27,6 @@ int gettimeofday(struct timeval *tp, void *tzp)
     tp->tv_usec = wtm.wMilliseconds * 1000;
     return (0);
 }
-#endif
 
 #include <sys/timeb.h>
 static uint64_t _getCurrentTimeMillis()
@@ -36,6 +35,7 @@ static uint64_t _getCurrentTimeMillis()
     ftime(&t);
     return t.time * 1000 + t.millitm;
 }
+#endif
 
 int64_t yang_get_system_micro_time(){
 #ifdef _MSC_VER

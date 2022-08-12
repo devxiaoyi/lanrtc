@@ -87,7 +87,6 @@ void yang_avinfo_initVideo(YangVideoInfo *video) {
 		sys->dataPort = 9999;
 		sys->hasLogFile = 1;
 		sys->logLevel = 1;
-		sys->logLevel = 1;
 		sys->cameraCount = 3;
 		strcpy(sys->cameraIndexs, "1");
 		strcpy(sys->rtmpServerIP, "127.0.0.1");
@@ -108,7 +107,7 @@ void yang_avinfo_initVideo(YangVideoInfo *video) {
 	}
 	void yang_avinfo_initRtc(YangRtcInfo *rtc) {
 		rtc->sessionTimeout= 30*1000000;
-		rtc->usingDatachannel=1;
+		rtc->usingDatachannel=0;
 		rtc->hasIceServer = 0;
         rtc->audioQueueCount = 5;
         rtc->videoQueueCount = 5;

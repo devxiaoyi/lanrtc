@@ -463,7 +463,7 @@ void yang_rtcconn_receive(YangRtcSession *session, char *data, int32_t size) {
 #endif
 		}
 
-	client_sucess:
+client_sucess:
 	yang_rtcconn_startTimers(session);
 	session->context.state = 1;
 	if (session->context.streamConfig&&session->context.streamConfig->rtcCallback.sendRequest)

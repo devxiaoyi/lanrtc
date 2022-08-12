@@ -8,7 +8,7 @@
 #define Yang_H265_Encoding 0
 
 #define Yang_HaveDtls 1 //default:using dtls
-#define Yang_HaveDatachannel 1
+#define Yang_HaveDatachannel 0
 
 #define YVRTC_RTPRTCP_DTLS 0
 

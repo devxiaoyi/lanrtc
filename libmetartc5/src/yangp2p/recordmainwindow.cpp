@@ -45,7 +45,7 @@ RecordMainWindow::RecordMainWindow()
     m_context->channeldataRecv.context = this;
     m_context->channeldataRecv.receiveData = g_qt_p2p_receiveData;
 
-    m_context->avinfo.rtc.usingDatachannel = 1;
+    m_context->avinfo.rtc.usingDatachannel = 0;
 }
 
 RecordMainWindow::~RecordMainWindow()

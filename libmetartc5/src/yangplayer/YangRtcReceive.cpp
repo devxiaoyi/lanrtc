@@ -164,16 +164,14 @@ void YangRtcReceive::run() {
 	m_isStart = 0;
 }
 void YangRtcReceive::startLoop() {
-	// yang_reindex(m_out_audioBuffer);
-	// yang_reindex(m_out_videoBuffer);
 	m_loops = 1;
 	m_isReceived = 1;
-	int err=Yang_Ok;
-	if ((err=m_recv->connectSfuServer(&m_recv->peer))!=Yang_Ok) {
+	int err = m_recv->connectSfuServer(&m_recv->peer);
+	if (err != Yang_Ok) {
 		m_loops=0;
-		// if(m_message) m_message->failure(err);
+		yang_error("\nRtcReceive connectServer error:%d", err);
 	}else{
-		// if(m_message) m_message->success();
+		yang_trace("\nRtcReceive connectServer success");
 	}
 
 	pthread_mutex_lock(&m_lock);
