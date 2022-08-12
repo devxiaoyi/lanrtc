@@ -39,12 +39,12 @@ int32_t yang_zlm_query(YangRtcSession* session,ZlmSdpResponseType* zlm,int32_t i
 
 	yang_cstr_replace(sdp,sBuffer, "{", "");
 	memset(sdp,0,Yang_SDP_BUFFERLEN);
-	strcpy(sdp,sBuffer);
+	strncpy(sdp,sBuffer, Yang_SDP_BUFFERLEN - 1);
 	memset(sBuffer,0,Yang_SDP_BUFFERLEN);
 	yang_cstr_replace(sdp,sBuffer, "}", "");
 
 	memset(sdp,0,Yang_SDP_BUFFERLEN);
-	strcpy(sdp,sBuffer);
+	strncpy(sdp,sBuffer, Yang_SDP_BUFFERLEN - 1);
 	memset(sBuffer,0,Yang_SDP_BUFFERLEN);
 	yang_cstr_replace(sdp,sBuffer, "\\r\\n", "\n");
 

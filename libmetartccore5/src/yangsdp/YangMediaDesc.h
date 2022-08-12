@@ -9,6 +9,8 @@
 #include <yangsdp/YangSdpType.h>
 #include <yangsdp/YangSSRCInfo.h>
 
+#define SESSION_INFO_MAX_SIZE (128 - 1)
+
 typedef struct
 {
     char ip[64];

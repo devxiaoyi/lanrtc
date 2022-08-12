@@ -16,10 +16,10 @@ int32_t yang_stream_parseUrl(char* url,YangStreamConfig* stream,YangAVInfo* avin
 	}
 
 	stream->localPort = 10000+yang_random()%15000;
-	strcpy(stream->remoteIp,data.server);
+	strncpy(stream->remoteIp, data.server, sizeof(stream->remoteIp) - 1);
 	stream->remotePort = data.port;
-	strcpy(stream->app,data.app);
-	strcpy(stream->stream,data.stream);
+	strncpy(stream->app, data.app, sizeof(stream->app) - 1);
+	strncpy(stream->stream, data.stream, sizeof(stream->stream) - 1);
 	stream->uid = 0;
 	stream->streamOptType = opt;//Yang_Stream_Play;
 

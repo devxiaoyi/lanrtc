@@ -6,14 +6,16 @@
 #include <yangutil/sys/YangMath.h>
 #include <yangutil/sys/YangLog.h>
 #include <ctype.h>
-void yang_destroy_strings(YangStrings* strs){
-	if(strs==NULL||strs->str==NULL) return;
-    for (int32_t i=0;i<strs->vsize;i++)           free(strs->str[i]);
 
-       free(strs->str);
+void yang_destroy_strings(YangStrings *strs)
+{
+	if (strs == NULL || strs->str == NULL)
+		return;
+	for (int32_t i = 0; i < strs->vsize; i++)
+		yang_free(strs->str[i]);
+
+	yang_free(strs->str);
 }
-
-
 
 int32_t yang_cstr_split(char *src, char *delim, YangStrings* istr)
 {

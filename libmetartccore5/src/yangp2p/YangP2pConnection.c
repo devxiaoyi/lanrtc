@@ -42,12 +42,12 @@ int32_t yang_sdp_queryP2p(P2pSdpResponseType* p2p,char* ip,int32_t port,char* pu
 
 	yang_cstr_replace(sdp,sBuffer, "{", "");
 	memset(sdp,0,Yang_SDP_BUFFERLEN);
-	strcpy(sdp,sBuffer);
+	strncpy(sdp, sBuffer, Yang_SDP_BUFFERLEN - 1);
 	memset(sBuffer,0,Yang_SDP_BUFFERLEN);
 	yang_cstr_replace(sdp,sBuffer, "}", "");
 
 	memset(sdp,0,Yang_SDP_BUFFERLEN);
-	strcpy(sdp,sBuffer);
+	strncpy(sdp, sBuffer, Yang_SDP_BUFFERLEN - 1);
 	memset(sBuffer,0,Yang_SDP_BUFFERLEN);
 	yang_cstr_replace(sdp,sBuffer, "\\r\\n", "\n");
 
@@ -124,7 +124,7 @@ int32_t yang_p2p_connectRtcServer(char* ip,int32_t remotePort,char* localSdp,cha
 //	tsdp[strlen(tsdp)]='}';
 
     if ((err=yang_p2p_doHandleSignal(&sdp,ip,remotePort,localSdp))  == Yang_Ok) {
-    	strcpy(remoteSdp,sdp.sdp);
+    	strncpy(remoteSdp, sdp.sdp, 12*1000 - 1);
     	//conn->setRemoteDescription(conn->session,sdp.sdp);
 	}
     //yang_free(tsdp);

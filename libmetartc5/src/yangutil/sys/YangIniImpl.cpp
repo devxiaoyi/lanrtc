@@ -39,7 +39,7 @@ void YangIni::init(const char *p_filename) {
 		int32_t len = strlen(file1) + 1;
 		m_file = (char*) malloc(len);
 		memset(m_file, 0, len);
-		strcpy(m_file, file1);
+		strncpy(m_file, file1, len-1);
 	}
 
 }

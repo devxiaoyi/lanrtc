@@ -50,12 +50,12 @@ int32_t yang_sdp_querySrs(YangRtcSession* session,SrsSdpResponseType* srs,int32_
 
 	yang_cstr_replace(sdp,sBuffer, "{", "");
 	memset(sdp,0,Yang_SDP_BUFFERLEN);
-	strcpy(sdp,sBuffer);
+	strncpy(sdp,sBuffer, Yang_SDP_BUFFERLEN - 1);
 	memset(sBuffer,0,Yang_SDP_BUFFERLEN);
 	yang_cstr_replace(sdp,sBuffer, "}", "");
 
 	memset(sdp,0,Yang_SDP_BUFFERLEN);
-	strcpy(sdp,sBuffer);
+	strncpy(sdp,sBuffer, Yang_SDP_BUFFERLEN - 1);
 	memset(sBuffer,0,Yang_SDP_BUFFERLEN);
 	yang_cstr_replace(sdp,sBuffer, "\\r\\n", "\n");
 

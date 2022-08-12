@@ -168,14 +168,14 @@ int32_t YangP2pRtc::connectPeer(int32_t nettype, string server,int32_t localPort
 	int32_t ret = 0;
 	YangPeerConnection* sh=(YangPeerConnection*)calloc(sizeof(YangPeerConnection),1);
 
-	strcpy(sh->peer.streamconfig.app,app.c_str());
+	strncpy(sh->peer.streamconfig.app, app.c_str(), sizeof(sh->peer.streamconfig.app) - 1);
 	sh->peer.streamconfig.streamOptType=Yang_Stream_Both;
 
-	strcpy(sh->peer.streamconfig.remoteIp,server.c_str());
+	strncpy(sh->peer.streamconfig.remoteIp, server.c_str(), sizeof(sh->peer.streamconfig.remoteIp) - 1);
 	sh->peer.streamconfig.remotePort=pport;
 
 	m_clientUid=m_uidSeq++;
-	strcpy(sh->peer.streamconfig.stream,stream.c_str());
+	strncpy(sh->peer.streamconfig.stream, stream.c_str(), sizeof(sh->peer.streamconfig.stream) - 1);
 	sh->peer.streamconfig.uid=m_clientUid;
 
 	sh->peer.streamconfig.isServer=0;
@@ -225,7 +225,7 @@ int32_t YangP2pRtc::addPeer(char* sdp,char* answer,char* remoteIp,int32_t localP
 	sh->peer.streamconfig.localPort=localPort;
 	sh->peer.streamconfig.isServer=1;
 	sh->peer.streamconfig.streamOptType=Yang_Stream_Both;
-	strcpy(sh->peer.streamconfig.remoteIp,remoteIp);
+	strncpy(sh->peer.streamconfig.remoteIp, remoteIp, sizeof(sh->peer.streamconfig.remoteIp) - 1);
 
 	sh->peer.streamconfig.sslCallback.context=this;
 	sh->peer.streamconfig.sslCallback.sslAlert=g_p2p_rtcrecv_sslAlert;

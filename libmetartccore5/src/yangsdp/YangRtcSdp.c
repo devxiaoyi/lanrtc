@@ -61,28 +61,28 @@ YangMediaDesc* yang_rtcsdp_find_media_descs(YangSdp *sdp, char *type) {
 void yang_rtcsdp_set_ice_ufrag(YangSdp *sdp, char *ufrag) {
 
 	for (int i = 0; i < sdp->media_descs.vsize; i++) {
-		strcpy(sdp->media_descs.payload[i].session_info.ice_ufrag, ufrag);
+		strncpy(sdp->media_descs.payload[i].session_info.ice_ufrag, ufrag, 31);
 	}
 }
 
 void yang_rtcsdp_set_ice_pwd(YangSdp *sdp, char *pwd) {
 
 	for (int i = 0; i < sdp->media_descs.vsize; i++) {
-		strcpy(sdp->media_descs.payload[i].session_info.ice_pwd, pwd);
+		strncpy(sdp->media_descs.payload[i].session_info.ice_pwd, pwd, SESSION_INFO_MAX_SIZE);
 	}
 }
 
 void yang_rtcsdp_set_dtls_role(YangSdp *sdp, char *dtls_role) {
 
 	for (int i = 0; i < sdp->media_descs.vsize; i++) {
-		strcpy(sdp->media_descs.payload[i].session_info.setup, dtls_role);
+		strncpy(sdp->media_descs.payload[i].session_info.setup, dtls_role, SESSION_INFO_MAX_SIZE);
 	}
 }
 
 void yang_rtcsdp_set_fingerprint_algo(YangSdp *sdp, char *algo) {
 
 	for (int i = 0; i < sdp->media_descs.vsize; i++) {
-		strcpy(sdp->media_descs.payload[i].session_info.fingerprint_algo, algo);
+		strncpy(sdp->media_descs.payload[i].session_info.fingerprint_algo, algo, SESSION_INFO_MAX_SIZE);
 	}
 
 }
@@ -90,8 +90,8 @@ void yang_rtcsdp_set_fingerprint_algo(YangSdp *sdp, char *algo) {
 void yang_rtcsdp_set_fingerprint(YangSdp *sdp, char *fingerprint) {
 
 	for (int i = 0; i < sdp->media_descs.vsize; i++) {
-		strcpy(sdp->media_descs.payload[i].session_info.fingerprint,
-				fingerprint);
+		strncpy(sdp->media_descs.payload[i].session_info.fingerprint,
+				fingerprint, SESSION_INFO_MAX_SIZE);
 	}
 
 }
@@ -100,9 +100,9 @@ void yang_rtcsdp_add_candidate(YangSdp *sdp, char *ip, int port, char *type) {
 	// @see: https://tools.ietf.org/id/draft-ietf-mmusic-ice-sip-sdp-14.html#rfc.section.5.1
 	YangCandidate candidate;
 
-	strcpy(candidate.ip, ip);
+	strncpy(candidate.ip, ip, sizeof(candidate.ip) - 1);
 	candidate.port = port;
-	strcpy(candidate.type, type);
+	strncpy(candidate.type, type, sizeof(candidate.type) - 1);
 
 
 	for (int i = 0; i < sdp->media_descs.vsize; i++) {
@@ -148,12 +148,12 @@ int32_t yang_rtcsdp_parse_origin(YangSdp *sdp, char *content) {
 	// o=<username> <sess-id> <sess-version> <nettype> <addrtype> <unicast-address>
 	// eg. o=- 9164462281920464688 2 IN IP4 127.0.0.1
 
-	strcpy(sdp->username, str.str[0]);
-	strcpy(sdp->session_id, str.str[1]);
-	strcpy(sdp->session_version, str.str[2]);
-	strcpy(sdp->nettype, str.str[3]);
-	strcpy(sdp->addrtype, str.str[4]);
-	strcpy(sdp->unicast_address, str.str[5]);
+	strncpy(sdp->username, str.str[0], sizeof(sdp->username) - 1);
+	strncpy(sdp->session_id, str.str[1], sizeof(sdp->session_id) - 1);
+	strncpy(sdp->session_version, str.str[2], sizeof(sdp->session_version) - 1);
+	strncpy(sdp->nettype, str.str[3], sizeof(sdp->nettype) - 1);
+	strncpy(sdp->addrtype, str.str[4], sizeof(sdp->addrtype) - 1);
+	strncpy(sdp->unicast_address, str.str[5], sizeof(sdp->unicast_address) - 1);
 
 	yang_destroy_strings(&str);
 	return err;
@@ -163,7 +163,7 @@ int32_t yang_rtcsdp_parse_version(YangSdp *sdp, char *content) {
 	int32_t err = Yang_Ok;
 	// @see: https://tools.ietf.org/html/rfc4566#section-5.1
 	if (strlen(content))
-		strcpy(sdp->version, content);
+		strncpy(sdp->version, content, sizeof(sdp->version) - 1);
 	else
 		yang_itoa(0, sdp->version, 10);
 
@@ -174,7 +174,7 @@ int32_t yang_rtcsdp_parse_session_name(YangSdp *sdp, char *content) {
 	int32_t err = Yang_Ok;
 	// @see: https://tools.ietf.org/html/rfc4566#section-5.3
 	// s=<session name>
-	strcpy(sdp->session_name, content);
+	strncpy(sdp->session_name, content, sizeof(sdp->session_name) - 1);
 
 	return err;
 }
@@ -205,7 +205,7 @@ int32_t yang_rtcsdp_parse_attr_group(YangSdp *sdp, char *value) {
 	if (str.vsize == 0)
 		return 1;
 
-	strcpy(sdp->group_policy, str.str[0]);
+	strncpy(sdp->group_policy, str.str[0], sizeof(sdp->group_policy) - 1);
 	for (int i = 1; i < str.vsize; i++) {
 		yang_insert_stringVector(&sdp->groups, str.str[i]);
 	}
@@ -231,8 +231,8 @@ int32_t yang_rtcsdp_parse_media_description(YangSdp *sdp, char *content) {
 	memset(&md, 0, sizeof(YangMediaDesc));
 	yang_insert_YangMediaDescVector(&sdp->media_descs, &md);
 	YangMediaDesc *desc = &sdp->media_descs.payload[sdp->media_descs.vsize - 1];
-	strcpy(desc->type, str.str[0]);
-	strcpy(desc->protos, str.str[2]);
+	strncpy(desc->type, str.str[0], sizeof(desc->type) - 1);
+	strncpy(desc->protos, str.str[2], sizeof(desc->protos) - 1);
 	desc->port = atoi(str.str[1]);
 	for (int32_t i = 3; i < str.vsize; i++) {
 		YangMediaPayloadType pt;
@@ -261,7 +261,7 @@ int32_t yang_rtcsdp_parse_attribute(YangSdp *sdp, char *content) {
 	memset(value, 0, sizeof(value));
 	if (p) {
 		memcpy(attribute, content, p - content);
-		strcpy(value, p + 1);
+		strncpy(value, p + 1, sizeof(value) - 1);
 
 	}
 	if (strcmp(attribute, "group") == 0) {
@@ -269,7 +269,7 @@ int32_t yang_rtcsdp_parse_attribute(YangSdp *sdp, char *content) {
 	} else if (strcmp(attribute, "msid-semantic") == 0) {
 		YangStrings str;
 		yang_cstr_split(value, " ", &str);
-		strcpy(sdp->msid_semantic, str.str[0]);
+		strncpy(sdp->msid_semantic, str.str[0], sizeof(sdp->msid_semantic) - 1);
 		for (int j = 1; j < str.vsize; j++) {
 			yang_insert_stringVector(&sdp->msids, str.str[j]);
 		}
@@ -447,19 +447,19 @@ int32_t yang_rtcsdp_parse(YangSdp *sdp, char *sdp_str) {
 
 			YangSSRCInfo *ssrc_info = &media_desc->ssrc_infos.payload[j];
 			if (strlen(ssrc_info->msid) == 0) {
-				strcpy(ssrc_info->msid, media_desc->msid);
+				strncpy(ssrc_info->msid, media_desc->msid, sizeof(ssrc_info->msid) - 1);
 			}
 
 			if (strlen(ssrc_info->msid_tracker) == 0) {
-				strcpy(ssrc_info->msid_tracker, media_desc->msid_tracker);
+				strncpy(ssrc_info->msid_tracker, media_desc->msid_tracker, sizeof(ssrc_info->msid_tracker) - 1);
 			}
 
 			if (strlen(ssrc_info->mslabel) == 0) {
-				strcpy(ssrc_info->mslabel, media_desc->msid);
+				strncpy(ssrc_info->mslabel, media_desc->msid, sizeof(ssrc_info->mslabel) - 1);
 			}
 
 			if (strlen(ssrc_info->label) == 0) {
-				strcpy(ssrc_info->label, media_desc->msid_tracker);
+				strncpy(ssrc_info->label, media_desc->msid_tracker, sizeof(ssrc_info->label) - 1);
 			}
 		}
 	}

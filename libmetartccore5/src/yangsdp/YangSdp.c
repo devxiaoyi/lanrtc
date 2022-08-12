@@ -24,7 +24,7 @@ void  yang_sdp_genLocalSdp_candidate(YangRtcSession *session,YangMediaDesc *medi
     //candidate   
     yang_insert_YangCandidateVector(&media_desc->candidates, NULL);
     int32_t index=media_desc->candidates.vsize-1;
-    strcpy(media_desc->candidates.payload[index].ip,localIp);
+    strncpy(media_desc->candidates.payload[index].ip,localIp, 63);
     media_desc->candidates.payload[index].port = localport;
     strcpy(media_desc->candidates.payload[index].type, "host");
 }
@@ -45,7 +45,7 @@ int32_t yang_sdp_genLocalSdp2(YangRtcSession *session, int32_t localport,char *d
 	strcpy(local_sdp->username, "MetaRtc");
 	memset(randstr, 0, sizeof(randstr));
 	snprintf(randstr, 22, "%" PRId64, (int64_t) &local_sdp);
-	strcpy(local_sdp->session_id, randstr);
+	strcpy(local_sdp->session_id, randstr, 31);
 	strcpy(local_sdp->session_version, "2");
 	strcpy(local_sdp->nettype, "IN");
 	strcpy(local_sdp->addrtype, "IP4");
@@ -118,22 +118,22 @@ int32_t yang_sdp_genLocalSdp2(YangRtcSession *session, int32_t localport,char *d
 	memset(randstr, 0, sizeof(randstr));
 	yang_cstr_random(4, randstr);
 	memset(session->local_ufrag,0,sizeof(session->local_ufrag));
-	strcpy(session->local_ufrag, randstr);
-	strcpy(audio_media_desc->session_info.ice_ufrag, randstr);
-	strcpy(video_media_desc->session_info.ice_ufrag, randstr);
+	strncpy(session->local_ufrag, randstr, sizeof(session->local_ufrag) - 1);
+	strncpy(audio_media_desc->session_info.ice_ufrag, randstr, sizeof(audio_media_desc->session_info.ice_ufrag) - 1);
+	strncpy(video_media_desc->session_info.ice_ufrag, randstr, sizeof(video_media_desc->session_info.ice_ufrag) - 1);
 #if Yang_HaveDatachannel
-	if(data_media_desc) strcpy(data_media_desc->session_info.ice_ufrag, randstr);
+	if(data_media_desc) strncpy(data_media_desc->session_info.ice_ufrag, randstr, sizeof(data_media_desc->session_info.ice_ufrag) - 1);
 #endif
 
 	memset(randstr, 0, sizeof(randstr));
 	yang_cstr_random(32, randstr);
-	strcpy(audio_media_desc->session_info.ice_pwd, randstr);
-	strcpy(video_media_desc->session_info.ice_pwd, randstr);
+	strncpy(audio_media_desc->session_info.ice_pwd, randstr, SESSION_INFO_MAX_SIZE);
+	strncpy(video_media_desc->session_info.ice_pwd, randstr, SESSION_INFO_MAX_SIZE);
 #if Yang_HaveDatachannel
-	if(data_media_desc) strcpy(data_media_desc->session_info.ice_pwd, randstr);
+	if(data_media_desc) strncpy(data_media_desc->session_info.ice_pwd, randstr, SESSION_INFO_MAX_SIZE);
 #endif
 	memset(session->localIcePwd,0,sizeof(session->localIcePwd));
-	strcpy(session->localIcePwd,randstr);
+	strncpy(session->localIcePwd,randstr, sizeof(session->localIcePwd) - 1);
 
 	strcpy(audio_media_desc->session_info.fingerprint_algo, "sha-256");
 	strcpy(video_media_desc->session_info.fingerprint_algo, "sha-256");
@@ -142,10 +142,10 @@ int32_t yang_sdp_genLocalSdp2(YangRtcSession *session, int32_t localport,char *d
 	if(data_media_desc) strcpy(data_media_desc->session_info.ice_options, "trickle");
 #endif
 #if Yang_HaveDtls
-	strcpy(audio_media_desc->session_info.fingerprint,session->context.cer->fingerprint);
-	strcpy(video_media_desc->session_info.fingerprint,session->context.cer->fingerprint);
+	strncpy(audio_media_desc->session_info.fingerprint,session->context.cer->fingerprint, SESSION_INFO_MAX_SIZE);
+	strncpy(video_media_desc->session_info.fingerprint,session->context.cer->fingerprint, SESSION_INFO_MAX_SIZE);
 #if Yang_HaveDatachannel
-	if(data_media_desc) strcpy(data_media_desc->session_info.fingerprint,session->context.cer->fingerprint);
+	if(data_media_desc) strncpy(data_media_desc->session_info.fingerprint,session->context.cer->fingerprint, SESSION_INFO_MAX_SIZE);
 #endif
 #else
 	strcpy(audio_media_desc->session_info.fingerprint,"EF:7A:50:9C:05:8C:EF:84:4D:72:B2:74:30:BA:FD:82:76:D1:C3:FE:0C:A0:10:43:B8:6C:B2:ED:B3:F7:77:8B");
@@ -230,8 +230,8 @@ int32_t yang_sdp_genLocalSdp2(YangRtcSession *session, int32_t localport,char *d
 
 	memset(randstr, 0, sizeof(randstr));
 	yang_cstr_random(16, randstr);
-	strcpy(audio_media_desc->ssrc_infos.payload[0].cname, randstr);
-	strcpy(video_media_desc->ssrc_infos.payload[0].cname, randstr);
+	strncpy(audio_media_desc->ssrc_infos.payload[0].cname, randstr, sizeof(audio_media_desc->ssrc_infos.payload[0].cname) - 1);
+	strncpy(video_media_desc->ssrc_infos.payload[0].cname, randstr, sizeof(video_media_desc->ssrc_infos.payload[0].cname) - 1);
 	strcpy(audio_media_desc->ssrc_infos.payload[0].mslabel, "-");
 	strcpy(video_media_desc->ssrc_infos.payload[0].mslabel, "-");
 
@@ -244,8 +244,8 @@ int32_t yang_sdp_genLocalSdp2(YangRtcSession *session, int32_t localport,char *d
 	memset(randstr, 0, sizeof(randstr));
 	sprintf(randstr, "%s-%s-%s-%s-%s", tmps[0], tmps[1], tmps[2], tmps[3],tmps[4]);
 	strcpy(audio_media_desc->ssrc_infos.payload[0].msid, "-");
-	strcpy(audio_media_desc->ssrc_infos.payload[0].msid_tracker, randstr);
-	strcpy(audio_media_desc->ssrc_infos.payload[0].label, randstr);
+	strncpy(audio_media_desc->ssrc_infos.payload[0].msid_tracker, randstr, sizeof(audio_media_desc->ssrc_infos.payload[0].msid_tracker) - 1);
+	strncpy(audio_media_desc->ssrc_infos.payload[0].label, randstr, sizeof(audio_media_desc->ssrc_infos.payload[0].label) - 1);
 
 	memset(tmps, 0, 16 * 5);
 	yang_cstr_random(8, tmps[0]);
@@ -257,8 +257,8 @@ int32_t yang_sdp_genLocalSdp2(YangRtcSession *session, int32_t localport,char *d
 	sprintf(randstr, "%s-%s-%s-%s-%s", tmps[0], tmps[1], tmps[2], tmps[3],
 			tmps[4]);
     strcpy(video_media_desc->ssrc_infos.payload[0].msid, "-");
-    strcpy(video_media_desc->ssrc_infos.payload[0].msid_tracker, randstr);
-    strcpy(video_media_desc->ssrc_infos.payload[0].label, randstr);
+    strncpy(video_media_desc->ssrc_infos.payload[0].msid_tracker, randstr, sizeof(video_media_desc->ssrc_infos.payload[0].msid_tracker) - 1);
+    strncpy(video_media_desc->ssrc_infos.payload[0].label, randstr, sizeof(video_media_desc->ssrc_infos.payload[0].label) - 1);
    if(mediaServer==Yang_Server_P2p && session->isServer){
 	    yang_create_YangCandidateVector(&audio_media_desc->candidates);
 	    yang_create_YangCandidateVector(&video_media_desc->candidates);
@@ -335,12 +335,12 @@ int32_t yang_sdp_parseRemoteSdp(YangRtcSession* session,YangSdp* sdp){
 			YangMediaDesc* desc=&sdp->media_descs.payload[i];
 			if(strlen(session->remoteIcePwd)==0){
 				memset(session->remoteIcePwd,0,sizeof(session->remoteIcePwd));
-				strcpy(session->remoteIcePwd,desc->session_info.ice_pwd);
+				strncpy(session->remoteIcePwd, desc->session_info.ice_pwd, sizeof(session->remoteIcePwd) - 1);
 			}
 
 			if(strlen(session->remote_ufrag)==0){
 				memset(session->remote_ufrag,0,sizeof(session->remote_ufrag));
-				strcpy(session->remote_ufrag,desc->session_info.ice_ufrag);
+				strncpy(session->remote_ufrag, desc->session_info.ice_ufrag, sizeof(session->remote_ufrag) - 1);
 			}
 
 			if(yang_strcmp(desc->type,"audio")==0){

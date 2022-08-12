@@ -94,7 +94,7 @@ void *senderThread(void *arg)
     {
         if (flag == 0)
         {
-            snprintf(filePath, MAX_PATH_LEN, "C:\\YVR\\webrtc\\metaRTC\\win5b0\\bin\\app_win_debug\\alvr_server_out_two.h264");
+            snprintf(filePath, MAX_PATH_LEN, "./alvr_server_out_two.h264");
             memset(tmpbuff, 0, buffLen);
             int ret = readFile(filePath, tmpbuff, &tmpsize);
             if (ret != 0)
@@ -102,7 +102,7 @@ void *senderThread(void *arg)
                 printf("senderThread::failed:%d...size:%d\n", ret, tmpsize);
             }
 
-            pFile = fopen("C:\\YVR\\webrtc\\metaRTC\\win5b0\\bin\\app_win_debug\\alvr_server_out_two.txt", "r");
+            pFile = fopen("./alvr_server_out_two.txt", "r");
             if (pFile == NULL)
                 perror("Error opening file");
 

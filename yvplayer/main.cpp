@@ -68,8 +68,9 @@ int main(int argc, char *argv[])
     yvplay->RegisterVideoReceiver(myVideoReceiver, NULL);
     yvplay->RegisterDataReceiver(myDataReceiver, NULL);
 
-    yvplay->YVPlayStart("webrtc://172.18.0.223:1988/live/livestream");
-    fp = fopen("./yvplay_0804.h264", "ab+");
+    yvplay->YVPlayStart("webrtc://172.18.0.27:1988/live/livestream");
+    remove("./yvplay_debug.h264");
+    fp = fopen("./yvplay_debug.h264", "ab+");
 
     while (1)
     {
