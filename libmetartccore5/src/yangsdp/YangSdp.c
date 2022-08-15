@@ -45,7 +45,7 @@ int32_t yang_sdp_genLocalSdp2(YangRtcSession *session, int32_t localport,char *d
 	strcpy(local_sdp->username, "MetaRtc");
 	memset(randstr, 0, sizeof(randstr));
 	snprintf(randstr, 22, "%" PRId64, (int64_t) &local_sdp);
-	strcpy(local_sdp->session_id, randstr, 31);
+	strncpy(local_sdp->session_id, randstr, 31);
 	strcpy(local_sdp->session_version, "2");
 	strcpy(local_sdp->nettype, "IN");
 	strcpy(local_sdp->addrtype, "IP4");

@@ -23,6 +23,7 @@ yvrtc::YVRTCEngine::YVRTCEngine()
 
 yvrtc::YVRTCEngine::~YVRTCEngine()
 {
+    g_p2p.reset();
 }
 
 int32_t yvrtc::YVRTCEngine::putVideoFrame(YVRFrame *pFrame)
@@ -99,13 +100,12 @@ static std::unique_ptr<YangPlayerHandle> g_player;
 
 yvrtc::YVPlayEngine::YVPlayEngine()
 {
-    if (!g_player)
-        g_player.reset(YangPlayerHandle::createPlayerHandle());
+    g_player.reset(YangPlayerHandle::createPlayerHandle());
 }
 
 yvrtc::YVPlayEngine::~YVPlayEngine()
 {
-
+    g_player.reset();
 }
 
 int32_t yvrtc::YVPlayEngine::YVPlayStart(std::string url)
@@ -123,6 +123,7 @@ int32_t yvrtc::YVPlayEngine::YVPlayStop()
     if (nullptr != g_player)
     {
         g_player->stopPlay();
+        g_player.reset();
     }
     return 0;
 }

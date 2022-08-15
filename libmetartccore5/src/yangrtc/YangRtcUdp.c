@@ -39,18 +39,21 @@ void* yang_run_rtcudp_thread(void *obj) {
 
 	udp->isStart = 1;
 #ifdef _WIN32
-    int32_t timeout=200;
+    int32_t timeout=800;
     setsockopt(udp->fd, SOL_SOCKET, SO_RCVTIMEO, (const char*) &timeout,  sizeof(timeout));
 #else
 	struct timeval tv;
 	tv.tv_sec = 0;
-	tv.tv_usec = 200000;  // 200 ms
+	tv.tv_usec = 800000;  // origin: 200 ms
 	setsockopt(udp->fd, SOL_SOCKET, SO_RCVTIMEO, (const char*) &tv,	sizeof(struct timeval));
 #endif
 
 	int32_t ret = bind(udp->fd, (struct sockaddr*) &udp->local_addr, sizeof(struct sockaddr_in));
 	if (ret < 0) {
-		yang_error("Udp server bind ret:%d error:%d", ret, errno);
+		yang_error("Udp server bind ret:%d errno:%d", ret, errno);
+#ifdef _WIN32
+		yang_error("Udp server bind ret:%d winerr:%d", ret, WSAGetLastError());
+#endif
 		closesocket(udp->fd);
 		udp->fd = -1;
 		return NULL;
