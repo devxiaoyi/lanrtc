@@ -8,31 +8,12 @@
 #include <stdlib.h>
 #include <memory.h>
 
-void yang_create_rtcpNack(YangRtcpCommon *comm, uint32_t pssrc) {
-	if (comm == NULL)
-		return;
-	comm->header.padding = 0;
-	comm->header.type = YangRtcpType_rtpfb;
-	comm->header.rc = 1;
-	comm->header.version = kRtcpVersion;
-	comm->ssrc = pssrc;
-	if (comm->nack == NULL)
-		comm->nack = (YangRtcpNack*) calloc(1, sizeof(YangRtcpNack));
-	comm->nack->capacity = 50;
-	if (comm->nack->nacks == NULL)
-		comm->nack->nacks = (uint16_t*) malloc(
-				sizeof(uint16_t) * comm->nack->capacity);
-    comm->nack->mediaSsrc = pssrc;
+void yang_rtcpNack_clear(YangRtcpNack *nack) {
+	if(nack->vsize==0) return;
+	memset(nack->nacks,0,nack->vsize * sizeof(uint16_t));
+	nack->vsize=0;
 }
-void yang_destroy_rtcpNack(YangRtcpCommon *comm) {
-	if (comm == NULL || comm->nack == NULL) {
-		// yang_trace("\n[Error] yang_destroy_rtcpNack is NULL\n");
-		return;
-	}
-	yang_free(comm->nack->nacks);
-	comm->nack->vsize = 0;
-	yang_free(comm->nack);
-}
+
 void yang_rtcpNack_addSn(YangRtcpNack *nack, uint16_t sn) {
 	if (nack == NULL)
 		return;
@@ -186,7 +167,40 @@ int32_t yang_encode_rtcpNack(YangRtcpCommon *comm, YangBuffer *buffer) {
 	yang_free(chunks);
 	return err;
 }
+
 uint64_t yang_rtcpNack_nb_bytes() {
 	return kRtcpPacketSize;
 }
 
+void yang_rtcpNack_init(YangRtcpCommon *comm, uint32_t pssrc) {
+	if (comm == NULL)	return;
+	comm->header.padding = 0;
+	comm->header.type = YangRtcpType_rtpfb;
+	comm->header.rc = 1;
+	comm->header.version = kRtcpVersion;
+	comm->header.length=0;
+	comm->ssrc = pssrc;
+
+    if(comm->nack) comm->nack->mediaSsrc = pssrc;
+}
+
+
+void yang_create_rtcpNack(YangRtcpCommon *comm, uint32_t pssrc) {
+	if (comm == NULL)	return;	
+	if (comm->nack == NULL)
+		comm->nack = (YangRtcpNack*) calloc(1, sizeof(YangRtcpNack));
+	comm->nack->capacity = 50;
+	if (comm->nack->nacks == NULL)
+		comm->nack->nacks = (uint16_t*) malloc(sizeof(uint16_t) * comm->nack->capacity);
+
+    yang_rtcpNack_init(comm,pssrc);
+
+}
+
+void yang_destroy_rtcpNack(YangRtcpCommon *comm) {
+	if (comm == NULL || comm->nack == NULL)		return;
+
+	yang_free(comm->nack->nacks);
+	comm->nack->vsize = 0;
+	yang_free(comm->nack);
+}

@@ -159,30 +159,28 @@ int32_t yang_check_send_nacks(YangRtcContext *context, YangRtpRecvNack *nack,
 		uint32_t ssrc, uint32_t *sent_nacks, uint32_t *timeout_nacks) {
 
 	int32_t err=Yang_Ok;
-	YangRtcpCommon rtcp;
-	memset(&rtcp, 0, sizeof(YangRtcpCommon));
-	yang_create_rtcpNack(&rtcp, ssrc);
+    yang_recvnack_initvec(nack,ssrc);
+	yang_rtcpNack_clear(nack->rtcp.nack);
 
-	yang_recvnack_get_nack_seqs(nack, rtcp.nack, timeout_nacks);
-	if (rtcp.nack->vsize == 0) {
-		yang_destroy_rtcpNack(&rtcp);
-		return Yang_Ok;
-	}
+	yang_recvnack_get_nack_seqs(nack, nack->rtcp.nack, timeout_nacks);
+	if (nack->rtcp.nack->vsize == 0) 		return Yang_Ok;
 
 	char buf[kRtcpPacketSize];
 	YangBuffer stream;
 	yang_init_buffer(&stream, buf, sizeof(buf));
 
-	yang_encode_rtcpNack(&rtcp, &stream);
+	yang_rtcpNack_init(&nack->rtcp,ssrc);
+
+	yang_encode_rtcpNack(&nack->rtcp, &stream);
 	int32_t nb_protected_buf = yang_buffer_pos(&stream);
 
 #if YVRTC_RTPRTCP_DTLS
 	if((err=yang_enc_rtcp(&context->srtp, stream.data, &nb_protected_buf))!=Yang_Ok){
-		yang_destroy_rtcpNack(&rtcp);
+		yang_rtcpNack_clear(nack->rtcp.nack);
 		return yang_error_wrap(err, "check send nacks");
 	}
 #endif
 	context->udp->sendData(&context->udp->session, stream.data, nb_protected_buf);
-	yang_destroy_rtcpNack(&rtcp);
+	yang_rtcpNack_clear(nack->rtcp.nack);
 	return Yang_Ok;
 }

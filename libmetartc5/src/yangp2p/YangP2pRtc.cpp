@@ -276,7 +276,8 @@ void YangP2pRtc::checkAlive(){
 		YangPeerConnection* rtc=m_pushs.at(i);
 		if(rtc->isConnected(&rtc->peer)&&!rtc->isAlive(&rtc->peer)) {
 			yang_trace("\nremove timeout session:%d",rtc->peer.streamconfig.uid);
-			removePeer(rtc->peer.streamconfig.uid);
+			// removePeer(rtc->peer.streamconfig.uid);
+			erasePeer(rtc->peer.streamconfig.uid);
 		}
 	}
 }

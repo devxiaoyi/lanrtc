@@ -63,11 +63,19 @@ int32_t yang_nackinfo_insert(YangRtpNackInfoList* vec,uint16_t value){
 
 int32_t yang_nackinfo_remove(YangRtpNackInfo* a,uint16_t value,uint32_t* palen){
 	if(a==NULL||*palen==0) return 1;
-	int32_t alen=*palen;
+
+	int32_t alen = *palen;
+
+	if(alen == 1){
+        if(a[0].sn != value) return Yang_Ok;
+		*palen = alen-1;
+		return Yang_Ok;
+	}
+
 	for(int32_t i=0;i<alen;i++){
 		if(a[i].sn==value) {
-			int left=alen-i-1;
-			if(left>0) memmove((char*)a+i*sizeof(YangRtpNackInfo),(char*)a+(i+1)*sizeof(YangRtpNackInfo),sizeof(YangRtpNackInfo)*left);
+			if(i!=alen-1)
+				memmove((char*)a+i*sizeof(YangRtpNackInfo),(char*)a+(i+1)*sizeof(YangRtpNackInfo),sizeof(YangRtpNackInfo)*(alen-i-1));
 			*palen=alen-1;
 			return Yang_Ok;
 		}
@@ -100,6 +108,13 @@ void yang_destroy_nackinfovec(YangRtpNackInfoList* nackvec){
 	yang_free(nackvec->nackinfos);
 }
 
+void yang_recvnack_initvec(YangRtpRecvNack* nack,uint32_t ssrc){
+	if(nack==NULL) return;
+	if(nack->rtcp.nack==NULL){
+		yang_create_rtcpNack(&nack->rtcp, ssrc);
+	}
+}
+
 void yang_create_recvnack(YangRtpRecvNack* nack, YangReceiveNackBuffer* rtp,size_t queue_size){
 	if(nack==NULL) return;
 	nack->opts.maxReqCount = 10;
@@ -117,10 +132,12 @@ void yang_create_recvnack(YangRtpRecvNack* nack, YangReceiveNackBuffer* rtp,size
 	nack->rtp = rtp;
 	nack->preCheckTime = 0;
 	nack->rtt = 0;
-
+	memset(&nack->rtcp, 0, sizeof(YangRtcpCommon));
 }
+
 void yang_destroy_recvnack(YangRtpRecvNack* nack){
 	if(nack==NULL) return;
+	yang_destroy_rtcpNack(&nack->rtcp);
 	yang_destroy_nackinfovec(&nack->queue);
 }
 

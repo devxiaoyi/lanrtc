@@ -24,14 +24,12 @@ typedef struct YangNackOption
 
 typedef struct YangRtpNackInfo
 {
-	  uint16_t sn;
-    // Use to control the time of first nack req and the life of seq.
+	 uint16_t sn;
     int64_t generateTime;
-    // Use to control nack interval.
+    // control nack interval.
     int64_t preReqNackTime;
-    // Use to control nack times.
+    // control nack times.
     int32_t reqNackCount;
-
 
 }YangRtpNackInfo;
 
@@ -48,6 +46,7 @@ typedef struct YangRtpRecvNack{
 	size_t maxQueueSize;		      // Max nack count.
 	YangReceiveNackBuffer* rtp;
 	YangNackOption opts;
+	YangRtcpCommon rtcp;
 	YangRtpNackInfoList queue;
 }YangRtpRecvNack;
 
@@ -62,6 +61,7 @@ void yang_destroy_nackinfovec(YangRtpNackInfoList* nackvec);
 
 void yang_create_recvnack(YangRtpRecvNack* nack, YangReceiveNackBuffer* rtp,size_t queue_size);
 void yang_destroy_recvnack(YangRtpRecvNack* nack);
+void yang_recvnack_initvec(YangRtpRecvNack* nack,uint32_t ssrc);
 void yang_recvnack_insert(YangRtpRecvNack* nack,uint16_t first, uint16_t last);
 YangRtpNackInfo* yang_recvnack_find(YangRtpRecvNack* nack,uint16_t seq);
 void yang_recvnack_update_rtt(YangRtpRecvNack* nack,int32_t rtt);

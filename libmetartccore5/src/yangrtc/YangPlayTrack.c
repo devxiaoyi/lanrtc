@@ -27,8 +27,6 @@ void yang_create_playTrack(YangRtcContext *context, YangPlayTrack *track, int is
 		yang_create_recvnack(track->nack_receiver, track->rtp_queue, 1000 * 2 / 3);
 	}
 	track->last_sender_report_rtp_time = 0;
-	track->last_sender_report_rtp_time1 = 0;
-
 	track->last_sender_report_sys_time = 0;
 
 	track->last_seq = 0;
@@ -64,9 +62,6 @@ void yang_playtrack_update_rtt(YangPlayTrack *track, int32_t rtt) {
 
 void yang_playtrack_update_send_report_time(YangPlayTrack *track, YangNtp *ntp,
 		uint32_t rtp_time) {
-	track->last_sender_report_ntp1 = track->last_sender_report_ntp;
-	track->last_sender_report_rtp_time1 = track->last_sender_report_rtp_time;
-
 
 	memcpy(&track->last_sender_report_ntp, ntp, sizeof(YangNtp));
 	track->last_sender_report_rtp_time = rtp_time;
@@ -108,7 +103,7 @@ int32_t yang_playtrack_on_nack(YangRtcContext *context, YangPlayTrack *track,Yan
 	if (track->nack_receiver->queue.vsize > 0) {
 		YangRtpNackInfo *nack_info = yang_recvnack_find(track->nack_receiver,seq);
 		if (nack_info) {
-			// seq had been received.
+			//receive lost seq
 			yang_trace("\nreceive nack seq=%hu", seq);
 			yang_recvnack_remove(track->nack_receiver, seq);
 			return err;
@@ -146,7 +141,7 @@ int32_t yang_playtrack_do_check_send_nacks(YangRtcContext *context,
 void yang_playtrack_receiveVideo(YangRtcContext *context,YangFrame *videoFrame) {
     if(videoFrame==NULL||videoFrame->payload==NULL||videoFrame->nb>YANG_VIDEO_ENCODE_BUFFER_LEN) return;
 	uint8_t *temp = videoFrame->payload;
-    int videoLen=videoFrame->nb;
+    int32_t videoLen=videoFrame->nb;
     videoFrame->dts=videoFrame->pts;
 
     if(temp[0] == 0x27&&temp[1] == 0x01){
@@ -235,6 +230,7 @@ void yang_playtrack_receiveVideo(YangRtcContext *context,YangFrame *videoFrame) 
                 }
         	}
         }
+		return;
 sendevideo:
 	videoFrame->uid=context->streamConfig->uid;
     if (context &&context->streamConfig->recvCallback.receiveVideo){

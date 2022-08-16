@@ -17,26 +17,22 @@
 
 
 typedef struct {
-	int32_t uid;
+
 	uint16_t last_seq;
 	int16_t isAudio;
-	// Latest sender report ntp and rtp time.
+
+	int32_t uid;
+	uint32_t ssrc;
 
 	int64_t last_sender_report_rtp_time;
-
-	// Prev sender report ntp and rtp time.
-
-	int64_t last_sender_report_rtp_time1;
-	//YangNtp last_sender_report_ntp;
 	uint64_t last_sender_report_sys_time;
-
-	uint32_t ssrc;
 
 	YangReceiveNackBuffer *rtp_queue;
 	YangRtpRecvNack *nack_receiver;
+
 	YangFrame audioFrame;
 	YangNtp last_sender_report_ntp;
-	YangNtp last_sender_report_ntp1;
+
 } YangPlayTrack;
 
 typedef struct{

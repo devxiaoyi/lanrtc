@@ -27,8 +27,8 @@ void yang_create_playTrackH265(YangRtcContext *context, YangPlayTrackH265 *track
 
 	memset(track->cache_video_pkts, 0,
 			YANG_RTC_RECV_BUFFER_COUNT * sizeof(YangH265PacketCache));
-    track->video_buffer = (char*) calloc(1, YANG_VIDEO_ENCODE_BUFFER_LEN*3/2);
-    memset(track->video_buffer, 0, YANG_VIDEO_ENCODE_BUFFER_LEN*3/2);
+    track->video_buffer = (char*) calloc(1, YANG_VIDEO_ENCODE_BUFFER_LEN);
+    memset(track->video_buffer, 0, YANG_VIDEO_ENCODE_BUFFER_LEN);
 
 	memset(&track->stapData, 0, sizeof(YangRtpSTAPData));
 

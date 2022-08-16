@@ -18,6 +18,8 @@ extern "C"{
 #endif
 void yang_create_rtcpNack(YangRtcpCommon* comm,uint32_t pssrc);
 void yang_destroy_rtcpNack(YangRtcpCommon* comm);
+void yang_rtcpNack_init(YangRtcpCommon *comm, uint32_t pssrc);
+void yang_rtcpNack_clear(YangRtcpNack *nack);
 void yang_rtcpNack_addSn(YangRtcpNack* nack,uint16_t sn);
 
 int32_t yang_decode_rtcpNack(YangRtcpCommon* comm,YangBuffer *buffer);
