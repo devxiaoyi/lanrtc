@@ -136,13 +136,6 @@ int32_t g_yang_pc_createOffer(YangPeer* peer,char **psdp){
 
 }
 
-int32_t g_yang_pc_requestStunServer(YangPeer *peer){
-	if(peer==NULL||peer->conn==NULL) return ERROR_RTC_PEERCONNECTION;
-		YangRtcConnection *conn = (YangRtcConnection*) peer->conn;
-		return conn->requestStunServer(conn->session);
-}
-
-
 void yang_create_peerConnection(YangPeerConnection* peerconn){
 	if(peerconn==NULL) return;
 	peerconn->peer.conn=NULL;
@@ -151,7 +144,6 @@ void yang_create_peerConnection(YangPeerConnection* peerconn){
 	peerconn->createOffer=g_yang_pc_createOffer;
 	peerconn->createAnswer=g_yang_pc_getAnswerSdp;
 	peerconn->createHttpAnswer=g_yang_pc_gethttpanswersdp;
-	peerconn->requestStunServer=g_yang_pc_requestStunServer;
 	peerconn->setRemoteDescription=g_yang_pc_startRtc;
 	peerconn->close=g_yang_pc_stopRtc;
 

@@ -16,8 +16,6 @@ typedef struct {
 	YangPeer peer;
 	void (*init)(YangPeer* peer);
 
-	int32_t (*requestStunServer)(YangPeer *peer);
-
 	int32_t (*createOffer)(YangPeer* peer, char **psdp);
 	int32_t (*createAnswer)(YangPeer* peer,char* answer);
 	int32_t (*createHttpAnswer)(YangPeer* peer,char* answer);

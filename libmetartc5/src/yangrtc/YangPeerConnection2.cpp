@@ -19,10 +19,6 @@ void YangPeerConnection2::init(){
 	m_conn.init(&m_conn.peer);
 }
 
-int32_t YangPeerConnection2::requestStunServer(){
-	return m_conn.requestStunServer(&m_conn.peer);
-}
-
 int32_t YangPeerConnection2::createOffer( char **psdp){
 	return m_conn.createOffer(&m_conn.peer,psdp);
 }

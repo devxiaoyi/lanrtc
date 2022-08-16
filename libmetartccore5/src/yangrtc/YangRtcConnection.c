@@ -515,27 +515,13 @@ int32_t yang_rtcconn_createHttpAnswer(YangRtcSession *session, char *answer){
 	return yang_sdp_getAnswerSdp(session, answer);
 }
 
-int32_t yang_rtcconn_requestStunServer(YangRtcSession *session){
-	int32_t err=Yang_Ok;
-
-		if(session->context.avinfo->rtc.hasIceServer&&session->ice.server.stunPort==0&&
-				(err=session->ice.requestStun(&session->ice.server,session->context.streamConfig->localPort))!=Yang_Ok){
-			return yang_error_wrap(err,"stun request fail!");
-		}
-
-		return err;
-}
-
 int32_t yang_rtcconn_startRtc(YangRtcSession* session,char* sdp){
 
 	yang_trace("\nstartRtc,port==%d",session->context.streamConfig->localPort);
 
 	session->isServer=session->context.streamConfig->isServer;
-	if(session->isServer&&session->context.avinfo->rtc.hasIceServer)	{
-		if(yang_rtcconn_requestStunServer(session)!=Yang_Ok) yang_error("request stun server fail");
-	}
+
 	yang_rtcconn_getRemoteSdp(session,sdp);
-	// session->ice.stun.createRequestStunPacket(session,session->remoteIcePwd);
 
 	yang_create_rtcudp(session->context.udp,session->context.streamConfig->localPort);
 	session->context.udp->updateRemoteAddress(&session->context.udp->session,session->context.streamConfig->remoteIp,session->isServer?0:session->listenPort);
@@ -585,7 +571,6 @@ void yang_create_rtcConnection(YangRtcConnection* conn,YangAVInfo* avinfo){
 	conn->createOffer=yang_rtcconn_createOffer;
 	conn->createAnswer=yang_rtcconn_createAnswer;
 	conn->createHttpAnswer=yang_rtcconn_createHttpAnswer;
-	conn->requestStunServer=yang_rtcconn_requestStunServer;
 	conn->isConnected=yang_rtcconn_isConnected;
 
 }

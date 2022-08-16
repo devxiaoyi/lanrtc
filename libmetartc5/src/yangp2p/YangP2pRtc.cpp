@@ -194,9 +194,7 @@ int32_t YangP2pRtc::connectPeer(int32_t nettype, string server,int32_t localPort
 	if (sh->isConnected(&sh->peer))		return Yang_Ok;
 	char* localSdp;
 	char* remoteSdp=(char*)calloc(12*1000,1);
-	if(m_context->avinfo.rtc.hasIceServer){
-		if(sh->requestStunServer(&sh->peer)!=Yang_Ok) yang_error("request stun server fail!");
-	}
+
 	sh->createOffer(&sh->peer, &localSdp);
     //连接对端http服务交换sdp
 	yang_p2p_getHttpSdp((char*)server.c_str(),pport,localSdp,remoteSdp);
@@ -239,7 +237,7 @@ int32_t YangP2pRtc::addPeer(char* sdp,char* answer,char* remoteIp,int32_t localP
 
     sh->init(&sh->peer);
 	if (sh->isConnected(&sh->peer))		return Yang_Ok;
-	if(m_context->avinfo.rtc.hasIceServer) sh->requestStunServer(&sh->peer);
+
 	ret = sh->setRemoteDescription(&sh->peer,sdp);
 
 	if (ret)		return ret;
