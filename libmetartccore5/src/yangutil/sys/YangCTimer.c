@@ -39,6 +39,10 @@ void yang_create_timer(YangCTimer *timer, void *user, int32_t taskId,
 }
 void yang_destroy_timer(YangCTimer *timer) {
 	if (timer == NULL)		return;
+#if Yang_Using_Phtread
+	pthread_mutex_destroy(&timer->t_lock);
+	pthread_cond_destroy(&timer->t_cond_mess);
+#endif
 }
 void* yang_run_timer_thread(void *obj) {
 	YangCTimer *timer = (YangCTimer*) obj;

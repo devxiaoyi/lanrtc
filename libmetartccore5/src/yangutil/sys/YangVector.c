@@ -78,6 +78,7 @@ void yang_clear_uint16Sort(YangUint16Sort* psort){
 }
 
 void yang_clear_uint16Sort2(YangUint16Sort* psort,int32_t index){
+	if(psort->vsize==0) return;
 	int32_t vsize=psort->vsize-index-1;
 	memmove((char*)psort->payload,(char*)psort->payload+index*sizeof(uint16_t),vsize*sizeof(uint16_t));
 	psort->vsize=vsize;
